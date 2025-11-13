@@ -1,0 +1,341 @@
+/**
+ * ============================================================================
+ * LIVERPOOL DENTAL CPD - STUDENT UI UTILITY CLASSES
+ * ============================================================================
+ *
+ * Utility classes for rapid styling and common patterns
+ * Based on: /docs/design-language/LIVERPOOL_DESIGN_LANGUAGE.md
+ * Version: 1.0.0
+ * Created: 2025-11-04
+ *
+ * Usage: Import tokens first, then this file
+ * @import '../../../../../shared/student-ui/styles/liverpool-student-tokens';
+ * @import '../../../../../shared/student-ui/styles/liverpool-student-utilities';
+ *
+ * Utilities included:
+ * - Spacing (margins, padding)
+ * - Text colors
+ * - Background colors
+ * - Border utilities
+ * - Display utilities
+ * - Flexbox utilities
+ * - Typography utilities
+ *
+ * ============================================================================
+ */
+
+// ============================================================================
+// 1. SPACING UTILITIES
+// ============================================================================
+
+// Margin utilities (m-0, m-1, m-2, etc.)
+.liverpool-m-0 { margin: $liverpool-space-0 !important; }
+.liverpool-m-1 { margin: $liverpool-space-1 !important; }
+.liverpool-m-2 { margin: $liverpool-space-2 !important; }
+.liverpool-m-3 { margin: $liverpool-space-3 !important; }
+.liverpool-m-4 { margin: $liverpool-space-4 !important; }
+.liverpool-m-5 { margin: $liverpool-space-5 !important; }
+.liverpool-m-6 { margin: $liverpool-space-6 !important; }
+.liverpool-m-7 { margin: $liverpool-space-7 !important; }
+.liverpool-m-8 { margin: $liverpool-space-8 !important; }
+
+// Margin top (mt-0, mt-1, etc.)
+.liverpool-mt-0 { margin-top: $liverpool-space-0 !important; }
+.liverpool-mt-1 { margin-top: $liverpool-space-1 !important; }
+.liverpool-mt-2 { margin-top: $liverpool-space-2 !important; }
+.liverpool-mt-3 { margin-top: $liverpool-space-3 !important; }
+.liverpool-mt-4 { margin-top: $liverpool-space-4 !important; }
+.liverpool-mt-5 { margin-top: $liverpool-space-5 !important; }
+.liverpool-mt-6 { margin-top: $liverpool-space-6 !important; }
+.liverpool-mt-8 { margin-top: $liverpool-space-8 !important; }
+
+// Margin bottom (mb-0, mb-1, etc.)
+.liverpool-mb-0 { margin-bottom: $liverpool-space-0 !important; }
+.liverpool-mb-1 { margin-bottom: $liverpool-space-1 !important; }
+.liverpool-mb-2 { margin-bottom: $liverpool-space-2 !important; }
+.liverpool-mb-3 { margin-bottom: $liverpool-space-3 !important; }
+.liverpool-mb-4 { margin-bottom: $liverpool-space-4 !important; }
+.liverpool-mb-5 { margin-bottom: $liverpool-space-5 !important; }
+.liverpool-mb-6 { margin-bottom: $liverpool-space-6 !important; }
+.liverpool-mb-8 { margin-bottom: $liverpool-space-8 !important; }
+
+// Margin left (ml-0, ml-1, etc.)
+.liverpool-ml-0 { margin-left: $liverpool-space-0 !important; }
+.liverpool-ml-1 { margin-left: $liverpool-space-1 !important; }
+.liverpool-ml-2 { margin-left: $liverpool-space-2 !important; }
+.liverpool-ml-3 { margin-left: $liverpool-space-3 !important; }
+.liverpool-ml-4 { margin-left: $liverpool-space-4 !important; }
+.liverpool-ml-5 { margin-left: $liverpool-space-5 !important; }
+.liverpool-ml-auto { margin-left: auto !important; }
+
+// Margin right (mr-0, mr-1, etc.)
+.liverpool-mr-0 { margin-right: $liverpool-space-0 !important; }
+.liverpool-mr-1 { margin-right: $liverpool-space-1 !important; }
+.liverpool-mr-2 { margin-right: $liverpool-space-2 !important; }
+.liverpool-mr-3 { margin-right: $liverpool-space-3 !important; }
+.liverpool-mr-4 { margin-right: $liverpool-space-4 !important; }
+.liverpool-mr-5 { margin-right: $liverpool-space-5 !important; }
+.liverpool-mr-auto { margin-right: auto !important; }
+
+// Padding utilities (p-0, p-1, p-2, etc.)
+.liverpool-p-0 { padding: $liverpool-space-0 !important; }
+.liverpool-p-1 { padding: $liverpool-space-1 !important; }
+.liverpool-p-2 { padding: $liverpool-space-2 !important; }
+.liverpool-p-3 { padding: $liverpool-space-3 !important; }
+.liverpool-p-4 { padding: $liverpool-space-4 !important; }
+.liverpool-p-5 { padding: $liverpool-space-5 !important; }
+.liverpool-p-6 { padding: $liverpool-space-6 !important; }
+.liverpool-p-8 { padding: $liverpool-space-8 !important; }
+
+// Padding top (pt-0, pt-1, etc.)
+.liverpool-pt-0 { padding-top: $liverpool-space-0 !important; }
+.liverpool-pt-1 { padding-top: $liverpool-space-1 !important; }
+.liverpool-pt-2 { padding-top: $liverpool-space-2 !important; }
+.liverpool-pt-3 { padding-top: $liverpool-space-3 !important; }
+.liverpool-pt-4 { padding-top: $liverpool-space-4 !important; }
+.liverpool-pt-5 { padding-top: $liverpool-space-5 !important; }
+.liverpool-pt-6 { padding-top: $liverpool-space-6 !important; }
+
+// Padding bottom (pb-0, pb-1, etc.)
+.liverpool-pb-0 { padding-bottom: $liverpool-space-0 !important; }
+.liverpool-pb-1 { padding-bottom: $liverpool-space-1 !important; }
+.liverpool-pb-2 { padding-bottom: $liverpool-space-2 !important; }
+.liverpool-pb-3 { padding-bottom: $liverpool-space-3 !important; }
+.liverpool-pb-4 { padding-bottom: $liverpool-space-4 !important; }
+.liverpool-pb-5 { padding-bottom: $liverpool-space-5 !important; }
+.liverpool-pb-6 { padding-bottom: $liverpool-space-6 !important; }
+
+// Padding left (pl-0, pl-1, etc.)
+.liverpool-pl-0 { padding-left: $liverpool-space-0 !important; }
+.liverpool-pl-1 { padding-left: $liverpool-space-1 !important; }
+.liverpool-pl-2 { padding-left: $liverpool-space-2 !important; }
+.liverpool-pl-3 { padding-left: $liverpool-space-3 !important; }
+.liverpool-pl-4 { padding-left: $liverpool-space-4 !important; }
+.liverpool-pl-5 { padding-left: $liverpool-space-5 !important; }
+.liverpool-pl-6 { padding-left: $liverpool-space-6 !important; }
+
+// Padding right (pr-0, pr-1, etc.)
+.liverpool-pr-0 { padding-right: $liverpool-space-0 !important; }
+.liverpool-pr-1 { padding-right: $liverpool-space-1 !important; }
+.liverpool-pr-2 { padding-right: $liverpool-space-2 !important; }
+.liverpool-pr-3 { padding-right: $liverpool-space-3 !important; }
+.liverpool-pr-4 { padding-right: $liverpool-space-4 !important; }
+.liverpool-pr-5 { padding-right: $liverpool-space-5 !important; }
+.liverpool-pr-6 { padding-right: $liverpool-space-6 !important; }
+
+// Gap utilities (for flexbox/grid)
+.liverpool-gap-0 { gap: $liverpool-space-0 !important; }
+.liverpool-gap-1 { gap: $liverpool-space-1 !important; }
+.liverpool-gap-2 { gap: $liverpool-space-2 !important; }
+.liverpool-gap-3 { gap: $liverpool-space-3 !important; }
+.liverpool-gap-4 { gap: $liverpool-space-4 !important; }
+.liverpool-gap-5 { gap: $liverpool-space-5 !important; }
+.liverpool-gap-6 { gap: $liverpool-space-6 !important; }
+
+// ============================================================================
+// 2. TEXT COLOR UTILITIES
+// ============================================================================
+
+.liverpool-text-primary { color: $liverpool-text-primary !important; }
+.liverpool-text-secondary { color: $liverpool-text-secondary !important; }
+.liverpool-text-muted { color: $liverpool-text-muted !important; }
+.liverpool-text-inverse { color: $liverpool-text-inverse !important; }
+.liverpool-text-blue { color: $liverpool-blue !important; }
+.liverpool-text-teal { color: $liverpool-teal !important; }
+.liverpool-text-success { color: $liverpool-color-success !important; }
+.liverpool-text-error { color: $liverpool-color-error !important; }
+.liverpool-text-warning { color: $liverpool-feedback-warning-color !important; }
+.liverpool-text-info { color: $liverpool-feedback-info-color !important; }
+
+// ============================================================================
+// 3. BACKGROUND COLOR UTILITIES
+// ============================================================================
+
+.liverpool-bg-white { background-color: $liverpool-neutral-white !important; }
+.liverpool-bg-page { background-color: $liverpool-bg-page !important; }
+.liverpool-bg-subtle { background-color: $liverpool-bg-subtle !important; }
+.liverpool-bg-blue { background-color: $liverpool-blue !important; }
+.liverpool-bg-blue-light { background-color: $liverpool-blue-100 !important; }
+.liverpool-bg-teal { background-color: $liverpool-teal !important; }
+.liverpool-bg-teal-light { background-color: $liverpool-teal-100 !important; }
+.liverpool-bg-success { background-color: $liverpool-feedback-success-bg !important; }
+.liverpool-bg-error { background-color: $liverpool-feedback-error-bg !important; }
+.liverpool-bg-warning { background-color: $liverpool-feedback-warning-bg !important; }
+.liverpool-bg-info { background-color: $liverpool-feedback-info-bg !important; }
+
+// ============================================================================
+// 4. BORDER UTILITIES
+// ============================================================================
+
+// Border width
+.liverpool-border { border: 1px solid $liverpool-border-default !important; }
+.liverpool-border-0 { border: 0 !important; }
+.liverpool-border-t { border-top: 1px solid $liverpool-border-default !important; }
+.liverpool-border-b { border-bottom: 1px solid $liverpool-border-default !important; }
+.liverpool-border-l { border-left: 1px solid $liverpool-border-default !important; }
+.liverpool-border-r { border-right: 1px solid $liverpool-border-default !important; }
+
+// Border color
+.liverpool-border-default { border-color: $liverpool-border-default !important; }
+.liverpool-border-blue { border-color: $liverpool-blue !important; }
+.liverpool-border-teal { border-color: $liverpool-teal !important; }
+.liverpool-border-transparent { border-color: transparent !important; }
+
+// Border radius
+.liverpool-rounded-none { border-radius: $liverpool-radius-none !important; }
+.liverpool-rounded-sm { border-radius: $liverpool-radius-sm !important; }
+.liverpool-rounded-md { border-radius: $liverpool-radius-md !important; }
+.liverpool-rounded { border-radius: $liverpool-radius-base !important; }
+.liverpool-rounded-lg { border-radius: $liverpool-radius-lg !important; }
+.liverpool-rounded-pill { border-radius: $liverpool-radius-pill !important; }
+.liverpool-rounded-circle { border-radius: $liverpool-radius-circle !important; }
+
+// ============================================================================
+// 5. DISPLAY UTILITIES
+// ============================================================================
+
+.liverpool-d-none { display: none !important; }
+.liverpool-d-block { display: block !important; }
+.liverpool-d-inline { display: inline !important; }
+.liverpool-d-inline-block { display: inline-block !important; }
+.liverpool-d-flex { display: flex !important; }
+.liverpool-d-inline-flex { display: inline-flex !important; }
+.liverpool-d-grid { display: grid !important; }
+
+// ============================================================================
+// 6. FLEXBOX UTILITIES
+// ============================================================================
+
+// Flex direction
+.liverpool-flex-row { flex-direction: row !important; }
+.liverpool-flex-column { flex-direction: column !important; }
+.liverpool-flex-row-reverse { flex-direction: row-reverse !important; }
+.liverpool-flex-column-reverse { flex-direction: column-reverse !important; }
+
+// Justify content
+.liverpool-justify-start { justify-content: flex-start !important; }
+.liverpool-justify-end { justify-content: flex-end !important; }
+.liverpool-justify-center { justify-content: center !important; }
+.liverpool-justify-between { justify-content: space-between !important; }
+.liverpool-justify-around { justify-content: space-around !important; }
+.liverpool-justify-evenly { justify-content: space-evenly !important; }
+
+// Align items
+.liverpool-align-start { align-items: flex-start !important; }
+.liverpool-align-end { align-items: flex-end !important; }
+.liverpool-align-center { align-items: center !important; }
+.liverpool-align-baseline { align-items: baseline !important; }
+.liverpool-align-stretch { align-items: stretch !important; }
+
+// Flex wrap
+.liverpool-flex-wrap { flex-wrap: wrap !important; }
+.liverpool-flex-nowrap { flex-wrap: nowrap !important; }
+.liverpool-flex-wrap-reverse { flex-wrap: wrap-reverse !important; }
+
+// Flex grow/shrink
+.liverpool-flex-1 { flex: 1 1 0% !important; }
+.liverpool-flex-auto { flex: 1 1 auto !important; }
+.liverpool-flex-initial { flex: 0 1 auto !important; }
+.liverpool-flex-none { flex: none !important; }
+
+// ============================================================================
+// 7. TYPOGRAPHY UTILITIES
+// ============================================================================
+
+// Font weight
+.liverpool-font-light { font-weight: $liverpool-font-weight-light !important; }
+.liverpool-font-regular { font-weight: $liverpool-font-weight-regular !important; }
+.liverpool-font-medium { font-weight: $liverpool-font-weight-medium !important; }
+.liverpool-font-semibold { font-weight: $liverpool-font-weight-semibold !important; }
+.liverpool-font-bold { font-weight: $liverpool-font-weight-bold !important; }
+
+// Font size
+.liverpool-text-xs { font-size: $liverpool-font-size-xs !important; }
+.liverpool-text-sm { font-size: $liverpool-font-size-sm !important; }
+.liverpool-text-base { font-size: $liverpool-font-size-base !important; }
+.liverpool-text-md { font-size: $liverpool-font-size-md !important; }
+.liverpool-text-lg { font-size: $liverpool-font-size-lg !important; }
+.liverpool-text-xl { font-size: $liverpool-font-size-xl !important; }
+.liverpool-text-2xl { font-size: $liverpool-font-size-2xl !important; }
+.liverpool-text-3xl { font-size: $liverpool-font-size-3xl !important; }
+
+// Text alignment
+.liverpool-text-left { text-align: left !important; }
+.liverpool-text-center { text-align: center !important; }
+.liverpool-text-right { text-align: right !important; }
+.liverpool-text-justify { text-align: justify !important; }
+
+// Text decoration
+.liverpool-underline { text-decoration: underline !important; }
+.liverpool-no-underline { text-decoration: none !important; }
+.liverpool-line-through { text-decoration: line-through !important; }
+
+// Text transform
+.liverpool-uppercase { text-transform: uppercase !important; }
+.liverpool-lowercase { text-transform: lowercase !important; }
+.liverpool-capitalize { text-transform: capitalize !important; }
+.liverpool-normal-case { text-transform: none !important; }
+
+// Line height
+.liverpool-leading-tight { line-height: $liverpool-line-height-tight !important; }
+.liverpool-leading-snug { line-height: $liverpool-line-height-snug !important; }
+.liverpool-leading-normal { line-height: $liverpool-line-height-normal !important; }
+.liverpool-leading-relaxed { line-height: $liverpool-line-height-relaxed !important; }
+.liverpool-leading-loose { line-height: $liverpool-line-height-loose !important; }
+
+// ============================================================================
+// 8. WIDTH/HEIGHT UTILITIES
+// ============================================================================
+
+.liverpool-w-full { width: 100% !important; }
+.liverpool-w-auto { width: auto !important; }
+.liverpool-h-full { height: 100% !important; }
+.liverpool-h-auto { height: auto !important; }
+
+// ============================================================================
+// 9. SHADOW UTILITIES
+// ============================================================================
+
+.liverpool-shadow-none { box-shadow: $liverpool-shadow-none !important; }
+.liverpool-shadow-sm { box-shadow: $liverpool-shadow-sm !important; }
+.liverpool-shadow { box-shadow: $liverpool-shadow-base !important; }
+.liverpool-shadow-md { box-shadow: $liverpool-shadow-md !important; }
+.liverpool-shadow-lg { box-shadow: $liverpool-shadow-lg !important; }
+
+// ============================================================================
+// 10. POSITION UTILITIES
+// ============================================================================
+
+.liverpool-relative { position: relative !important; }
+.liverpool-absolute { position: absolute !important; }
+.liverpool-fixed { position: fixed !important; }
+.liverpool-sticky { position: sticky !important; }
+
+// ============================================================================
+// 11. OVERFLOW UTILITIES
+// ============================================================================
+
+.liverpool-overflow-auto { overflow: auto !important; }
+.liverpool-overflow-hidden { overflow: hidden !important; }
+.liverpool-overflow-visible { overflow: visible !important; }
+.liverpool-overflow-scroll { overflow: scroll !important; }
+
+// ============================================================================
+// 12. CURSOR UTILITIES
+// ============================================================================
+
+.liverpool-cursor-pointer { cursor: pointer !important; }
+.liverpool-cursor-default { cursor: default !important; }
+.liverpool-cursor-not-allowed { cursor: not-allowed !important; }
+
+// ============================================================================
+// 13. INTERACTION UTILITIES
+// ============================================================================
+
+.liverpool-user-select-none { user-select: none !important; }
+.liverpool-pointer-events-none { pointer-events: none !important; }
+.liverpool-pointer-events-auto { pointer-events: auto !important; }
+
+// ============================================================================
+// END OF UTILITIES
+// ============================================================================

@@ -1,0 +1,541 @@
+/**
+ * ARCHITECTURAL: XBlock structural styles only
+ *
+ * Paragon CSS is loaded from CDN at runtime (via Python fragment)
+ * This file contains ONLY XBlock-specific layout and structural styles
+ * Use CSS variables for colors (--pgn-color-*) to respect theme
+ */
+
+@import '../../../../../shared/styles/liverpool-shared-tokens';
+
+// IMPLEMENTATION: XBlock-specific studio editor styles
+.image-commentary-studio-view {
+  // Add horizontal padding to prevent content touching edges
+  padding-left: 3rem;
+  padding-right: 3rem;
+
+  // Ensure the view takes full height and pushes sticky actions to bottom
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  // Consistent typography
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  // Main heading - Paragon h3 scaled for 10px modal base
+  // Paragon intent: $h3-font-size: 1.375rem (22px at 16px base)
+  // Modal base: 10px, so 2.2rem × 10px = 22px
+  h3 {
+    font-size: $liverpool-modal-h3-size;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    margin-top: 0;
+  }
+
+  // Section headings - Paragon h4 scaled for 10px modal base
+  // Paragon intent: $h4-font-size: 1.125rem (18px at 16px base)
+  // Modal base: 10px, so 1.8rem × 10px = 18px
+  h4 {
+    font-size: $liverpool-modal-h4-size;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    margin-top: 0;
+  }
+
+  h5 {
+    font-size: $liverpool-modal-h5-size;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    margin-top: 0;
+  }
+
+  // Form labels - Paragon input size scaled for 10px modal base
+  // Paragon intent: $input-font-size: 1.125rem (18px at 16px base)
+  // Modal base: 10px, so 1.8rem × 10px = 18px
+  .pgn__form-label,
+  label {
+    font-size: $liverpool-modal-label-size;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+
+  // Button text - Paragon button size scaled for 10px modal base
+  // Paragon intent: $input-btn-font-size: 1.125rem (18px at 16px base)
+  // Modal base: 10px, so 1.8rem × 10px = 18px
+  .btn {
+    font-size: $liverpool-modal-button-size;
+  }
+
+  // ========================================
+  // STEPPER COMPONENT STYLING
+  // ========================================
+
+  // Stepper header - make it compact and consistent
+  .pgn__stepper-header {
+    margin-bottom: 2rem;
+  }
+
+  .pgn__stepper-header-step-list {
+    gap: 0.5rem;
+  }
+
+  // Stepper step titles - scaled for 10px modal base
+  .pgn__stepper-header-step-title {
+    font-size: $liverpool-stepper-title-size; // 14px at 10px base
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+    white-space: normal !important; // Allow text to wrap
+    overflow: visible !important; // Don't hide overflow
+    text-overflow: clip !important; // Don't add ellipsis
+  }
+
+  // Stepper step descriptions - scaled for 10px modal base
+  .pgn__stepper-header-step-description {
+    font-size: $liverpool-stepper-description-size; // 12px at 10px base
+    color: var(--pgn-color-text-secondary, #6c757d);
+    white-space: normal !important; // Allow text to wrap
+    overflow: visible !important; // Don't hide overflow
+    text-overflow: clip !important; // Don't add ellipsis
+  }
+
+  // Stepper header step title-description wrapper - ensure it doesn't constrain width
+  .pgn__stepper-header-step-title-description {
+    overflow: visible !important;
+    max-width: none !important;
+    flex: 1 1 auto; // Allow it to grow
+  }
+
+  // Stepper bubbles - make them consistent size
+  .pgn__bubble {
+    width: $liverpool-stepper-bubble-size;
+    height: $liverpool-stepper-bubble-size;
+    font-size: $liverpool-stepper-bubble-font-size;
+    font-weight: $liverpool-stepper-bubble-font-weight;
+  }
+
+  // Active step bubble - Liverpool blue
+  .pgn__stepper-header-step-active .pgn__bubble {
+    background-color: $liverpool-stepper-active-bg !important;
+    border-color: $liverpool-stepper-active-border !important;
+  }
+
+  // Completed step bubble - Liverpool blue
+  .pgn__stepper-header-step-complete .pgn__bubble {
+    background-color: $liverpool-stepper-complete-bg !important;
+    border-color: $liverpool-stepper-complete-border !important;
+  }
+
+  // Asset Picker Grid
+  .asset-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+
+  .asset-picker-item {
+    cursor: pointer;
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: border-color 0.2s;
+
+    &:hover {
+      border-color: var(--pgn-color-primary-base, #0075b4);
+    }
+
+    &.selected {
+      border: 2px solid var(--pgn-color-primary-base, #0075b4);
+    }
+  }
+
+  .asset-picker-thumbnail {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 2px;
+  }
+
+  .asset-picker-filename {
+    display: block;
+    margin-top: 0.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: $liverpool-modal-small-size; // 12px at 10px base
+  }
+}
+
+// Alert text sizing - scaled for 10px modal base
+.image-commentary-studio-view .alert,
+.image-commentary-studio-view .pgn__alert {
+  font-size: $liverpool-modal-body-size; // 14px at 10px base
+}
+
+.image-commentary-wizard-view {
+  flex: 1; // Grow to fill available space, pushing sticky actions to bottom
+  display: flex;
+  flex-direction: column;
+
+  // Stepper component needs to grow to push sticky actions down
+  .pgn__stepper,
+  > div[class*="stepper"] {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  // Wizard step content
+  .wizard-step-content {
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+  }
+
+  // Image preview
+  .image-preview-container {
+    border: 2px solid var(--pgn-color-border-base, #dee2e6);
+    border-radius: 4px;
+    padding: 1rem;
+    background-color: var(--pgn-color-bg-subtle, #f8f9fa);
+    text-align: center;
+  }
+
+  .image-preview {
+    max-width: 100%;
+    max-height: 400px;
+    display: block;
+    margin: 0 auto;
+    border-radius: 4px;
+  }
+
+  .image-thumbnail {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid var(--pgn-color-border-base, #dee2e6);
+  }
+
+  .image-url-preview {
+    font-size: $liverpool-modal-small-size; // 12px at 10px base
+    word-break: break-all;
+    color: var(--pgn-color-text-muted, #adb5bd);
+  }
+
+  // Marker list header - scaled for 10px modal base
+  .marker-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .marker-list-title {
+    font-size: $liverpool-modal-h5-size; // 16px at 10px base
+    font-weight: 600;
+    margin: 0;
+  }
+
+  // Marker cards - scaled for 10px modal base
+  .marker-card {
+    border: 1px solid var(--pgn-color-border-base, #dee2e6);
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    background-color: #fff;
+    transition: box-shadow 0.2s;
+
+    &:hover {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .marker-card-title {
+    font-size: $liverpool-modal-body-size; // 14px at 10px base
+    font-weight: 600;
+    margin-right: 0.5rem;
+  }
+
+  .marker-type-badge {
+    font-size: $liverpool-modal-small-size; // 12px at 10px base
+  }
+
+  .marker-commentary-preview {
+    font-size: 1.3rem; // 13px at 10px base
+    color: var(--pgn-color-text-secondary, #6c757d);
+    font-style: italic;
+    margin-bottom: 0.5rem;
+  }
+
+  .marker-position-info {
+    font-size: $liverpool-modal-small-size; // 12px at 10px base
+    color: var(--pgn-color-text-muted, #adb5bd);
+  }
+
+  .marker-actions {
+    margin-left: 1rem;
+  }
+
+  // ========================================
+  // LIVERPOOL BUTTON STYLING
+  // ========================================
+
+  // Primary buttons - Liverpool pill-shaped with shadows
+  .btn-primary {
+    border-radius: $liverpool-btn-border-radius !important; // Liverpool pill shape
+    box-shadow: $liverpool-btn-primary-shadow !important; // Liverpool blue shadow
+    background-color: $liverpool-btn-primary-bg !important; // Liverpool blue
+    border-color: $liverpool-btn-primary-bg !important;
+    color: $liverpool-btn-primary-color !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease !important;
+    transform: scale(1);
+    cursor: pointer;
+    padding: 0.75rem 1.5rem !important;
+
+    &:hover:not(:disabled) {
+      transform: scale(1.05);
+      box-shadow: $liverpool-btn-primary-shadow-hover !important;
+      background-color: $liverpool-btn-primary-bg-hover !important; // Liverpool hover blue
+      border-color: $liverpool-btn-primary-bg-hover !important;
+      color: $liverpool-btn-primary-color !important;
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.98);
+      box-shadow: $liverpool-btn-primary-shadow-active !important;
+    }
+
+    &:focus {
+      box-shadow: $liverpool-btn-primary-shadow, $liverpool-shadow-focus !important;
+      outline: none;
+    }
+
+    &:disabled {
+      background-color: $liverpool-btn-disabled-bg !important;
+      border-color: $liverpool-btn-disabled-bg !important;
+      box-shadow: none !important;
+      transform: none !important;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+  }
+
+  // Outline buttons - Liverpool blue outline
+  .btn-outline-primary {
+    border-radius: $liverpool-btn-border-radius !important; // Liverpool pill shape
+    background-color: transparent !important;
+    color: $liverpool-btn-outline-color !important; // Liverpool blue
+    border: $liverpool-btn-outline-border !important;
+    padding: 0.5rem 1.25rem !important;
+    cursor: pointer;
+    transition: all 0.2s ease !important;
+
+    &:hover:not(:disabled) {
+      background-color: $liverpool-btn-outline-hover-bg !important;
+      color: $liverpool-btn-outline-hover-color !important;
+      border-color: $liverpool-btn-outline-hover-bg !important;
+    }
+
+    &:focus {
+      box-shadow: $liverpool-input-shadow-focus !important;
+      outline: none !important;
+    }
+
+    &:disabled {
+      background-color: transparent !important;
+      border-color: $liverpool-btn-disabled-bg !important;
+      color: $liverpool-btn-disabled-bg !important;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+  }
+
+  // Link buttons (Edit/Delete) - Liverpool blue
+  .btn-link {
+    color: $liverpool-link-default !important; // Liverpool blue
+    text-decoration: none !important;
+
+    &:hover:not(:disabled) {
+      color: $liverpool-link-hover !important; // Liverpool hover blue
+      text-decoration: underline !important;
+    }
+
+    &.text-danger {
+      color: #dc3545 !important;
+
+      &:hover:not(:disabled) {
+        color: #c82333 !important;
+      }
+    }
+  }
+
+  // ========================================
+  // LIVERPOOL FORM CONTROL STYLING
+  // ========================================
+
+  // Text inputs, textareas - Liverpool blue focus
+  .form-control,
+  .pgn__form-control,
+  input[type="text"],
+  textarea {
+    border-radius: 0.375rem !important;
+
+    &:focus {
+      border-color: $liverpool-input-border-focus !important; // Liverpool blue
+      box-shadow: $liverpool-input-shadow-focus !important;
+      outline: 0 !important;
+    }
+  }
+
+  // Empty state - scaled for 10px modal base
+  .empty-state-title {
+    font-size: $liverpool-modal-h5-size; // 16px at 10px base
+    font-weight: 600;
+  }
+
+  // Inline editor - scaled for 10px modal base
+  .inline-editor-header {
+    h5 {
+      font-size: $liverpool-modal-h5-size; // 16px at 10px base
+      font-weight: 600;
+    }
+  }
+
+  .tip-alert {
+    font-size: 1.3rem; // 13px at 10px base
+    padding: 0.75rem 1rem;
+  }
+
+  // Form text and helper text - scaled for 10px modal base
+  .form-text,
+  .pgn__form-text {
+    font-size: $liverpool-modal-small-size; // 12px at 10px base
+  }
+
+  // Small text elements - scaled for 10px modal base
+  small,
+  .small {
+    font-size: $liverpool-modal-small-size; // 12px at 10px base
+  }
+
+  // Marker canvas
+  .marker-canvas {
+    position: relative;
+    cursor: crosshair;
+    border: 2px solid var(--pgn-color-border-base, #dee2e6);
+    border-radius: 4px;
+    overflow: hidden;
+    background-color: var(--pgn-color-bg-subtle, #f8f9fa);
+
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+  }
+
+  // Marker preview in canvas
+  .marker-preview {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: $liverpool-marker-size;
+    height: $liverpool-marker-size;
+    border-radius: 50%;
+    border: $liverpool-marker-border;
+    color: white;
+    font-size: $liverpool-marker-font-size;
+    font-weight: $liverpool-marker-font-weight;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: $liverpool-marker-shadow;
+    pointer-events: none;
+    z-index: 10;
+    animation: pulse 2s infinite;
+
+    // Marker type colors (Liverpool blue)
+    &.preview-info {
+      background-color: $liverpool-marker-info; // Liverpool blue
+    }
+
+    &.preview-warning {
+      background-color: $liverpool-marker-warning;
+    }
+
+    &.preview-success {
+      background-color: $liverpool-marker-success;
+    }
+
+    &.preview-danger {
+      background-color: $liverpool-marker-danger;
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+
+  // ========================================
+  // STICKY ACTION BUTTONS
+  // ========================================
+
+  // Make action buttons sticky at bottom so they're always visible
+  .image-commentary-sticky-actions {
+    position: sticky;
+    bottom: 0;
+    background-color: var(--pgn-color-bg-base, #ffffff);
+    z-index: $liverpool-sticky-action-z-index;
+    margin-left: -3rem;  // Extend to full width (compensate for container padding)
+    margin-right: -3rem;
+    margin-top: $liverpool-sticky-action-margin-top;
+    padding-left: $liverpool-sticky-action-padding-h;
+    padding-right: $liverpool-sticky-action-padding-h;
+    padding-bottom: $liverpool-sticky-action-padding-v;
+    padding-top: $liverpool-sticky-action-padding-v;
+    box-shadow: $liverpool-sticky-action-shadow; // Liverpool shadow
+    // RESPONSIVE: Prevent double-tap zoom on touch devices
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+// Hide Studio's modal action buttons for image_commentary
+// We provide our own buttons with clearer labels
+.modal-type-image_commentary .modal-actions {
+  display: none !important;
+}
+
+// Hide the action-cancel close button
+.modal-type-image_commentary .action-cancel {
+  display: none !important;
+}
+
+// Hide any close buttons in header as well
+.modal-type-image_commentary .modal-header .close,
+.modal-type-image_commentary .modal-header .btn-close {
+  display: none !important;
+}
+
+// Make the xblock wrappers fill modal height so sticky actions work
+.modal-type-image_commentary .modal-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 502px; // Match OpenEdX modal min-height
+}
+
+.modal-type-image_commentary .modal-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.modal-type-image_commentary .xblock-editor,
+.modal-type-image_commentary .xblock {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}

@@ -1,0 +1,35 @@
+/**
+ * ARCHITECTURAL: Minimal Paragon styles for Studio editor
+ *
+ * DON'T CHANGE: Core Paragon imports
+ * IMPLEMENTATION: Add custom styles below
+ *
+ * This imports only the essential Paragon styles needed for components to work.
+ * This keeps bundle size minimal while ensuring Paragon components render correctly.
+ */
+
+// ARCHITECTURAL: Core Paragon styles (required)
+@import '~@openedx/paragon/scss/core/core';
+
+// IMPLEMENTATION: Import Paragon component styles as needed
+// Uncomment the ones you use (matches xblock-accordion pattern):
+
+// @import '~@openedx/paragon/src/Card/index.scss';
+// @import '~@openedx/paragon/src/Button/index.scss';
+// @import '~@openedx/paragon/src/Form/index.scss';
+// @import '~@openedx/paragon/src/Alert/index.scss';
+// @import '~@openedx/paragon/src/Modal/index.scss';
+// @import '~@openedx/paragon/src/Spinner/index.scss';
+
+// IMPLEMENTATION: Your custom styles below
+.{xblock-name}-studio-view {
+  // Add your XBlock-specific editor styles here
+
+  // Example: Custom spacing
+  // padding: 1rem;
+
+  // Example: Custom form styling
+  // .form-group {
+  //   margin-bottom: 1.5rem;
+  // }
+}

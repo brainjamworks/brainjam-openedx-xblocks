@@ -1,0 +1,337 @@
+/**
+ * ARCHITECTURAL: XBlock structural styles only
+ *
+ * Paragon CSS is loaded from CDN at runtime (via Python fragment)
+ * This file contains ONLY XBlock-specific layout and structural styles
+ * Use CSS variables for colors (--pgn-color-*) to respect theme
+ */
+
+// ============================================================================
+// LIVERPOOL DESIGN TOKENS
+// ============================================================================
+@import '../../../../../../shared/styles/liverpool-shared-tokens';
+
+// IMPLEMENTATION: Tabs styles matching legacy tabbed-xblock design
+.tabs-student-view {
+  max-width: 100%;
+  margin: $liverpool-space-6 auto;
+  margin-bottom: $liverpool-space-8;
+  font-family: $liverpool-font-primary;
+
+  // ========================================
+  // UNIFIED SHADOW WRAPPER - Legacy Design
+  // ========================================
+  .tabs-wrapper {
+    box-shadow: $liverpool-shadow-base;
+    border-radius: $liverpool-radius-xs;
+    overflow: hidden;
+  }
+
+  // ========================================
+  // TAB BAR - Legacy Design with Gray Background
+  // ========================================
+  .tabs-tab-bar {
+    display: flex;
+    flex-direction: row;
+    background: $liverpool-bg-subtle;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+    // RESPONSIVE: Prevent double-tap zoom on mobile
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  // Hide scrollbar but keep functionality
+  .tabs-tab-bar::-webkit-scrollbar {
+    height: $liverpool-space-1;
+  }
+
+  .tabs-tab-bar::-webkit-scrollbar-thumb {
+    background: $liverpool-neutral-400;
+    border-radius: $liverpool-radius-xs;
+  }
+
+  // ========================================
+  // TAB BUTTONS - Legacy Design
+  // ========================================
+  .tabs-tab-button {
+    // RESET: Remove default button styles
+    flex: 1;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: $liverpool-font-primary;
+
+    // TAB LAYOUT - Match legacy spacing
+    padding: $liverpool-space-7 $liverpool-space-5;
+    font-size: $liverpool-font-size-base;
+    font-weight: $liverpool-font-weight-bold;
+    color: $liverpool-text-muted;
+    transition: all $liverpool-duration-base $liverpool-easing-in-out;
+    white-space: nowrap;
+    position: relative;
+    box-shadow: none;
+    text-shadow: none;
+
+    // RESPONSIVE: Touch-friendly minimum size
+    min-height: 44px;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+
+    // HOVER STATE
+    &:hover {
+      background: rgba($liverpool-neutral-900, 0.03);
+      color: $liverpool-text-secondary;
+      box-shadow: none;
+    }
+
+    // FOCUS STATE (keyboard navigation)
+    &:focus {
+      outline: 2px solid $liverpool-blue;
+      outline-offset: -2px;
+      z-index: 1;
+    }
+
+    &:focus:not(:focus-visible) {
+      outline: none;
+    }
+
+    // ACTIVE STATE - White background with inset shadow
+    &.active {
+      background: $liverpool-neutral-white;
+      color: $liverpool-blue;
+      font-weight: $liverpool-font-weight-bold;
+      box-shadow: inset 0 2px 3px rgba($liverpool-neutral-900, 0.06);
+    }
+
+    // PRESSED STATE
+    &:active {
+      background: rgba($liverpool-neutral-900, 0.05);
+      box-shadow: none;
+    }
+
+    &.active:active {
+      background: $liverpool-neutral-white;
+      box-shadow: inset 0 2px 3px rgba($liverpool-neutral-900, 0.06);
+    }
+  }
+
+  // ========================================
+  // CONTENT AREA - Legacy Design
+  // ========================================
+  .tabs-content-area {
+    background: $liverpool-neutral-white;
+    padding: $liverpool-space-6;
+    min-height: 200px;
+    border-radius: 0 0 $liverpool-radius-xs $liverpool-radius-xs;
+    position: relative;
+  }
+
+  // Hide inactive panels
+  .tabs-content-area.hidden {
+    display: none;
+  }
+
+  // Fade In Up Animation - Legacy Design
+  .tabs-content-area.fade-in {
+    animation: fadeInUp $liverpool-duration-base $liverpool-easing-out;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  // ========================================
+  // HTML CONTENT STYLING - Legacy Design
+  // ========================================
+  .tabs-content-html {
+    color: $liverpool-text-secondary;
+    line-height: $liverpool-line-height-loose;
+    font-family: $liverpool-font-primary;
+
+    // TYPOGRAPHY: Style HTML content from TinyMCE
+    h1, h2, h3 {
+      margin-top: 0;
+      margin-bottom: $liverpool-space-3;
+      color: $liverpool-text-primary;
+      font-weight: $liverpool-font-weight-semibold;
+    }
+
+    h1 { font-size: $liverpool-font-size-3xl; }
+    h2 { font-size: $liverpool-font-size-xl; }
+    h3 { font-size: $liverpool-font-size-lg; }
+
+    p {
+      margin: $liverpool-space-3 0;
+    }
+
+    ul, ol {
+      margin: $liverpool-space-3 0;
+      padding-left: $liverpool-space-5;
+
+      li {
+        margin: $liverpool-space-2 0;
+      }
+    }
+
+    a {
+      color: $liverpool-link-default;
+      text-decoration: none;
+      transition: color $liverpool-duration-fast $liverpool-easing-out;
+
+      &:hover {
+        color: $liverpool-link-hover;
+        text-decoration: underline;
+      }
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: $liverpool-radius-xs;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: $liverpool-space-4 0;
+
+      th, td {
+        padding: $liverpool-space-3;
+        border: 1px solid $liverpool-border-default;
+        text-align: left;
+      }
+
+      th {
+        background: $liverpool-bg-subtle;
+        font-weight: $liverpool-font-weight-semibold;
+      }
+    }
+
+    blockquote {
+      margin: $liverpool-space-4 0;
+      padding: $liverpool-space-4 $liverpool-space-5;
+      border-left: 4px solid $liverpool-blue;
+      background: $liverpool-bg-subtle;
+      border-radius: $liverpool-radius-xs;
+    }
+  }
+
+  // ========================================
+  // RESPONSIVE DESIGN - Tablet (max-width: 768px)
+  // ========================================
+  @media (max-width: 768px) {
+    margin: $liverpool-space-4;
+
+    .tabs-content-area {
+      padding: $liverpool-space-5;
+    }
+
+    .tabs-tab-button {
+      padding: $liverpool-space-4 $liverpool-space-5;
+      font-size: $liverpool-font-size-base;
+    }
+  }
+
+  // ========================================
+  // RESPONSIVE DESIGN - Mobile (max-width: 480px)
+  // ========================================
+  @media (max-width: 480px) {
+    margin: $liverpool-space-2;
+
+    .tabs-content-area {
+      padding: $liverpool-space-4;
+      min-height: 150px;
+    }
+
+    .tabs-tab-button {
+      padding: $liverpool-space-4;
+      font-size: $liverpool-font-size-base;
+      min-width: 44px;
+      min-height: 44px;
+    }
+
+    .tabs-content-html {
+      h1 { font-size: $liverpool-font-size-xl; }
+      h2 { font-size: $liverpool-font-size-lg; }
+      h3 { font-size: $liverpool-font-size-md; }
+
+      // RESPONSIVE: Ensure images fit on mobile
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+
+      // RESPONSIVE: Scrollable tables on mobile
+      table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+    }
+  }
+
+  // ========================================
+  // TOUCH DEVICE OPTIMIZATIONS
+  // ========================================
+  @media (hover: none) and (pointer: coarse) {
+    .tabs-tab-button {
+      min-width: 44px;
+      min-height: 44px;
+
+      &:hover {
+        background: transparent;
+        color: $liverpool-text-muted;
+      }
+
+      &:active {
+        background: rgba($liverpool-neutral-900, 0.05);
+      }
+
+      &.active:hover {
+        background: $liverpool-neutral-white;
+        color: $liverpool-blue;
+      }
+    }
+  }
+
+  // ========================================
+  // HIGH CONTRAST MODE SUPPORT
+  // ========================================
+  @media (prefers-contrast: high) {
+    .tabs-tab-button {
+      border: 1px solid currentColor;
+
+      &.active {
+        border-bottom-width: 4px;
+      }
+
+      &:focus {
+        outline-width: 3px;
+      }
+    }
+  }
+
+  // ========================================
+  // REDUCED MOTION SUPPORT
+  // ========================================
+  @media (prefers-reduced-motion: reduce) {
+    .tabs-tab-button {
+      transition: none !important;
+    }
+
+    .tabs-content-area.fade-in {
+      animation: none !important;
+    }
+  }
+}

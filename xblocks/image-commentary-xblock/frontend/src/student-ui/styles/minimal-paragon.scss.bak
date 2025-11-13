@@ -1,0 +1,159 @@
+/**
+ * ARCHITECTURAL: Minimal Paragon styles for Student view
+ *
+ * DON'T CHANGE: Core Paragon imports
+ * IMPLEMENTATION: Add custom styles below
+ */
+
+// ARCHITECTURAL: Core Paragon styles (required)
+@import '~@openedx/paragon/scss/core/core';
+
+// IMPLEMENTATION: Import Paragon components used in student view
+@import '~@openedx/paragon/src/Card/index.scss';
+
+// IMPLEMENTATION: XBlock-specific student view styles
+.image-commentary-student-view {
+  // Image container
+  .image-commentary-container {
+    position: relative;
+    width: 100%;
+    display: inline-block;
+
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+  }
+
+  // Marker button base styles
+  .image-commentary-marker {
+    // Reset button defaults (but NOT background - that's set by marker type classes)
+    appearance: none;
+
+    // Positioning
+    position: absolute;
+    transform: translate(-50%, -50%);
+
+    // Size (enforce circular shape)
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
+    max-width: 32px;
+    max-height: 32px;
+    padding: 0;
+
+    // Circular appearance
+    border-radius: 50%;
+    border: 2px solid white;
+
+    // Typography
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1;
+
+    // Layout
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    // Interaction
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+
+    z-index: 10;
+
+    &.active {
+      transform: translate(-50%, -50%) scale(1.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      z-index: 20;
+    }
+
+    &:focus {
+      outline: 2px solid #0075b4;
+      outline-offset: 2px;
+    }
+
+    &:active {
+      transform: translate(-50%, -50%) scale(0.95) !important;
+    }
+
+    // Marker type colors
+    &.marker-info {
+      background-color: #0075b4;
+    }
+
+    &.marker-warning {
+      background-color: #f0ad4e;
+    }
+
+    &.marker-success {
+      background-color: #1e8449;
+    }
+
+    &.marker-danger {
+      background-color: #c0392b;
+    }
+  }
+
+  // Custom popover styles
+  .custom-popover {
+    position: absolute;
+    transform: translate(-50%, calc(-100% - 50px));
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 25;
+    max-width: 300px;
+    min-width: 200px;
+    animation: fadeIn 0.2s ease;
+
+    .popover-header {
+      color: #fff;
+      padding: 0.75rem 1rem;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+      font-weight: 600;
+      font-size: 1.4rem;
+
+      &.header-info {
+        background-color: #0075b4;
+      }
+
+      &.header-warning {
+        background-color: #f0ad4e;
+      }
+
+      &.header-success {
+        background-color: #1e8449;
+      }
+
+      &.header-danger {
+        background-color: #c0392b;
+      }
+    }
+
+    .popover-body {
+      padding: 1rem;
+      font-size: 1.3rem;
+      line-height: 1.6;
+      color: #212529;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, calc(-100% - 45px));
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, calc(-100% - 50px));
+    }
+  }
+}

@@ -1,0 +1,334 @@
+/**
+ * ARCHITECTURAL: Minimal Paragon styles
+ *
+ * DON'T CHANGE: Core Paragon imports
+ * IMPLEMENTATION: Add custom styles below
+ *
+ * This imports only the essential Paragon styles needed for components to work.
+ * This keeps bundle size minimal while ensuring Paragon components render correctly.
+ */
+
+// ARCHITECTURAL: Core Paragon styles (required)
+@import '~@openedx/paragon/scss/core/core';
+
+// IMPLEMENTATION: Tabs styles matching legacy tabbed-xblock design
+.tabs-student-view {
+  max-width: 100%;
+  margin: 2rem auto;
+  margin-bottom: 3rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  // ========================================
+  // UNIFIED SHADOW WRAPPER - Legacy Design
+  // ========================================
+  .tabs-wrapper {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12),
+                2px 0 6px rgba(0, 0, 0, 0.08),
+                -2px 0 6px rgba(0, 0, 0, 0.08);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  // ========================================
+  // TAB BAR - Legacy Design with Gray Background
+  // ========================================
+  .tabs-tab-bar {
+    display: flex;
+    flex-direction: row;
+    background: #f8f9fa;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+    // RESPONSIVE: Prevent double-tap zoom on mobile
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  // Hide scrollbar but keep functionality
+  .tabs-tab-bar::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .tabs-tab-bar::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+  }
+
+  // ========================================
+  // TAB BUTTONS - Legacy Design
+  // ========================================
+  .tabs-tab-button {
+    // RESET: Remove default button styles
+    flex: 1;
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer;
+    font-family: inherit;
+
+    // TAB LAYOUT - Match legacy spacing
+    padding: 28px 24px;
+    font-size: 1em;
+    font-weight: bold;
+    color: #666;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    position: relative;
+    box-shadow: none !important;
+    text-shadow: none !important;
+
+    // RESPONSIVE: Touch-friendly minimum size
+    min-height: 44px;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+
+    // HOVER STATE
+    &:hover {
+      background: rgba(0, 0, 0, 0.03) !important;
+      color: #333 !important;
+      box-shadow: none !important;
+    }
+
+    // FOCUS STATE (keyboard navigation)
+    &:focus {
+      outline: 2px solid #4a90e2;
+      outline-offset: -2px;
+      z-index: 1;
+    }
+
+    &:focus:not(:focus-visible) {
+      outline: none;
+    }
+
+    // ACTIVE STATE - White background with inset shadow
+    &.active {
+      background: white !important;
+      color: #4a90e2 !important;
+      font-weight: bold;
+      box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.06) !important;
+    }
+
+    // PRESSED STATE
+    &:active {
+      background: rgba(0, 0, 0, 0.05) !important;
+      box-shadow: none !important;
+    }
+
+    &.active:active {
+      background: white !important;
+      box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.06) !important;
+    }
+  }
+
+  // ========================================
+  // CONTENT AREA - Legacy Design
+  // ========================================
+  .tabs-content-area {
+    background: white;
+    padding: 32px;
+    min-height: 200px;
+    border-radius: 0 0 4px 4px;
+    position: relative;
+  }
+
+  // Hide inactive panels
+  .tabs-content-area.hidden {
+    display: none;
+  }
+
+  // Fade In Up Animation - Legacy Design
+  .tabs-content-area.fade-in {
+    animation: fadeInUp 0.3s ease-out;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  // ========================================
+  // HTML CONTENT STYLING - Legacy Design
+  // ========================================
+  .tabs-content-html {
+    color: #333;
+    line-height: 1.6;
+
+    // TYPOGRAPHY: Style HTML content from TinyMCE
+    h1, h2, h3 {
+      margin-top: 0;
+      margin-bottom: 0.75rem;
+      color: #2c3e50;
+    }
+
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.25rem; }
+
+    p {
+      margin: 0.75rem 0;
+    }
+
+    ul, ol {
+      margin: 0.75rem 0;
+      padding-left: 1.5rem;
+
+      li {
+        margin: 0.5rem 0;
+      }
+    }
+
+    a {
+      color: #4a90e2;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 2px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+
+      th, td {
+        padding: 0.75rem;
+        border: 1px solid #dee2e6;
+        text-align: left;
+      }
+
+      th {
+        background: #f8f9fa;
+        font-weight: 600;
+      }
+    }
+
+    blockquote {
+      margin: 1rem 0;
+      padding: 1rem 1.5rem;
+      border-left: 4px solid #4a90e2;
+      background: #f8f9fa;
+    }
+  }
+
+  // ========================================
+  // RESPONSIVE DESIGN - Tablet (max-width: 768px)
+  // ========================================
+  @media (max-width: 768px) {
+    margin: 1rem;
+
+    .tabs-content-area {
+      padding: 24px;
+    }
+
+    .tabs-tab-button {
+      padding: 18px 20px;
+      font-size: 1em;
+    }
+  }
+
+  // ========================================
+  // RESPONSIVE DESIGN - Mobile (max-width: 480px)
+  // ========================================
+  @media (max-width: 480px) {
+    margin: 0.5rem;
+
+    .tabs-content-area {
+      padding: 16px;
+      min-height: 150px;
+    }
+
+    .tabs-tab-button {
+      padding: 16px;
+      font-size: 1em;
+      min-width: 44px;
+      min-height: 44px;
+    }
+
+    .tabs-content-html {
+      h1 { font-size: 1.5rem; }
+      h2 { font-size: 1.25rem; }
+      h3 { font-size: 1.1rem; }
+
+      // RESPONSIVE: Ensure images fit on mobile
+      img {
+        max-width: 100% !important;
+        height: auto !important;
+      }
+
+      // RESPONSIVE: Scrollable tables on mobile
+      table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+    }
+  }
+
+  // ========================================
+  // TOUCH DEVICE OPTIMIZATIONS
+  // ========================================
+  @media (hover: none) and (pointer: coarse) {
+    .tabs-tab-button {
+      min-width: 44px;
+      min-height: 44px;
+
+      &:hover {
+        background: transparent;
+        color: #666;
+      }
+
+      &:active {
+        background: rgba(0, 0, 0, 0.05);
+      }
+
+      &.active:hover {
+        background: white;
+        color: #4a90e2;
+      }
+    }
+  }
+
+  // ========================================
+  // HIGH CONTRAST MODE SUPPORT
+  // ========================================
+  @media (prefers-contrast: high) {
+    .tabs-tab-button {
+      border: 1px solid currentColor;
+
+      &.active {
+        border-bottom-width: 4px;
+      }
+
+      &:focus {
+        outline-width: 3px;
+      }
+    }
+  }
+
+  // ========================================
+  // REDUCED MOTION SUPPORT
+  // ========================================
+  @media (prefers-reduced-motion: reduce) {
+    .tabs-tab-button {
+      transition: none;
+    }
+
+    .tabs-content-area.fade-in {
+      animation: none;
+    }
+  }
+}

@@ -1,0 +1,331 @@
+/**
+ * ARCHITECTURAL: XBlock structural styles only
+ *
+ * Paragon CSS is loaded from CDN at runtime (via Python fragment)
+ * This file contains ONLY XBlock-specific layout and structural styles
+ * Uses shared Liverpool design tokens for consistency
+ */
+
+// Import shared Liverpool design tokens
+@import '../../../../../../shared/styles/liverpool-shared-tokens';
+
+// IMPLEMENTATION: Accordion styles with card design
+.accordion-student-view {
+  max-width: 100%;
+  margin: 2rem auto;
+  margin-bottom: 3rem;
+  font-family: $liverpool-font-primary;
+
+  // ========================================
+  // ACCORDION WRAPPER
+  // ========================================
+  .accordion-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: $liverpool-space-3;
+  }
+
+  // ========================================
+  // ACCORDION SECTION - Card Design (Liverpool Styling)
+  // ========================================
+  .accordion-section {
+    border: $liverpool-card-border;
+    border-radius: $liverpool-card-border-radius;
+    background: $liverpool-card-bg;
+    overflow: hidden;
+    box-shadow: $liverpool-card-shadow;
+    transition: box-shadow $liverpool-duration-base $liverpool-easing-out;
+
+    &:hover {
+      box-shadow: $liverpool-card-shadow-hover;
+    }
+  }
+
+  // ========================================
+  // SECTION TRIGGER - Clickable Header with Plus Icon
+  // ========================================
+  .accordion-section-trigger {
+    width: 100%;
+    padding: 1.25rem 1.5rem;
+    background: $liverpool-card-bg;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $liverpool-space-4;
+    transition: background-color $liverpool-duration-base $liverpool-easing-out;
+    position: relative;
+
+    // RESPONSIVE: Touch-friendly minimum size
+    min-height: 44px;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+
+    // HOVER STATE
+    &:hover {
+      background: $liverpool-bg-subtle;
+    }
+
+    // FOCUS STATE (keyboard navigation - Liverpool blue)
+    &:focus {
+      outline: 2px solid $liverpool-border-focus;
+      outline-offset: -2px;
+      z-index: 1;
+    }
+
+    &:focus:not(:focus-visible) {
+      outline: none;
+    }
+
+    // ACTIVE/OPEN STATE
+    .pgn__collapsible[open] & {
+      background: $liverpool-bg-subtle;
+    }
+
+    // PRESSED STATE
+    &:active {
+      background: $liverpool-neutral-200;
+    }
+  }
+
+  .accordion-section-title {
+    flex: 1;
+    text-align: left;
+    font-size: $liverpool-font-size-md;
+    font-weight: $liverpool-font-weight-semibold;
+    color: $liverpool-text-primary;
+    line-height: $liverpool-line-height-normal;
+  }
+
+  // Plus/Minus Icon Indicator
+  .accordion-section-trigger::after {
+    content: '+';
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    font-size: 24px;
+    font-weight: $liverpool-font-weight-light;
+    color: $liverpool-blue;
+    transition: transform $liverpool-duration-base $liverpool-easing-out,
+                color $liverpool-duration-base $liverpool-easing-out;
+  }
+
+  .pgn__collapsible[open] .accordion-section-trigger::after {
+    content: '−';
+    color: $liverpool-blue-dark;
+  }
+
+  .accordion-section-trigger:hover::after {
+    color: $liverpool-blue-dark;
+  }
+
+  // ========================================
+  // SECTION BODY - Content Area
+  // ========================================
+  .accordion-section-body {
+    padding: $liverpool-space-5;
+    background: $liverpool-card-bg;
+    border-top: 1px solid $liverpool-border-default;
+  }
+
+  .accordion-section-content {
+    color: $liverpool-text-secondary;
+    line-height: $liverpool-line-height-loose;
+
+    // TYPOGRAPHY: Style HTML content from TinyMCE
+    h1, h2, h3, h4 {
+      margin-top: 0;
+      margin-bottom: $liverpool-space-3;
+      color: $liverpool-text-primary;
+      font-weight: $liverpool-font-weight-semibold;
+    }
+
+    h1 { font-size: $liverpool-font-size-3xl; }
+    h2 { font-size: $liverpool-font-size-xl; }
+    h3 { font-size: $liverpool-font-size-lg; }
+    h4 { font-size: $liverpool-font-size-md; }
+
+    p {
+      margin: $liverpool-space-3 0;
+    }
+
+    ul, ol {
+      margin: $liverpool-space-3 0;
+      padding-left: $liverpool-space-5;
+
+      li {
+        margin: $liverpool-space-2 0;
+      }
+    }
+
+    a {
+      color: $liverpool-link-default;
+      text-decoration: none;
+      transition: color $liverpool-duration-fast $liverpool-easing-out;
+
+      &:hover {
+        color: $liverpool-link-hover;
+        text-decoration: underline;
+      }
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 2px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: $liverpool-space-4 0;
+
+      th, td {
+        padding: $liverpool-space-3;
+        border: 1px solid $liverpool-border-default;
+        text-align: left;
+      }
+
+      th {
+        background: $liverpool-bg-subtle;
+        font-weight: $liverpool-font-weight-semibold;
+      }
+    }
+
+    blockquote {
+      margin: $liverpool-space-4 0;
+      padding: $liverpool-space-4 $liverpool-space-5;
+      border-left: 4px solid $liverpool-blue;
+      background: $liverpool-bg-subtle;
+    }
+
+    strong {
+      font-weight: $liverpool-font-weight-semibold;
+    }
+
+    em {
+      font-style: italic;
+    }
+  }
+
+  // ========================================
+  // RESPONSIVE DESIGN - Tablet (max-width: 768px)
+  // ========================================
+  @media (max-width: 768px) {
+    margin: 1rem;
+
+    .accordion-section-trigger {
+      padding: 1rem 1.25rem;
+    }
+
+    .accordion-section-title {
+      font-size: 1rem;
+    }
+
+    .accordion-section-body {
+      padding: 1.25rem;
+    }
+  }
+
+  // ========================================
+  // RESPONSIVE DESIGN - Mobile (max-width: 480px)
+  // ========================================
+  @media (max-width: 480px) {
+    margin: 0.5rem;
+
+    .accordion-wrapper {
+      gap: 0.5rem;
+    }
+
+    .accordion-section-trigger {
+      padding: 0.875rem 1rem;
+      min-height: 48px;
+    }
+
+    .accordion-section-title {
+      font-size: 0.9375rem;
+    }
+
+    .accordion-section-body {
+      padding: 1rem;
+    }
+
+    .accordion-section-content {
+      h1 { font-size: 1.5rem; }
+      h2 { font-size: 1.25rem; }
+      h3 { font-size: 1.1rem; }
+      h4 { font-size: 1rem; }
+
+      // RESPONSIVE: Ensure images fit on mobile
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+
+      // RESPONSIVE: Scrollable tables on mobile
+      table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+    }
+  }
+
+  // ========================================
+  // TOUCH DEVICE OPTIMIZATIONS
+  // ========================================
+  @media (hover: none) and (pointer: coarse) {
+    .accordion-section-trigger {
+      min-width: 44px;
+      min-height: 48px;
+
+      &:hover {
+        background: $liverpool-card-bg;
+      }
+
+      &:active {
+        background: $liverpool-neutral-200;
+      }
+
+      .pgn__collapsible[open] & {
+        &:hover {
+          background: $liverpool-bg-subtle;
+        }
+      }
+    }
+  }
+
+  // ========================================
+  // HIGH CONTRAST MODE SUPPORT
+  // ========================================
+  @media (prefers-contrast: high) {
+    .accordion-section {
+      border-width: 2px;
+    }
+
+    .accordion-section-trigger {
+      &:focus {
+        outline-width: 3px;
+      }
+
+      &::after {
+        font-weight: $liverpool-font-weight-bold;
+      }
+    }
+  }
+
+  // ========================================
+  // REDUCED MOTION SUPPORT
+  // ========================================
+  @media (prefers-reduced-motion: reduce) {
+    .accordion-section,
+    .accordion-section-trigger {
+      transition: none;
+    }
+  }
+}

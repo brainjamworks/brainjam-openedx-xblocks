@@ -1,0 +1,465 @@
+/**
+ * ARCHITECTURAL: XBlock structural styles only
+ *
+ * Paragon CSS is loaded from CDN at runtime (via Python fragment)
+ * This file contains ONLY XBlock-specific layout and structural styles
+ * Uses shared Liverpool design tokens for consistency
+ */
+
+// Import shared Liverpool design tokens
+@import '../../../../../../shared/styles/liverpool-shared-tokens';
+
+// IMPLEMENTATION: Drag and Drop Matching styles - Liverpool design
+.drag-drop-matching-student-view {
+  font-family: $liverpool-font-primary;
+  background-color: $liverpool-card-bg;
+  border-radius: $liverpool-card-border-radius;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.08); // Match OpenEdX xblock card shadow
+  padding: 50px; // Match OpenEdX problem blocks
+  margin: 40px 0; // Match OpenEdX problem blocks
+  // Problem Header
+  .problem-header {
+    margin-bottom: $liverpool-space-5;
+
+    .problem-title {
+      font-weight: $liverpool-font-weight-semibold;
+      margin-bottom: $liverpool-space-4; /* Match OpenEdX h3.problem-header spacing (16px) */
+      color: $liverpool-text-primary;
+    }
+
+    .problem-points {
+      display: inline-block;
+      font-size: $liverpool-font-size-sm; /* Match OpenEdX .problem-progress (0.875em/14px) */
+      color: $liverpool-text-openedx-meta; /* Match OpenEdX var(--gray-d1) */
+    }
+  }
+
+  // Question Text
+  .problem-question {
+    margin-bottom: $liverpool-space-5;
+    line-height: $liverpool-line-height-loose;
+    color: $liverpool-text-primary;
+  }
+
+  // Score Display
+  .score-display {
+    background-color: $liverpool-bg-subtle;
+    padding: $liverpool-space-3 $liverpool-space-4;
+    border-radius: $liverpool-radius-sm;
+    margin-bottom: $liverpool-space-5;
+    border-left: 4px solid $liverpool-blue;
+    color: $liverpool-text-primary;
+  }
+
+  // Matching Container - Three Column Layout
+  .matching-container {
+    display: grid;
+    grid-template-columns: 1fr 100px 1fr;
+    gap: $liverpool-space-4;
+    margin-bottom: $liverpool-space-8; // Increased spacing before buttons
+    min-height: 400px;
+
+    .column-header {
+      font-weight: $liverpool-font-weight-semibold;
+      margin-bottom: $liverpool-space-4;
+      text-align: center;
+      color: $liverpool-text-primary;
+    }
+
+    .items-list {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      padding: 20px 0;
+    }
+
+    .terms-column {
+      .column-header {
+        text-align: left;
+      }
+    }
+
+    .connectors-column {
+      position: relative;
+
+      .connectors-svg {
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        height: calc(100% - 60px);
+      }
+    }
+
+    .descriptions-column {
+      .column-header {
+        text-align: left;
+      }
+    }
+  }
+
+  // Draggable Term Styles
+  .draggable-term {
+    background-color: $liverpool-card-bg;
+    border: 2px solid $liverpool-border-default;
+    border-radius: $liverpool-radius-md;
+    padding: $liverpool-space-4;
+    transition: all $liverpool-duration-base $liverpool-easing-in-out;
+    position: relative;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: grab;
+    box-shadow: $liverpool-shadow-sm;
+
+    &:hover:not(.disabled) {
+      border-color: $liverpool-blue;
+      box-shadow: $liverpool-card-shadow-hover;
+      transform: translateY(-2px);
+    }
+
+    &.dragging {
+      opacity: 0.5;
+      cursor: grabbing;
+      box-shadow: $liverpool-shadow-lg;
+      transform: scale(1.02);
+    }
+
+    &.matched {
+      background-color: $liverpool-bg-subtle;
+
+      &.correct {
+        border-color: $liverpool-teal;
+        background-color: $liverpool-feedback-success-bg;
+
+        .match-indicator {
+          color: $liverpool-teal;
+          font-weight: $liverpool-font-weight-bold;
+        }
+      }
+
+      &.incorrect {
+        border-color: $liverpool-pink;
+        background-color: $liverpool-feedback-error-bg;
+
+        .match-indicator {
+          color: $liverpool-pink;
+          font-weight: $liverpool-font-weight-bold;
+        }
+      }
+    }
+
+    &.disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .term-content {
+      flex: 1;
+      font-weight: $liverpool-font-weight-medium;
+      color: $liverpool-text-primary;
+    }
+
+    .match-indicator {
+      font-weight: $liverpool-font-weight-bold;
+      margin-left: $liverpool-space-2;
+    }
+  }
+
+  // Droppable Description Styles
+  .droppable-description {
+    background-color: $liverpool-card-bg;
+    border: 2px dashed $liverpool-border-default;
+    border-radius: $liverpool-radius-md;
+    padding: $liverpool-space-4;
+    transition: all $liverpool-duration-base $liverpool-easing-in-out;
+    position: relative;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    &.hover {
+      border-color: $liverpool-blue;
+      background-color: $liverpool-blue-100;
+      border-style: solid;
+      box-shadow: $liverpool-shadow-base;
+    }
+
+    &.has-match {
+      border-style: solid;
+      background-color: $liverpool-bg-subtle;
+
+      &.correct {
+        border-color: $liverpool-teal;
+        background-color: $liverpool-feedback-success-bg;
+      }
+
+      &.incorrect {
+        border-color: $liverpool-pink;
+        background-color: $liverpool-feedback-error-bg;
+      }
+    }
+
+    &.disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .description-content {
+      margin-bottom: $liverpool-space-2;
+      color: $liverpool-text-primary;
+    }
+
+    .matched-term {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: $liverpool-space-3;
+      padding-top: $liverpool-space-3;
+      border-top: 1px solid $liverpool-border-default;
+
+      .term-label {
+        font-weight: $liverpool-font-weight-semibold;
+        font-size: $liverpool-font-size-base;
+        color: $liverpool-text-primary;
+      }
+
+      .match-indicator {
+        font-weight: $liverpool-font-weight-bold;
+        margin-left: $liverpool-space-2;
+      }
+    }
+
+    .drop-hint {
+      text-align: center;
+      font-size: $liverpool-font-size-sm;
+      font-style: italic;
+      margin-top: $liverpool-space-2;
+      opacity: 0.6;
+      color: $liverpool-text-muted;
+    }
+  }
+
+  // Problem Notifications (OpenEdX-style)
+  .problem-notifications,
+  .submission-feedback {
+    margin: $liverpool-space-5 0;
+    display: flex;
+    flex-direction: column;
+    gap: 22px; // Match OpenEdX notification spacing
+
+    .notification {
+      display: flex;
+      align-items: flex-start;
+      padding: $liverpool-space-2;
+      margin: 0; // No margin - using flex gap instead
+      border-radius: $liverpool-radius-sm;
+      border-left: 4px solid transparent;
+
+      .notification-icon {
+        font-size: $liverpool-font-size-lg;
+        margin-right: $liverpool-space-3;
+        line-height: 1;
+      }
+
+      .notification-content {
+        flex: 1;
+        line-height: $liverpool-line-height-relaxed;
+        color: $liverpool-blue;
+        font-size: 18px !important; // Match OpenEdX notifications
+
+        strong {
+          font-weight: $liverpool-font-weight-semibold;
+          font-size: 18px !important;
+        }
+
+        // Remove all margins from paragraphs and set font size
+        p {
+          margin: 0;
+          font-size: 18px !important;
+        }
+      }
+
+      // Correct notification (green)
+      &.notification-correct {
+        background-color: $liverpool-feedback-success-bg;
+        border-left-color: $liverpool-teal;
+
+        .notification-icon {
+          color: $liverpool-teal;
+        }
+      }
+
+      // Incorrect notification (pink/red)
+      &.notification-incorrect {
+        background-color: $liverpool-feedback-error-bg;
+        border-left-color: $liverpool-pink;
+
+        .notification-icon {
+          color: $liverpool-pink;
+        }
+      }
+
+      // Explanation notification (yellow)
+      &.notification-explanation {
+        background-color: $liverpool-feedback-warning-bg;
+        border-left-color: $liverpool-yellow;
+
+        .notification-icon {
+          color: $liverpool-yellow;
+        }
+      }
+
+      // Info notifications (blue)
+      &.notification-info,
+      &.notification-answer {
+        background-color: $liverpool-feedback-info-bg;
+        border-left-color: $liverpool-blue;
+
+        .notification-icon {
+          color: $liverpool-blue;
+        }
+      }
+    }
+  }
+
+  // ========================================
+  // ACTION BAR - OpenEdX Problem Block Pattern
+  // ========================================
+
+  .action {
+    margin-top: $liverpool-space-6;
+
+    // Problem action buttons (Reset, Show Answer) - displayed above submit
+    .problem-action-buttons-wrapper {
+      display: flex;
+      gap: $liverpool-space-4;
+      margin-bottom: $liverpool-space-3;
+      justify-content: flex-end;
+
+      .problem-action-button-wrapper {
+        display: inline-block;
+
+        // Link-style buttons (Reset, Show Answer)
+        button.problem-action-btn.btn-link.btn-small {
+          background-color: transparent !important;
+          background-image: none !important;
+          color: $liverpool-blue !important;
+          font-family: $liverpool-font-primary;
+          font-weight: $liverpool-font-weight-medium;
+          font-size: $liverpool-font-size-sm; // Smaller size for secondary actions
+          text-decoration: none; // No underline
+          padding: 0;
+          border: none !important;
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          &:hover:not(:disabled) {
+            background-color: transparent !important;
+            background-image: none !important;
+            color: $liverpool-blue-dark !important;
+            text-decoration: underline; // Underline on hover only
+          }
+
+          &:focus {
+            outline: none !important;
+            box-shadow: $liverpool-shadow-focus !important;
+          }
+
+          &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+          }
+        }
+      }
+    }
+
+    // Submit attempt container - contains submit button and feedback
+    .submit-attempt-container {
+      display: flex;
+      flex-direction: column;
+      gap: $liverpool-space-4;
+      padding: 20px 0; // Match OpenEdX problem blocks
+
+      // Submit button - brand style
+      button.submit.btn-brand {
+        padding: $liverpool-space-2 $liverpool-space-4; // 8px 16px
+        border-radius: $liverpool-btn-border-radius; // Pill shape (50px)
+        font-family: $liverpool-font-primary;
+        font-weight: $liverpool-font-weight-medium;
+        font-size: $liverpool-font-size-base;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background-color: $liverpool-btn-primary-bg !important;
+        background-image: none !important;
+        color: $liverpool-btn-primary-color !important;
+        border: 2px solid $liverpool-btn-primary-bg !important;
+        box-shadow: $liverpool-btn-primary-shadow !important;
+        align-self: flex-start; // Left-align submit button
+
+        &:hover:not(:disabled),
+        &:hover:not(:disabled):hover {
+          background-color: $liverpool-btn-primary-bg-hover !important;
+          background-image: none !important;
+          border-color: $liverpool-btn-primary-bg-hover !important;
+          box-shadow: $liverpool-btn-primary-shadow-hover !important;
+          transform: scale(1.02) !important;
+        }
+
+        &:active:not(:disabled) {
+          box-shadow: $liverpool-btn-primary-shadow-active !important;
+        }
+
+        &:focus {
+          outline: none !important;
+          box-shadow: $liverpool-shadow-focus !important;
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+
+      // Submission feedback - shown after submit
+      .submission-feedback {
+        display: flex;
+        flex-direction: column;
+        gap: $liverpool-space-3;
+      }
+    }
+  }
+
+}
+
+// ========================================
+// RESPONSIVE DESIGN - Mobile-First Approach
+// ========================================
+
+// Responsive Design
+@media (max-width: 768px) {
+  .drag-drop-matching-student-view {
+    .matching-container {
+      grid-template-columns: 1fr;
+      gap: $liverpool-space-6;
+
+      .connectors-column {
+        display: none; // Hide connectors on mobile
+      }
+
+      .column-header {
+        text-align: left !important;
+      }
+    }
+
+    // Increase touch targets on mobile
+    .draggable-term,
+    .droppable-description {
+      min-height: 60px;
+      padding: $liverpool-space-3;
+    }
+  }
+}

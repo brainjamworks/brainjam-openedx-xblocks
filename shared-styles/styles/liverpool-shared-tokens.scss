@@ -1,0 +1,431 @@
+/**
+ * ============================================================================
+ * LIVERPOOL DENTAL CPD - SHARED DESIGN TOKENS
+ * ============================================================================
+ *
+ * Shared design tokens for ALL XBlock views (student-ui AND studio-ui)
+ * Based on: /docs/design-language/LIVERPOOL_DESIGN_LANGUAGE.md
+ * Version: 2.0.0
+ * Created: 2025-11-04
+ * Updated: 2025-11-04 (Added studio-ui tokens)
+ *
+ * Usage:
+ * - Student-UI: @import '../../../../../../shared/styles/liverpool-shared-tokens';
+ * - Studio-UI:  @import '../../../../../shared/styles/liverpool-shared-tokens';
+ *
+ * Changelog:
+ * - v2.0.0: Renamed from liverpool-student-tokens.scss, added studio-ui tokens
+ * - v1.0.0: Initial student-ui token system
+ *
+ * ============================================================================
+ */
+
+// ============================================================================
+// GOOGLE FONTS IMPORT - MUST BE FIRST
+// ============================================================================
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+// ============================================================================
+// 1. TYPOGRAPHY TOKENS
+// ============================================================================
+
+// Font Families
+$liverpool-font-primary: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+$liverpool-font-mono: 'Courier New', Courier, monospace;
+
+// Font Weights
+$liverpool-font-weight-light: 300;
+$liverpool-font-weight-regular: 400;
+$liverpool-font-weight-medium: 500;
+$liverpool-font-weight-semibold: 600;
+$liverpool-font-weight-bold: 700;
+
+// Font Sizes (rem-based, 16px = 1rem)
+$liverpool-font-size-xs: 0.75rem;      // 12px
+$liverpool-font-size-sm: 0.875rem;     // 14px
+$liverpool-font-size-base: 1rem;       // 16px
+$liverpool-font-size-md: 1.125rem;     // 18px
+$liverpool-font-size-lg: 1.25rem;      // 20px
+$liverpool-font-size-xl: 1.5rem;       // 24px
+$liverpool-font-size-2xl: 1.75rem;     // 28px
+$liverpool-font-size-3xl: 2rem;        // 32px
+$liverpool-font-size-4xl: 2.5rem;      // 40px
+
+// Line Heights
+$liverpool-line-height-tight: 1.2;
+$liverpool-line-height-snug: 1.3;
+$liverpool-line-height-normal: 1.4;
+$liverpool-line-height-relaxed: 1.5;
+$liverpool-line-height-loose: 1.6;
+
+// ============================================================================
+// 2. COLOR TOKENS
+// ============================================================================
+
+// Primary Brand Colors
+$liverpool-blue: #212b58;              // University of Liverpool Blue (Primary)
+$liverpool-blue-dark: #15376D;         // Darker blue (Hover states)
+$liverpool-blue-darker: #0E2447;       // Darkest blue (Gradients)
+$liverpool-teal: #00A689;              // Teal Green (Secondary/Success)
+$liverpool-pink: #EF426F;              // Pink (Error states)
+$liverpool-yellow: #FFD100;            // Yellow (Warning states)
+$liverpool-sky-blue: #009CDD;          // Sky Blue (Info states)
+
+// Blue Scale (100-900)
+$liverpool-blue-100: #E8EAEF;
+$liverpool-blue-200: #C8CEE0;
+$liverpool-blue-300: #9BA4C5;
+$liverpool-blue-400: #606AA0;
+$liverpool-blue-500: #212b58;          // Base
+$liverpool-blue-600: #1a2347;
+$liverpool-blue-700: #151c38;
+$liverpool-blue-800: #0f1426;
+$liverpool-blue-900: #0a0d18;
+
+// Teal Scale (100-900)
+$liverpool-teal-100: #E6F7F4;
+$liverpool-teal-200: #B3EAE0;
+$liverpool-teal-300: #80DDC9;
+$liverpool-teal-400: #4DD0B3;
+$liverpool-teal-500: #00A689;          // Base
+$liverpool-teal-600: #008C73;
+$liverpool-teal-700: #006B5E;
+$liverpool-teal-800: #004D44;
+$liverpool-teal-900: #00332D;
+
+// Pink Scale (100-900)
+$liverpool-pink-100: #FDEEF3;
+$liverpool-pink-200: #FBC9DB;
+$liverpool-pink-300: #F7A0BB;
+$liverpool-pink-400: #F37197;
+$liverpool-pink-500: #EF426F;          // Base
+$liverpool-pink-600: #D9245A;
+$liverpool-pink-700: #B82750;
+$liverpool-pink-800: #8C1D3C;
+$liverpool-pink-900: #5E1428;
+
+// Neutral Scale
+$liverpool-neutral-white: #FFFFFF;
+$liverpool-neutral-100: #F8F9FA;       // Light gray
+$liverpool-neutral-200: #DBDBD3;       // Stone (borders)
+$liverpool-neutral-300: #CED4DA;       // Medium light gray
+$liverpool-neutral-400: #ADB5BD;       // Medium gray
+$liverpool-neutral-500: #8d9695;       // Grey (secondary text)
+$liverpool-neutral-600: #6C757D;       // Dark gray
+$liverpool-neutral-700: #333F48;       // Charcoal (headings)
+$liverpool-neutral-800: #212529;       // Very dark gray
+$liverpool-neutral-900: #000000;       // Black (primary text)
+
+// Semantic Colors
+$liverpool-color-success: $liverpool-teal;
+$liverpool-color-error: $liverpool-pink;
+$liverpool-color-warning: $liverpool-yellow;
+$liverpool-color-info: $liverpool-sky-blue;
+
+// Functional Color Tokens
+$liverpool-text-primary: $liverpool-neutral-900;
+$liverpool-text-secondary: $liverpool-neutral-700;
+$liverpool-text-muted: $liverpool-neutral-500;
+$liverpool-text-inverse: $liverpool-neutral-white;
+$liverpool-text-openedx-meta: #5e5e5e;  // OpenEdX problem-progress gray (var(--gray-d1))
+
+$liverpool-bg-page: $liverpool-neutral-white;
+$liverpool-bg-surface: $liverpool-neutral-white;
+$liverpool-bg-subtle: $liverpool-neutral-100;
+$liverpool-bg-dark: $liverpool-blue-dark;
+
+$liverpool-border-default: $liverpool-neutral-200;
+$liverpool-border-focus: $liverpool-blue;
+$liverpool-border-dark: rgba(255, 255, 255, 0.1);
+
+$liverpool-link-default: $liverpool-blue;
+$liverpool-link-hover: $liverpool-blue-dark;
+
+// ============================================================================
+// 3. SPACING TOKENS (4px base unit)
+// ============================================================================
+
+$liverpool-space-0: 0;
+$liverpool-space-1: 0.25rem;   // 4px
+$liverpool-space-2: 0.5rem;    // 8px
+$liverpool-space-2_5: 0.625rem; // 10px
+$liverpool-space-3: 0.75rem;   // 12px
+$liverpool-space-4: 1rem;      // 16px (base unit)
+$liverpool-space-5: 1.5rem;    // 24px
+$liverpool-space-6: 2rem;      // 32px
+$liverpool-space-7: 2.5rem;    // 40px
+$liverpool-space-8: 3rem;      // 48px
+$liverpool-space-10: 4rem;     // 64px
+$liverpool-space-12: 6rem;     // 96px
+
+// ============================================================================
+// 4. BORDER RADIUS TOKENS
+// ============================================================================
+
+$liverpool-radius-none: 0;
+$liverpool-radius-xs: 4px;
+$liverpool-radius-sm: 8px;
+$liverpool-radius-md: 12px;
+$liverpool-radius-base: 16px;      // Standard cards
+$liverpool-radius-lg: 20px;
+$liverpool-radius-xl: 24px;
+$liverpool-radius-pill: 50px;      // Buttons, pills
+$liverpool-radius-circle: 50%;     // Avatars, circular elements
+
+// ============================================================================
+// 5. SHADOW TOKENS
+// ============================================================================
+
+// Standard Shadows
+$liverpool-shadow-none: none;
+$liverpool-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+$liverpool-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+$liverpool-shadow-base: 0 4px 8px rgba(0, 0, 0, 0.12);
+$liverpool-shadow-md: 0 8px 16px rgba(0, 0, 0, 0.15);
+$liverpool-shadow-lg: 0 16px 32px rgba(0, 0, 0, 0.18);
+$liverpool-shadow-xl: 0 24px 48px rgba(0, 0, 0, 0.22);
+
+// Contextual Shadows
+$liverpool-shadow-navy: 0 8px 32px rgba(21, 55, 109, 0.3);
+$liverpool-shadow-primary: 0 4px 16px rgba(33, 43, 88, 0.4);
+$liverpool-shadow-primary-hover: 0 6px 24px rgba(33, 43, 88, 0.5);
+$liverpool-shadow-focus: 0 0 0 3px rgba(33, 43, 88, 0.2);
+
+// ============================================================================
+// 6. GRADIENT TOKENS
+// ============================================================================
+
+$liverpool-gradient-primary: linear-gradient(135deg, $liverpool-blue 0%, $liverpool-blue-dark 100%);
+$liverpool-gradient-primary-hover: linear-gradient(135deg, #2A3F7E 0%, $liverpool-blue 100%);
+$liverpool-gradient-navy: linear-gradient(135deg, $liverpool-blue-dark 0%, $liverpool-blue-darker 100%);
+$liverpool-gradient-teal: linear-gradient(135deg, $liverpool-teal 0%, $liverpool-teal-600 100%);
+
+// ============================================================================
+// 7. TRANSITION TOKENS
+// ============================================================================
+
+// Durations
+$liverpool-duration-instant: 0ms;
+$liverpool-duration-fast: 150ms;
+$liverpool-duration-base: 300ms;       // Standard UI transitions
+$liverpool-duration-slow: 500ms;
+$liverpool-duration-slower: 700ms;
+
+// Easing Functions
+$liverpool-easing-linear: linear;
+$liverpool-easing-in: ease-in;
+$liverpool-easing-out: ease-out;
+$liverpool-easing-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+$liverpool-easing-standard: ease;
+
+// Common Transition Patterns
+$liverpool-transition-base: all $liverpool-duration-base $liverpool-easing-in-out;
+$liverpool-transition-fast: all $liverpool-duration-fast $liverpool-easing-out;
+$liverpool-transition-transform: transform $liverpool-duration-base $liverpool-easing-out;
+$liverpool-transition-shadow: box-shadow $liverpool-duration-base $liverpool-easing-out;
+$liverpool-transition-color: background-color $liverpool-duration-fast $liverpool-easing-out,
+                             color $liverpool-duration-fast $liverpool-easing-out;
+
+// ============================================================================
+// 8. BUTTON DESIGN TOKENS
+// ============================================================================
+
+// Button Border Radius
+$liverpool-btn-border-radius: $liverpool-radius-pill;
+
+// Primary Button
+$liverpool-btn-primary-bg: $liverpool-blue;
+$liverpool-btn-primary-bg-hover: $liverpool-blue-dark;
+$liverpool-btn-primary-color: $liverpool-neutral-white;
+$liverpool-btn-primary-shadow: $liverpool-shadow-primary;
+$liverpool-btn-primary-shadow-hover: $liverpool-shadow-primary-hover;
+$liverpool-btn-primary-shadow-active: 0 2px 8px rgba(33, 43, 88, 0.3);
+
+// Secondary Button (Teal)
+$liverpool-btn-secondary-bg: $liverpool-teal;
+$liverpool-btn-secondary-bg-hover: $liverpool-teal-600;
+$liverpool-btn-secondary-color: $liverpool-neutral-white;
+
+// Outline Button
+$liverpool-btn-outline-color: $liverpool-blue;
+$liverpool-btn-outline-border: 2px solid $liverpool-blue;
+$liverpool-btn-outline-hover-bg: $liverpool-blue;
+$liverpool-btn-outline-hover-color: $liverpool-neutral-white;
+
+// Disabled Button
+$liverpool-btn-disabled-bg: $liverpool-neutral-500;
+$liverpool-btn-disabled-color: $liverpool-neutral-white;
+
+// ============================================================================
+// 9. CARD DESIGN TOKENS
+// ============================================================================
+
+$liverpool-card-bg: $liverpool-neutral-white;
+$liverpool-card-border: 1px solid $liverpool-neutral-200;
+$liverpool-card-border-radius: $liverpool-radius-base;
+$liverpool-card-padding: $liverpool-space-6;
+$liverpool-card-shadow: $liverpool-shadow-base;
+$liverpool-card-shadow-hover: $liverpool-shadow-md;
+
+// ============================================================================
+// 10. FORM DESIGN TOKENS
+// ============================================================================
+
+$liverpool-input-border: 1px solid $liverpool-neutral-200;
+$liverpool-input-border-radius: $liverpool-radius-sm;
+$liverpool-input-border-focus: 1px solid rgba(33, 43, 88, 0.5);
+$liverpool-input-shadow-focus: 0 0 0 0.2rem rgba(33, 43, 88, 0.25);
+$liverpool-input-padding: $liverpool-space-3 $liverpool-space-4;
+$liverpool-input-bg: $liverpool-neutral-white;
+$liverpool-input-bg-disabled: $liverpool-neutral-100;
+
+// ============================================================================
+// 11. FEEDBACK MESSAGE TOKENS
+// ============================================================================
+
+// Success
+$liverpool-feedback-success-bg: $liverpool-teal-100;
+$liverpool-feedback-success-border: 1px solid $liverpool-teal-300;
+$liverpool-feedback-success-color: $liverpool-teal-700;
+
+// Error
+$liverpool-feedback-error-bg: $liverpool-pink-100;
+$liverpool-feedback-error-border: 1px solid $liverpool-pink-300;
+$liverpool-feedback-error-color: $liverpool-pink-600;
+
+// Warning
+$liverpool-feedback-warning-bg: #FFFDF0;
+$liverpool-feedback-warning-border: 1px solid #FFF6BF;
+$liverpool-feedback-warning-color: #B39800;
+
+// Info
+$liverpool-feedback-info-bg: #E6F7FF;
+$liverpool-feedback-info-border: 1px solid #B3E5FF;
+$liverpool-feedback-info-color: #0077B5;
+
+// ============================================================================
+// STUDIO-UI SPECIFIC TOKENS
+// ============================================================================
+
+// ============================================================================
+// 12. MODAL TYPOGRAPHY TOKENS (10px base font-size context)
+// ============================================================================
+// OpenEdx Studio modals use font-size: 10px on the modal root
+// All rem values are calculated relative to 10px base
+
+$liverpool-modal-h3-size: 2.2rem;           // 22px (Paragon h3 equivalent)
+$liverpool-modal-h4-size: 1.8rem;           // 18px (Paragon h4 equivalent)
+$liverpool-modal-h5-size: 1.6rem;           // 16px (Paragon h5 equivalent)
+$liverpool-modal-label-size: 1.8rem;        // 18px (form labels)
+$liverpool-modal-body-size: 1.4rem;         // 14px (body text)
+$liverpool-modal-small-size: 1.2rem;        // 12px (captions, helper text)
+$liverpool-modal-button-size: 1.8rem;       // 18px (button text)
+
+// ============================================================================
+// 13. STICKY ACTION BAR TOKENS
+// ============================================================================
+// Bottom-anchored action buttons for studio modals
+
+$liverpool-sticky-action-shadow: 0 -4px 8px rgba(0, 0, 0, 0.12);
+$liverpool-sticky-action-z-index: 100;
+$liverpool-sticky-action-padding-v: 1.5rem;      // Vertical padding
+$liverpool-sticky-action-padding-h: 3rem;        // Horizontal padding (desktop)
+$liverpool-sticky-action-padding-h-tablet: 2rem; // Tablet
+$liverpool-sticky-action-padding-h-mobile: 1rem; // Mobile
+$liverpool-sticky-action-margin-top: 2rem;
+$liverpool-sticky-action-bg: $liverpool-neutral-white;
+
+// ============================================================================
+// 14. WIZARD/STEPPER TOKENS
+// ============================================================================
+// Used in multi-step editors (Image Commentary, Image Hotspot)
+
+// Stepper Bubbles
+$liverpool-stepper-bubble-size: 3.2rem;          // Circle diameter
+$liverpool-stepper-bubble-font-size: 1.4rem;     // Number inside
+$liverpool-stepper-bubble-font-weight: 600;
+
+// Stepper Text
+$liverpool-stepper-title-size: 1.4rem;           // Step title
+$liverpool-stepper-description-size: 1.2rem;     // Step description
+
+// Stepper States (use Liverpool blue for active/complete)
+$liverpool-stepper-active-bg: $liverpool-blue;
+$liverpool-stepper-active-border: $liverpool-blue;
+$liverpool-stepper-complete-bg: $liverpool-blue;
+$liverpool-stepper-complete-border: $liverpool-blue;
+$liverpool-stepper-incomplete-bg: $liverpool-neutral-300;
+$liverpool-stepper-incomplete-border: $liverpool-neutral-300;
+
+// ============================================================================
+// 15. DRAG-AND-DROP STATE TOKENS
+// ============================================================================
+// Used in reorderable lists (cards, pairs, tabs)
+
+$liverpool-drag-opacity: 0.5;                    // Opacity while dragging
+$liverpool-drag-over-border: 2px solid $liverpool-blue; // Drop target indicator
+$liverpool-drag-handle-color: $liverpool-neutral-400;
+$liverpool-drag-handle-color-hover: $liverpool-neutral-600;
+$liverpool-drag-handle-size: 2rem;
+$liverpool-drag-cursor-grab: grab;
+$liverpool-drag-cursor-grabbing: grabbing;
+
+// ============================================================================
+// 16. STUDIO LIST ITEM TOKENS
+// ============================================================================
+// Card-style list items in studio editors
+
+$liverpool-list-item-padding-v: 1.5rem;
+$liverpool-list-item-padding-h: 0;
+$liverpool-list-item-gap: 1.2rem;                // Gap between drag handle and content
+$liverpool-list-item-border: 1px solid $liverpool-neutral-200;
+$liverpool-list-item-border-last: none;
+$liverpool-list-item-label-size: 1.4rem;
+$liverpool-list-item-label-weight: 600;
+$liverpool-list-item-title-size: 1.4rem;
+$liverpool-list-item-subtitle-size: 1.3rem;
+$liverpool-list-item-preview-size: 1.2rem;
+$liverpool-list-item-preview-color: #868e96;
+$liverpool-list-item-action-gap: 1.5rem;         // Gap between action buttons
+
+// ============================================================================
+// 17. ASSET PICKER TOKENS
+// ============================================================================
+// Grid-based image/file selection UI
+
+$liverpool-asset-grid-columns: repeat(auto-fill, minmax(150px, 1fr));
+$liverpool-asset-grid-gap: 1rem;
+$liverpool-asset-thumbnail-height: 100px;
+$liverpool-asset-item-padding: 0.5rem;
+$liverpool-asset-item-border: 1px solid #ccc;
+$liverpool-asset-item-border-radius: 4px;
+$liverpool-asset-item-border-hover: $liverpool-blue;
+$liverpool-asset-item-border-selected: 2px solid $liverpool-blue;
+$liverpool-asset-filename-size: 1.2rem;
+
+// ============================================================================
+// 18. MARKER/HOTSPOT CANVAS TOKENS
+// ============================================================================
+// Visual editor overlays for image-based interactions
+
+$liverpool-marker-size: 32px;
+$liverpool-marker-border: 2px solid white;
+$liverpool-marker-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+$liverpool-marker-font-size: 14px;
+$liverpool-marker-font-weight: bold;
+
+// Marker Type Colors (Liverpool palette)
+$liverpool-marker-info: $liverpool-blue;         // Default
+$liverpool-marker-warning: #f0ad4e;
+$liverpool-marker-success: #1e8449;
+$liverpool-marker-danger: #c0392b;
+
+// Canvas
+$liverpool-canvas-border: 2px solid $liverpool-neutral-200;
+$liverpool-canvas-border-radius: 4px;
+$liverpool-canvas-bg: $liverpool-neutral-100;
+$liverpool-canvas-cursor: crosshair;
+
+// ============================================================================
+// END OF TOKENS
+// ============================================================================

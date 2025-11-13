@@ -1,0 +1,160 @@
+/**
+ * ARCHITECTURAL: XBlock structural styles only
+ *
+ * Paragon CSS is loaded from CDN at runtime (via Python fragment)
+ * This file contains ONLY XBlock-specific layout and structural styles
+ * Uses shared Liverpool design tokens for consistency
+ */
+
+// Import shared Liverpool design tokens
+@import '../../../../../../shared/styles/liverpool-shared-tokens';
+
+// IMPLEMENTATION: XBlock-specific student view styles
+.image-commentary-student-view {
+  font-family: $liverpool-font-primary;
+  // Image container
+  .image-commentary-container {
+    position: relative;
+    width: 100%;
+    display: inline-block;
+
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+  }
+
+  // Marker button base styles
+  .image-commentary-marker {
+    // Reset button defaults (but NOT background - that's set by marker type classes)
+    appearance: none;
+
+    // Positioning
+    position: absolute;
+    transform: translate(-50%, -50%);
+
+    // Size (enforce circular shape)
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
+    max-width: 32px;
+    max-height: 32px;
+    padding: 0;
+
+    // Circular appearance
+    border-radius: $liverpool-radius-circle;
+    border: 2px solid $liverpool-neutral-white;
+
+    // Typography
+    color: $liverpool-neutral-white;
+    font-size: $liverpool-font-size-sm;
+    font-weight: $liverpool-font-weight-bold;
+    line-height: $liverpool-line-height-tight;
+
+    // Layout
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    // Interaction
+    cursor: pointer;
+    box-shadow: $liverpool-shadow-base;
+    transition: all $liverpool-duration-fast $liverpool-easing-out;
+
+    z-index: 10;
+
+    &.active {
+      transform: translate(-50%, -50%) scale(1.1);
+      box-shadow: $liverpool-shadow-md;
+      z-index: 20;
+    }
+
+    &:focus {
+      outline: 2px solid $liverpool-border-focus;
+      outline-offset: $liverpool-space-1;
+    }
+
+    &:active {
+      transform: translate(-50%, -50%) scale(0.95);
+    }
+
+    // Marker type colors - Liverpool palette
+    &.marker-info {
+      background-color: $liverpool-sky-blue;
+    }
+
+    &.marker-warning {
+      background-color: $liverpool-yellow;
+      color: $liverpool-text-primary; // Yellow needs dark text for contrast
+    }
+
+    &.marker-success {
+      background-color: $liverpool-teal;
+    }
+
+    &.marker-danger {
+      background-color: $liverpool-pink;
+    }
+  }
+
+  // Custom popover styles - Liverpool card design
+  .custom-popover {
+    position: absolute;
+    transform: translate(-50%, calc(-100% - 50px));
+    background-color: $liverpool-card-bg;
+    border: $liverpool-card-border;
+    border-radius: $liverpool-radius-sm;
+    box-shadow: $liverpool-card-shadow-hover;
+    z-index: 25;
+    max-width: 300px;
+    min-width: 200px;
+    animation: fadeIn $liverpool-duration-fast $liverpool-easing-out;
+
+    .popover-header {
+      color: $liverpool-neutral-white;
+      padding: $liverpool-space-3 $liverpool-space-4;
+      border-top-left-radius: $liverpool-radius-xs;
+      border-top-right-radius: $liverpool-radius-xs;
+      font-weight: $liverpool-font-weight-semibold;
+      font-size: $liverpool-font-size-md;
+
+      &.header-info {
+        background-color: $liverpool-sky-blue;
+      }
+
+      &.header-warning {
+        background-color: $liverpool-yellow;
+        color: $liverpool-text-primary; // Yellow needs dark text for contrast
+      }
+
+      &.header-success {
+        background-color: $liverpool-teal;
+      }
+
+      &.header-danger {
+        background-color: $liverpool-pink;
+      }
+    }
+
+    .popover-body {
+      padding: $liverpool-space-4;
+      font-size: $liverpool-font-size-base;
+      line-height: $liverpool-line-height-loose;
+      color: $liverpool-text-secondary;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, calc(-100% - 45px));
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, calc(-100% - 50px));
+    }
+  }
+}

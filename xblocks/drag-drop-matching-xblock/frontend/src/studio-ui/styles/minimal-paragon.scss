@@ -1,0 +1,185 @@
+/**
+ * ARCHITECTURAL: XBlock structural styles only
+ *
+ * Paragon CSS is loaded from CDN at runtime (via Python fragment)
+ * This file contains ONLY XBlock-specific layout and structural styles
+ * Use CSS variables for colors (--pgn-color-*) to respect theme
+ */
+
+@import '../../../../../shared/styles/liverpool-shared-tokens';
+
+// IMPLEMENTATION: Studio editor styles
+.drag-drop-matching-studio-view {
+  padding-left: 3rem;
+  padding-right: 3rem;
+
+  // Form.Switch layout - label left, toggle right
+  .pgn__form-switch {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+    .pgn__form-label {
+      order: 1; // Label first (left)
+    }
+
+    .pgn__form-switch-input {
+      flex-shrink: 0;
+      order: 2; // Toggle second (right)
+    }
+  }
+
+  // Sticky action buttons - extend full width
+  .drag-drop-matching-sticky-actions {
+    position: sticky;
+    bottom: 0;
+    background-color: var(--pgn-color-bg-base, #ffffff);
+    z-index: 100;
+    margin-left: -3rem;
+    margin-right: -3rem;
+    margin-top: 2rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
+    padding-bottom: 1.5rem;
+    padding-top: 1.5rem;
+    box-shadow: $liverpool-sticky-action-shadow;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+// ListView styles
+.drag-drop-matching-list-view {
+  .pair-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .pair-list-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.2rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--pgn-color-border-base, #e9ecef);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &.dragging {
+      opacity: 0.5;
+      cursor: grabbing;
+    }
+
+    &.drag-over {
+      border-top: $liverpool-drag-over-border;
+    }
+
+    .pair-drag-handle {
+      color: var(--pgn-color-text-muted, #adb5bd);
+      cursor: grab;
+      padding-top: 0.3rem;
+      flex-shrink: 0;
+      user-select: none;
+
+      .pgn__icon {
+        width: 2rem;
+        height: 2rem;
+      }
+
+      &:hover {
+        color: var(--pgn-color-text-secondary, #6c757d);
+      }
+
+      &:active {
+        cursor: grabbing;
+      }
+    }
+
+    .pair-content {
+      flex: 1;
+      min-width: 0;
+
+      .pair-main {
+        margin-bottom: 0.5rem;
+      }
+
+      .pair-label {
+        font-weight: 600;
+        margin-right: 0.5rem;
+      }
+
+      .pair-term {
+        font-weight: 600;
+      }
+
+      .pair-arrow {
+        margin: 0 0.25rem;
+      }
+    }
+
+    .pair-actions {
+      display: flex;
+      gap: 1.5rem;
+      flex-shrink: 0;
+      padding-top: 0.3rem;
+
+      .btn-link {
+        padding: 0;
+
+        &.text-danger:disabled {
+          opacity: 0.4;
+        }
+      }
+    }
+  }
+
+  .settings-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--pgn-color-border-base, #dee2e6);
+  }
+}
+
+// EditView styles
+.drag-drop-matching-edit-view {
+  .edit-header {
+    h3 {
+      margin: 0;
+      font-weight: 600;
+    }
+  }
+
+  .section-label {
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .pgn__form-label {
+    font-weight: 500;
+  }
+
+  // Sticky action buttons
+  .drag-drop-matching-sticky-actions {
+    position: sticky;
+    bottom: 0;
+    background-color: var(--pgn-color-bg-base, #ffffff);
+    z-index: 100;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    padding-bottom: 0;
+    border-top: 1px solid var(--pgn-color-border-base, #dee2e6);
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+// Hide Studio's modal action buttons (Save/Close)
+// We provide our own buttons with clearer labels
+.modal-type-drag_drop_matching .modal-actions {
+  display: none;
+}

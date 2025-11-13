@@ -1,0 +1,380 @@
+/**
+ * ARCHITECTURAL: Minimal Paragon styles
+ *
+ * DON'T CHANGE: Core Paragon imports
+ * IMPLEMENTATION: Add custom styles below
+ *
+ * This imports only the essential Paragon styles needed for components to work.
+ * This keeps bundle size minimal while ensuring Paragon components render correctly.
+ */
+
+// ARCHITECTURAL: Core Paragon styles (required)
+@import '~@openedx/paragon/scss/core/core';
+
+// IMPLEMENTATION: Import Paragon components used in student view
+@import '~@openedx/paragon/src/Card/index.scss';
+@import '~@openedx/paragon/src/Icon/index.scss';
+@import '~@openedx/paragon/src/Button/index.scss';
+
+// IMPLEMENTATION: Flashcard styles - plain black/white design
+.flashcards-student-view {
+  padding: 2rem 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  // Container with 3D perspective
+  .flashcard-container {
+    perspective: 1200px;
+    width: 100%;
+    max-width: 700px;
+    height: 400px;
+    margin: 0 auto;
+    cursor: pointer;
+    // RESPONSIVE: Prevent double-tap zoom on mobile
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+
+    &:focus {
+      outline: 2px solid #000;
+      outline-offset: 4px;
+    }
+  }
+
+  // Inner element that rotates (hardware-accelerated)
+  .flashcard-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 600ms cubic-bezier(0.4, 0.0, 0.2, 1);
+    will-change: transform;
+  }
+
+  // Flip the card when .flipped class is added
+  .flashcard-container.flipped .flashcard-inner {
+    transform: rotateY(180deg);
+  }
+
+  // Slide animations
+  .flashcard-container.sliding-left {
+    animation: slideOutLeft 300ms ease-in-out;
+  }
+
+  .flashcard-container.sliding-right {
+    animation: slideOutRight 300ms ease-in-out;
+  }
+
+  @keyframes slideOutLeft {
+    0% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    50% {
+      transform: translateX(-30px);
+      opacity: 0.5;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideOutRight {
+    0% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    50% {
+      transform: translateX(30px);
+      opacity: 0.5;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  // Both faces share these styles
+  .flashcard-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+
+    // Style the Paragon Card inside each face
+    .flashcard-card.pgn__card {
+      height: 100%;
+      background: white;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+
+      .pgn__card-section {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 3rem 2rem;
+        overflow: hidden;
+      }
+    }
+  }
+
+  // Front face (default view)
+  .flashcard-front {
+    transform: rotateY(0deg);
+  }
+
+  // Back face (rotated 180deg to be hidden initially)
+  .flashcard-back {
+    transform: rotateY(180deg);
+  }
+
+  // Content area
+  .flashcard-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
+
+  // Front title styling
+  .flashcard-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #000;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.2;
+  }
+
+  // Front subtitle styling
+  .flashcard-subtitle {
+    font-size: 1.25rem;
+    color: #333;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  // Back text styling
+  .flashcard-back-text {
+    font-size: 1.125rem;
+    color: #000;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-width: 100%;
+  }
+
+  // Flip icon at bottom
+  .flashcard-flip-icon {
+    margin-top: 1.5rem;
+    color: #666;
+    font-size: 1.5rem;
+
+    .pgn__icon {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+
+  // Navigation controls (only shown when 2+ cards)
+  .flashcard-navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 2rem;
+
+    .flashcard-counter {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #333;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    // Override Paragon button styles for icon-only appearance
+    .btn-tertiary {
+      // RESPONSIVE: Touch-friendly button size (44x44px minimum)
+      min-width: 44px;
+      min-height: 44px;
+      padding: 0;
+      border: none !important;
+      background: transparent;
+      color: #666;
+      font-size: 1.5rem;
+      // RESPONSIVE: Prevent double-tap zoom on buttons
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        background: transparent;
+        color: #000;
+      }
+
+      &:focus,
+      &:focus-visible,
+      &:active,
+      &:focus:active {
+        box-shadow: none !important;
+        outline: none !important;
+        border: none !important;
+        background: transparent;
+      }
+
+      .pgn__icon {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+    }
+  }
+
+  // ========================================
+  // RESPONSIVE DESIGN - Mobile-First Approach
+  // ========================================
+
+  // RESPONSIVE: Tablet (481-768px)
+  @media (max-width: 768px) and (min-width: 481px) {
+    padding: 1.5rem 1rem;
+
+    .flashcard-container {
+      height: 350px;
+      max-width: 600px;
+    }
+
+    .flashcard-face .flashcard-card .pgn__card-section {
+      padding: 2rem 1.5rem;
+    }
+
+    .flashcard-title {
+      font-size: 1.75rem;
+    }
+
+    .flashcard-subtitle {
+      font-size: 1.125rem;
+    }
+
+    .flashcard-back-text {
+      font-size: 1rem;
+    }
+
+    .flashcard-navigation {
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+
+      .btn-tertiary {
+        // RESPONSIVE: Larger touch targets on tablet
+        min-width: 48px;
+        min-height: 48px;
+
+        .pgn__icon {
+          width: 1.75rem;
+          height: 1.75rem;
+        }
+      }
+    }
+  }
+
+  // RESPONSIVE: Mobile (<481px)
+  @media (max-width: 480px) {
+    padding: 1rem 0.5rem;
+
+    .flashcard-container {
+      height: 320px;
+      max-width: 100%;
+      // RESPONSIVE: Prevent text overflow on mobile
+      overflow: hidden;
+    }
+
+    .flashcard-face .flashcard-card {
+      border-radius: 8px;
+
+      .pgn__card-section {
+        padding: 1.5rem 1rem;
+      }
+    }
+
+    .flashcard-content {
+      // RESPONSIVE: Ensure content doesn't overflow
+      max-width: 100%;
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+
+    .flashcard-title {
+      font-size: 1.5rem;
+      // RESPONSIVE: Prevent long titles from breaking layout
+      overflow-wrap: break-word;
+      word-break: break-word;
+      hyphens: auto;
+    }
+
+    .flashcard-subtitle {
+      font-size: 1rem;
+      // RESPONSIVE: Prevent overflow
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+
+    .flashcard-back-text {
+      font-size: 0.9375rem;
+      // RESPONSIVE: Ensure HTML content doesn't overflow
+      max-width: 100%;
+      overflow-wrap: break-word;
+      word-break: break-word;
+
+      // RESPONSIVE: Limit image sizes on mobile
+      img {
+        max-width: 100% !important;
+        height: auto !important;
+      }
+
+      // RESPONSIVE: Constrain tables on mobile
+      table {
+        max-width: 100%;
+        overflow-x: auto;
+        display: block;
+      }
+    }
+
+    .flashcard-flip-icon {
+      margin-top: 1rem;
+
+      .pgn__icon {
+        width: 1.25rem;
+        height: 1.25rem;
+      }
+    }
+
+    .flashcard-navigation {
+      gap: 1rem;
+      margin-top: 1.25rem;
+
+      .flashcard-counter {
+        font-size: 0.9375rem;
+        min-width: 50px;
+      }
+
+      .btn-tertiary {
+        // RESPONSIVE: Extra large touch targets on mobile (48x48px)
+        min-width: 48px;
+        min-height: 48px;
+
+        .pgn__icon {
+          width: 2rem;
+          height: 2rem;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "name": "{xblock-name}-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "_build": "vite build",
+    "build:student": "COMPONENT=student-ui npm run _build",
+    "build:studio": "COMPONENT=studio-ui npm run _build",
+    "build": "npm run build:student && npm run build:studio",
+    "dev": "vite",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@openedx/paragon": "^23.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.0",
+    "vite": "^5.0.0",
+    "typescript": "^5.3.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "sass": "^1.69.0"
+  },
+  "comments": {
+    "versions": {
+      "react": "ARCHITECTURAL: Upgraded to 18.x for OpenEdX Teak (React 18 required)",
+      "paragon": "ARCHITECTURAL: Upgraded to 23.x for design tokens support",
+      "reason": "OpenEdX Teak (Oct 2024) upgraded to React 18. Paragon 23+ enables runtime CSS loading via design tokens."
+    }
+  }
+}

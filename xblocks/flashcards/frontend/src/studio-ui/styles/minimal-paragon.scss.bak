@@ -1,0 +1,342 @@
+/**
+ * ARCHITECTURAL: Minimal Paragon styles for Studio editor
+ *
+ * DON'T CHANGE: Core Paragon imports
+ * IMPLEMENTATION: Add custom styles below
+ *
+ * This imports only the essential Paragon styles needed for components to work.
+ * This keeps bundle size minimal while ensuring Paragon components render correctly.
+ */
+
+// ARCHITECTURAL: Core Paragon styles (required)
+@import '~@openedx/paragon/scss/core/core';
+
+// IMPLEMENTATION: Import Paragon components used in studio view
+@import '~@openedx/paragon/src/Button/index.scss';
+@import '~@openedx/paragon/src/Form/index.scss';
+@import '~@openedx/paragon/src/Alert/index.scss';
+@import '~@openedx/paragon/src/Collapsible/index.scss';
+@import '~@openedx/paragon/src/Icon/index.scss';
+
+// IMPLEMENTATION: Your custom styles below
+.flashcards-studio-view {
+  // Add horizontal padding to prevent content touching edges
+  padding-left: 3rem;
+  padding-right: 3rem;
+
+  // Consistent typography
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  // Main heading for card count - Paragon h3 scaled for 10px modal base
+  // Paragon intent: $h3-font-size: 1.375rem (22px at 16px base)
+  // Modal base: 10px, so 2.2rem × 10px = 22px
+  h3 {
+    font-size: 2.2rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 1rem !important;
+    margin-top: 0 !important;
+  }
+
+  // Section headings inside accordion - Paragon h4 scaled for 10px modal base
+  // Paragon intent: $h4-font-size: 1.125rem (18px at 16px base)
+  // Modal base: 10px, so 1.8rem × 10px = 18px
+  h4 {
+    font-size: 1.8rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 0.75rem !important;
+    margin-top: 0 !important;
+  }
+
+  // Form labels - Paragon input size scaled for 10px modal base
+  // Paragon intent: $input-font-size: 1.125rem (18px at 16px base)
+  // Modal base: 10px, so 1.8rem × 10px = 18px
+  .pgn__form-label,
+  label {
+    font-size: 1.8rem !important;
+    font-weight: 500 !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  // Collapsible buttons - scaled for 10px modal base
+  .collapsible-trigger,
+  .pgn__collapsible-trigger {
+    font-size: 1.8rem !important;
+  }
+
+  // Button text - Paragon button size scaled for 10px modal base
+  // Paragon intent: $input-btn-font-size: 1.125rem (18px at 16px base)
+  // Modal base: 10px, so 1.8rem × 10px = 18px
+  .btn {
+    font-size: 1.8rem !important;
+  }
+
+  // ========================================
+  // LIST VIEW STYLING - Professional OpenEdX Style
+  // ========================================
+
+  .flashcards-list-view {
+    .card-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .card-list-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.2rem;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid #e9ecef;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    .card-drag-handle {
+      color: #adb5bd;
+      cursor: grab;
+      padding-top: 0.3rem;
+      flex-shrink: 0;
+      user-select: none;
+
+      .pgn__icon {
+        width: 2rem;
+        height: 2rem;
+      }
+
+      &:hover {
+        color: #6c757d;
+      }
+
+      &:active {
+        cursor: grabbing;
+      }
+    }
+
+    // Dragging state
+    .card-list-item.dragging {
+      opacity: 0.5;
+      cursor: grabbing;
+    }
+
+    // Drag over state - show where the card will drop
+    .card-list-item.drag-over {
+      border-top: 2px solid #0075b4;
+    }
+
+    .card-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .card-main {
+      margin-bottom: 0.5rem;
+    }
+
+    .card-label {
+      font-weight: 600;
+      color: #495057;
+      font-size: 1.4rem;
+      margin-right: 0.5rem;
+    }
+
+    .card-title {
+      font-size: 1.4rem;
+      color: #212529;
+    }
+
+    .card-subtitle {
+      font-size: 1.3rem;
+      color: #6c757d;
+      margin-bottom: 0.5rem;
+      line-height: 1.4;
+    }
+
+    .card-back-preview {
+      font-size: 1.2rem;
+      color: #868e96;
+      line-height: 1.4;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 1.5rem;
+      flex-shrink: 0;
+      padding-top: 0.3rem;
+
+      .btn-link {
+        font-size: 1.3rem;
+        padding: 0;
+
+        &.text-danger:disabled {
+          opacity: 0.4;
+        }
+      }
+    }
+  }
+
+  // ========================================
+  // EDIT VIEW STYLING - Professional OpenEdX Style
+  // ========================================
+
+  .flashcards-edit-view {
+    .edit-header {
+      h3 {
+        margin: 0 !important;
+        color: #212529;
+        font-weight: 600 !important;
+      }
+    }
+
+    .form-section {
+      // Clean sections with just spacing, no backgrounds or borders
+    }
+
+    .section-label {
+      font-weight: 700 !important;
+      color: #212529 !important;
+      font-size: 1.6rem !important;
+      margin: 0 !important;
+    }
+
+    .pgn__form-label {
+      font-weight: 500 !important;
+      color: #495057;
+    }
+
+    .form-text {
+      font-size: 1.2rem !important;
+    }
+  }
+
+  // ========================================
+  // GENERAL STYLING
+  // ========================================
+
+  // Empty state
+  .bg-light {
+    background-color: #f8f9fa !important;
+  }
+
+  // ========================================
+  // STICKY ACTION BUTTONS
+  // ========================================
+
+  // Make action buttons sticky at bottom so they're always visible
+  .flashcards-sticky-actions {
+    position: sticky;
+    bottom: 0;
+    background-color: #ffffff;
+    z-index: 100;
+    margin-left: -3rem;  // Extend to full width (compensate for container padding)
+    margin-right: -3rem;
+    margin-top: 2rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
+    padding-bottom: 1.5rem;
+    padding-top: 1.5rem;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
+    // RESPONSIVE: Prevent double-tap zoom on touch devices
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  // ========================================
+  // RESPONSIVE DESIGN - Tablet Support
+  // ========================================
+
+  // RESPONSIVE: Tablet (481-768px)
+  @media (max-width: 768px) and (min-width: 481px) {
+    padding-left: 2rem;
+    padding-right: 2rem;
+
+    .flashcards-sticky-actions {
+      margin-left: -2rem;
+      margin-right: -2rem;
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+
+    // RESPONSIVE: Touch-friendly button sizing
+    .btn {
+      min-height: 44px;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .flashcards-list-view {
+      .card-list-item {
+        flex-wrap: wrap;
+
+        .card-actions {
+          .btn-link {
+            min-height: 44px;
+            padding: 0.5rem;
+          }
+        }
+      }
+    }
+  }
+
+  // RESPONSIVE: Mobile (<481px) - Limited support (Studio mainly for desktop)
+  @media (max-width: 480px) {
+    padding-left: 1rem;
+    padding-right: 1rem;
+
+    h3 {
+      font-size: 1.8rem !important;
+    }
+
+    h4 {
+      font-size: 1.6rem !important;
+    }
+
+    .pgn__form-label,
+    label {
+      font-size: 1.6rem !important;
+    }
+
+    .flashcards-sticky-actions {
+      margin-left: -1rem;
+      margin-right: -1rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+
+      .btn {
+        font-size: 1.6rem !important;
+        min-height: 48px;
+        padding: 0.75rem 1rem;
+      }
+    }
+
+    .flashcards-list-view {
+      .card-list-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+
+        .card-drag-handle {
+          padding-top: 0;
+        }
+
+        .card-actions {
+          width: 100%;
+          justify-content: flex-start;
+
+          .btn-link {
+            min-height: 48px;
+            padding: 0.75rem 1rem;
+            font-size: 1.4rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Hide Studio's modal action buttons (Save/Close) for flashcards
+// We provide our own buttons with clearer labels
+.modal-type-flashcards .modal-actions {
+  display: none !important;
+}

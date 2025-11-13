@@ -1,0 +1,323 @@
+/**
+ * ARCHITECTURAL: XBlock structural styles only
+ *
+ * Paragon CSS is loaded from CDN at runtime (via Python fragment)
+ * This file contains ONLY XBlock-specific layout and structural styles
+ * Uses shared Liverpool design tokens for consistency
+ */
+
+// Import shared Liverpool design tokens
+@import '../../../../../../shared/styles/liverpool-shared-tokens';
+
+// IMPLEMENTATION: Image Hotspot styles - Liverpool design
+.image-hotspot-student-view {
+  font-family: $liverpool-font-primary;
+  background-color: $liverpool-card-bg;
+  border-radius: $liverpool-card-border-radius;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.08); // Match OpenEdX xblock card shadow
+  padding: 50px; // Match OpenEdX problem blocks
+  margin: 40px 0; // Match OpenEdX problem blocks
+
+  // Problem Header
+  .problem-header {
+    margin-bottom: $liverpool-space-5;
+
+    .problem-title {
+      font-weight: $liverpool-font-weight-semibold;
+      margin-bottom: 12px;
+      color: $liverpool-text-primary;
+    }
+
+    .problem-points {
+      font-size: $liverpool-font-size-sm;
+      color: $liverpool-text-secondary;
+    }
+  }
+
+  // Question Text
+  .problem-question {
+    margin-bottom: $liverpool-space-5;
+    line-height: $liverpool-line-height-loose;
+    color: $liverpool-text-primary;
+  }
+
+  // Image Container
+  .hotspot-image-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: $liverpool-space-4;
+
+    .hotspot-image {
+      width: 100%;
+      display: block;
+      border: $liverpool-card-border;
+      border-radius: $liverpool-radius-md;
+      box-shadow: $liverpool-shadow-sm;
+
+      &.clickable {
+        cursor: pointer;
+        transition: box-shadow $liverpool-duration-base $liverpool-easing-in-out;
+
+        &:hover {
+          box-shadow: $liverpool-card-shadow-hover;
+        }
+      }
+
+      &.processing {
+        opacity: 0.6;
+      }
+    }
+  }
+
+  // Click Markers - Modernized
+  .click-marker {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border-radius: $liverpool-radius-circle;
+    pointer-events: none;
+    z-index: 10;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &.correct {
+      background-color: $liverpool-teal;
+      border: 3px solid white;
+      box-shadow: 0 2px 8px rgba(0, 166, 137, 0.4), 0 0 0 4px rgba(0, 166, 137, 0.15);
+    }
+
+    &.incorrect {
+      background-color: $liverpool-pink;
+      border: 3px solid white;
+      box-shadow: 0 2px 8px rgba(232, 62, 140, 0.4), 0 0 0 4px rgba(232, 62, 140, 0.15);
+    }
+  }
+
+  // Answer Hotspot Overlay - Modernized
+  .answer-hotspot {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    border: 3px solid $liverpool-teal;
+    border-radius: $liverpool-radius-circle;
+    background: linear-gradient(135deg, rgba(0, 166, 137, 0.12), rgba(0, 166, 137, 0.06));
+    backdrop-filter: blur(2px);
+    pointer-events: none;
+    z-index: 5;
+    animation: pulse 2s ease-in-out infinite;
+    box-shadow: 0 0 0 2px rgba(0, 166, 137, 0.2), inset 0 0 20px rgba(0, 166, 137, 0.1);
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: translate(-50%, -50%) scale(1.03);
+      opacity: 0.85;
+    }
+  }
+
+  // Processing Overlay
+  .processing-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: $liverpool-space-4 $liverpool-space-6;
+    border-radius: $liverpool-radius-md;
+    box-shadow: $liverpool-shadow-lg;
+    z-index: 20;
+    font-size: $liverpool-font-size-sm;
+    font-family: $liverpool-font-primary;
+    color: $liverpool-text-primary;
+    border: $liverpool-card-border;
+  }
+
+  // ========================================
+  // NOTIFICATION SYSTEM - OpenEdX Pattern
+  // ========================================
+
+  .submission-feedback {
+    margin: $liverpool-space-5 0;
+    display: flex;
+    flex-direction: column;
+    gap: 22px; // Match OpenEdX notification spacing
+
+    .notification {
+      display: flex;
+      align-items: flex-start;
+      padding: $liverpool-space-2;
+      margin: 0;
+      border-radius: $liverpool-radius-sm;
+      border-left: 4px solid transparent;
+
+      .notification-icon {
+        font-size: $liverpool-font-size-lg;
+        margin-right: $liverpool-space-3;
+        line-height: 1;
+      }
+
+      .notification-content {
+        flex: 1;
+        line-height: $liverpool-line-height-relaxed;
+        color: $liverpool-blue;
+        font-size: 18px !important;
+
+        strong {
+          font-weight: $liverpool-font-weight-semibold;
+          font-size: 18px !important;
+        }
+
+        p {
+          margin: 0;
+          font-size: 18px !important;
+        }
+      }
+
+      // Correct notification (green)
+      &.notification-correct {
+        background-color: $liverpool-feedback-success-bg;
+        border-left-color: $liverpool-teal;
+
+        .notification-icon {
+          color: $liverpool-teal;
+        }
+      }
+
+      // Incorrect notification (pink/red)
+      &.notification-incorrect {
+        background-color: $liverpool-feedback-error-bg;
+        border-left-color: $liverpool-pink;
+
+        .notification-icon {
+          color: $liverpool-pink;
+        }
+      }
+
+      // Explanation notification (yellow)
+      &.notification-explanation {
+        background-color: $liverpool-feedback-warning-bg;
+        border-left-color: $liverpool-yellow;
+
+        .notification-icon {
+          color: $liverpool-yellow;
+        }
+      }
+
+      // Info/answer notifications (blue)
+      &.notification-info,
+      &.notification-answer {
+        background-color: $liverpool-feedback-info-bg;
+        border-left-color: $liverpool-blue;
+
+        .notification-icon {
+          color: $liverpool-blue;
+        }
+      }
+    }
+  }
+
+  // ========================================
+  // ACTION BAR - OpenEdX Problem Block Pattern
+  // ========================================
+
+  .action {
+    margin-top: $liverpool-space-6;
+
+    // Problem action buttons (Reset, Show Answer) - displayed above submit
+    .problem-action-buttons-wrapper {
+      display: flex;
+      gap: $liverpool-space-4;
+      margin-bottom: $liverpool-space-3;
+      justify-content: flex-end; // Align buttons to right
+
+      .problem-action-button-wrapper {
+        display: inline-block;
+
+        // Link-style buttons (Reset, Show Answer)
+        button.problem-action-btn.btn-link.btn-small {
+          background-color: transparent !important;
+          background-image: none !important;
+          color: $liverpool-blue !important;
+          font-family: $liverpool-font-primary;
+          font-weight: $liverpool-font-weight-medium;
+          font-size: $liverpool-font-size-sm;
+          text-decoration: none;
+          padding: 0;
+          border: none !important;
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          &:hover:not(:disabled) {
+            background-color: transparent !important;
+            background-image: none !important;
+            color: $liverpool-blue-dark !important;
+            text-decoration: underline;
+          }
+
+          &:focus {
+            outline: none !important;
+            box-shadow: $liverpool-shadow-focus !important;
+          }
+
+          &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+          }
+        }
+      }
+    }
+
+    // Submit attempt container - contains submit button and feedback
+    .submit-attempt-container {
+      display: flex;
+      flex-direction: column;
+      gap: $liverpool-space-4;
+      padding: 20px 0; // Match OpenEdX problem blocks
+
+      // Submit button - brand style
+      button.submit.btn-brand {
+        padding: $liverpool-space-2 $liverpool-space-4;
+        border-radius: $liverpool-btn-border-radius;
+        font-family: $liverpool-font-primary;
+        font-weight: $liverpool-font-weight-medium;
+        font-size: $liverpool-font-size-base;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background-color: $liverpool-btn-primary-bg !important;
+        background-image: none !important;
+        color: $liverpool-btn-primary-color !important;
+        border: 2px solid $liverpool-btn-primary-bg !important;
+        box-shadow: $liverpool-btn-primary-shadow !important;
+        align-self: flex-start;
+
+        &:hover:not(:disabled),
+        &:hover:not(:disabled):hover {
+          background-color: $liverpool-btn-primary-bg-hover !important;
+          background-image: none !important;
+          border-color: $liverpool-btn-primary-bg-hover !important;
+          box-shadow: $liverpool-btn-primary-shadow-hover !important;
+          transform: scale(1.02) !important;
+        }
+
+        &:active:not(:disabled) {
+          box-shadow: $liverpool-btn-primary-shadow-active !important;
+        }
+
+        &:focus {
+          outline: none !important;
+          box-shadow: $liverpool-shadow-focus !important;
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+}

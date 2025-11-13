@@ -1,0 +1,555 @@
+/**
+ * ============================================================================
+ * LIVERPOOL DENTAL CPD - SHARED REUSABLE COMPONENTS
+ * ============================================================================
+ *
+ * Shared component classes for ALL XBlock views (student-ui AND studio-ui)
+ * Based on: /docs/design-language/LIVERPOOL_DESIGN_LANGUAGE.md
+ * Version: 2.0.0
+ * Created: 2025-11-04
+ * Updated: 2025-11-04 (Renamed to shared, updated import paths)
+ *
+ * Usage: Import tokens first, then this file
+ * - Student-UI: @import '../../../../../../shared/styles/liverpool-shared-tokens';
+ *               @import '../../../../../../shared/styles/liverpool-shared-components';
+ * - Studio-UI:  @import '../../../../../shared/styles/liverpool-shared-tokens';
+ *               @import '../../../../../shared/styles/liverpool-shared-components';
+ *
+ * Components included:
+ * - Buttons (primary, secondary, outline, link, disabled)
+ * - Cards (standard, interactive, with hover effects)
+ * - Feedback messages (success, error, warning, info)
+ * - Form controls (inputs, textareas, selects)
+ * - Typography classes
+ * - Badges
+ *
+ * ============================================================================
+ */
+
+// ============================================================================
+// 1. BUTTON COMPONENTS
+// ============================================================================
+
+// Base button styles (shared by all button variants)
+%liverpool-btn-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $liverpool-space-2;
+  font-family: $liverpool-font-primary;
+  font-weight: $liverpool-font-weight-semibold;
+  font-size: $liverpool-font-size-sm;
+  line-height: $liverpool-line-height-relaxed;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  border: none;
+  padding: $liverpool-space-4 $liverpool-space-7;
+  border-radius: $liverpool-btn-border-radius;
+  transition: $liverpool-transition-transform, $liverpool-transition-shadow;
+
+  &:focus {
+    outline: none;
+    box-shadow: $liverpool-shadow-focus;
+  }
+
+  &:disabled,
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+}
+
+// Primary Button - Liverpool Blue with pill shape and scale animation
+.liverpool-btn-primary {
+  @extend %liverpool-btn-base;
+  background-color: $liverpool-btn-primary-bg;
+  color: $liverpool-btn-primary-color;
+  box-shadow: $liverpool-btn-primary-shadow;
+  transform: scale(1);
+
+  &:hover:not(:disabled):not(.disabled) {
+    background-color: $liverpool-btn-primary-bg-hover;
+    transform: scale(1.05);
+    box-shadow: $liverpool-btn-primary-shadow-hover;
+  }
+
+  &:active:not(:disabled):not(.disabled) {
+    transform: scale(0.98);
+    box-shadow: $liverpool-btn-primary-shadow-active;
+  }
+
+  &:focus {
+    box-shadow: $liverpool-btn-primary-shadow, $liverpool-shadow-focus;
+  }
+
+  &:disabled,
+  &.disabled {
+    background-color: $liverpool-btn-disabled-bg;
+  }
+}
+
+// Secondary Button - Teal with same pill style
+.liverpool-btn-secondary {
+  @extend %liverpool-btn-base;
+  background-color: $liverpool-btn-secondary-bg;
+  color: $liverpool-btn-secondary-color;
+  box-shadow: 0 4px 16px rgba(0, 166, 137, 0.4);
+  transform: scale(1);
+
+  &:hover:not(:disabled):not(.disabled) {
+    background-color: $liverpool-btn-secondary-bg-hover;
+    transform: scale(1.05);
+    box-shadow: 0 6px 24px rgba(0, 166, 137, 0.5);
+  }
+
+  &:active:not(:disabled):not(.disabled) {
+    transform: scale(0.98);
+    box-shadow: 0 2px 8px rgba(0, 166, 137, 0.3);
+  }
+
+  &:disabled,
+  &.disabled {
+    background-color: $liverpool-btn-disabled-bg;
+  }
+}
+
+// Outline Button - Liverpool Blue outline
+.liverpool-btn-outline {
+  @extend %liverpool-btn-base;
+  background-color: transparent;
+  color: $liverpool-btn-outline-color;
+  border: $liverpool-btn-outline-border;
+  box-shadow: none;
+  padding: calc(#{$liverpool-space-4} - 2px) calc(#{$liverpool-space-7} - 2px); // Adjust for border
+
+  &:hover:not(:disabled):not(.disabled) {
+    background-color: $liverpool-btn-outline-hover-bg;
+    color: $liverpool-btn-outline-hover-color;
+    border-color: $liverpool-blue;
+  }
+
+  &:active:not(:disabled):not(.disabled) {
+    transform: scale(0.98);
+  }
+
+  &:disabled,
+  &.disabled {
+    border-color: $liverpool-btn-disabled-bg;
+    color: $liverpool-btn-disabled-bg;
+  }
+}
+
+// Link Button - Text button with underline on hover
+.liverpool-btn-link {
+  display: inline-flex;
+  align-items: center;
+  gap: $liverpool-space-2;
+  font-family: $liverpool-font-primary;
+  font-weight: $liverpool-font-weight-medium;
+  font-size: $liverpool-font-size-base;
+  color: $liverpool-link-default;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: none;
+  transition: $liverpool-transition-color;
+
+  &:hover:not(:disabled):not(.disabled) {
+    color: $liverpool-link-hover;
+    text-decoration: underline;
+  }
+
+  &:disabled,
+  &.disabled {
+    color: $liverpool-text-muted;
+    cursor: not-allowed;
+  }
+}
+
+// Danger Link Button - For delete actions
+.liverpool-btn-link-danger {
+  @extend .liverpool-btn-link;
+  color: $liverpool-color-error;
+
+  &:hover:not(:disabled):not(.disabled) {
+    color: $liverpool-pink-600;
+  }
+}
+
+// Small Button Variant
+.liverpool-btn-sm {
+  padding: $liverpool-space-2 $liverpool-space-5;
+  font-size: $liverpool-font-size-xs;
+}
+
+// Large Button Variant
+.liverpool-btn-lg {
+  padding: $liverpool-space-5 $liverpool-space-8;
+  font-size: $liverpool-font-size-md;
+}
+
+// ============================================================================
+// 2. CARD COMPONENTS
+// ============================================================================
+
+// Standard Card
+.liverpool-card {
+  background-color: $liverpool-card-bg;
+  border: $liverpool-card-border;
+  border-radius: $liverpool-card-border-radius;
+  padding: $liverpool-card-padding;
+  box-shadow: $liverpool-card-shadow;
+  transition: $liverpool-transition-shadow;
+}
+
+// Interactive Card - Has hover effect
+.liverpool-card-interactive {
+  @extend .liverpool-card;
+  cursor: pointer;
+  transition: $liverpool-transition-shadow, $liverpool-transition-transform;
+
+  &:hover {
+    box-shadow: $liverpool-card-shadow-hover;
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Card with accent border (decorative top border)
+.liverpool-card-accent {
+  @extend .liverpool-card;
+  border-top: 3px solid $liverpool-blue;
+}
+
+// Card header section
+.liverpool-card-header {
+  margin: calc(-1 * #{$liverpool-card-padding}) calc(-1 * #{$liverpool-card-padding}) $liverpool-space-5;
+  padding: $liverpool-space-5 $liverpool-card-padding;
+  border-bottom: 1px solid $liverpool-border-default;
+}
+
+// Card body section
+.liverpool-card-body {
+  // Default padding comes from .liverpool-card
+}
+
+// Card footer section
+.liverpool-card-footer {
+  margin: $liverpool-space-5 calc(-1 * #{$liverpool-card-padding}) calc(-1 * #{$liverpool-card-padding});
+  padding: $liverpool-space-5 $liverpool-card-padding;
+  border-top: 1px solid $liverpool-border-default;
+  background-color: $liverpool-bg-subtle;
+}
+
+// ============================================================================
+// 3. FEEDBACK MESSAGE COMPONENTS
+// ============================================================================
+
+// Base feedback message
+%liverpool-feedback-base {
+  display: flex;
+  align-items: flex-start;
+  gap: $liverpool-space-3;
+  padding: $liverpool-space-4 $liverpool-space-5;
+  border-radius: $liverpool-radius-md;
+  font-size: $liverpool-font-size-sm;
+  line-height: $liverpool-line-height-relaxed;
+  margin-bottom: $liverpool-space-4;
+
+  // Icon spacing (when present)
+  .icon,
+  .fa,
+  .fas,
+  .far,
+  .fal,
+  .fab {
+    flex-shrink: 0;
+    margin-top: 2px; // Optical alignment with first line of text
+  }
+}
+
+// Success Message
+.liverpool-feedback-success {
+  @extend %liverpool-feedback-base;
+  background-color: $liverpool-feedback-success-bg;
+  border: $liverpool-feedback-success-border;
+  color: $liverpool-feedback-success-color;
+}
+
+// Error Message
+.liverpool-feedback-error {
+  @extend %liverpool-feedback-base;
+  background-color: $liverpool-feedback-error-bg;
+  border: $liverpool-feedback-error-border;
+  color: $liverpool-feedback-error-color;
+}
+
+// Warning Message
+.liverpool-feedback-warning {
+  @extend %liverpool-feedback-base;
+  background-color: $liverpool-feedback-warning-bg;
+  border: $liverpool-feedback-warning-border;
+  color: $liverpool-feedback-warning-color;
+}
+
+// Info Message
+.liverpool-feedback-info {
+  @extend %liverpool-feedback-base;
+  background-color: $liverpool-feedback-info-bg;
+  border: $liverpool-feedback-info-border;
+  color: $liverpool-feedback-info-color;
+}
+
+// ============================================================================
+// 4. FORM CONTROL COMPONENTS
+// ============================================================================
+
+// Input fields (text, email, number, etc.)
+.liverpool-input {
+  display: block;
+  width: 100%;
+  font-family: $liverpool-font-primary;
+  font-size: $liverpool-font-size-base;
+  font-weight: $liverpool-font-weight-regular;
+  line-height: $liverpool-line-height-relaxed;
+  color: $liverpool-text-primary;
+  background-color: $liverpool-input-bg;
+  border: $liverpool-input-border;
+  border-radius: $liverpool-input-border-radius;
+  padding: $liverpool-input-padding;
+  transition: border-color $liverpool-duration-fast $liverpool-easing-out,
+              box-shadow $liverpool-duration-fast $liverpool-easing-out;
+
+  &:focus {
+    outline: none;
+    border: $liverpool-input-border-focus;
+    box-shadow: $liverpool-input-shadow-focus;
+  }
+
+  &:disabled,
+  &[disabled] {
+    background-color: $liverpool-input-bg-disabled;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  &::placeholder {
+    color: $liverpool-text-muted;
+  }
+}
+
+// Textarea
+.liverpool-textarea {
+  @extend .liverpool-input;
+  min-height: 120px;
+  resize: vertical;
+}
+
+// Select dropdown
+.liverpool-select {
+  @extend .liverpool-input;
+  appearance: none;
+  background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"%3E%3Cpath fill="none" stroke="%23333F48" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 5l6 6 6-6"/%3E%3C/svg%3E');
+  background-repeat: no-repeat;
+  background-position: right $liverpool-space-3 center;
+  background-size: 16px 12px;
+  padding-right: calc(#{$liverpool-space-4} + 16px + #{$liverpool-space-3}); // Space for arrow
+}
+
+// Form label
+.liverpool-label {
+  display: block;
+  font-family: $liverpool-font-primary;
+  font-size: $liverpool-font-size-sm;
+  font-weight: $liverpool-font-weight-medium;
+  color: $liverpool-text-secondary;
+  margin-bottom: $liverpool-space-2;
+}
+
+// Form helper text
+.liverpool-helper-text {
+  display: block;
+  font-size: $liverpool-font-size-xs;
+  color: $liverpool-text-muted;
+  margin-top: $liverpool-space-2;
+  line-height: $liverpool-line-height-normal;
+}
+
+// Form error text
+.liverpool-error-text {
+  display: block;
+  font-size: $liverpool-font-size-xs;
+  color: $liverpool-color-error;
+  margin-top: $liverpool-space-2;
+  line-height: $liverpool-line-height-normal;
+}
+
+// Form group container
+.liverpool-form-group {
+  margin-bottom: $liverpool-space-5;
+}
+
+// ============================================================================
+// 5. TYPOGRAPHY COMPONENTS
+// ============================================================================
+
+// Heading classes
+.liverpool-h1 {
+  font-family: $liverpool-font-primary;
+  font-size: $liverpool-font-size-4xl;
+  font-weight: $liverpool-font-weight-bold;
+  line-height: $liverpool-line-height-tight;
+  letter-spacing: -0.5px;
+  color: $liverpool-text-primary;
+  margin-bottom: $liverpool-space-5;
+}
+
+.liverpool-h2 {
+  font-family: $liverpool-font-primary;
+  font-size: $liverpool-font-size-3xl;
+  font-weight: $liverpool-font-weight-semibold;
+  line-height: $liverpool-line-height-snug;
+  letter-spacing: -0.25px;
+  color: $liverpool-text-primary;
+  margin-bottom: $liverpool-space-5;
+}
+
+.liverpool-h3 {
+  font-family: $liverpool-font-primary;
+  font-size: $liverpool-font-size-2xl;
+  font-weight: $liverpool-font-weight-semibold;
+  line-height: $liverpool-line-height-snug;
+  color: $liverpool-text-primary;
+  margin-bottom: $liverpool-space-4;
+}
+
+.liverpool-h4 {
+  font-family: $liverpool-font-primary;
+  font-size: $liverpool-font-size-xl;
+  font-weight: $liverpool-font-weight-semibold;
+  line-height: $liverpool-line-height-normal;
+  color: $liverpool-text-primary;
+  margin-bottom: $liverpool-space-4;
+}
+
+.liverpool-h5 {
+  font-family: $liverpool-font-primary;
+  font-size: $liverpool-font-size-lg;
+  font-weight: $liverpool-font-weight-semibold;
+  line-height: $liverpool-line-height-normal;
+  color: $liverpool-text-primary;
+  margin-bottom: $liverpool-space-3;
+}
+
+.liverpool-h6 {
+  font-family: $liverpool-font-primary;
+  font-size: $liverpool-font-size-base;
+  font-weight: $liverpool-font-weight-semibold;
+  line-height: $liverpool-line-height-relaxed;
+  color: $liverpool-text-primary;
+  margin-bottom: $liverpool-space-3;
+}
+
+// Body text classes
+.liverpool-text-body-lg {
+  font-family: $liverpool-font-primary;
+  font-size: $liverpool-font-size-md;
+  font-weight: $liverpool-font-weight-regular;
+  line-height: $liverpool-line-height-loose;
+  color: $liverpool-text-primary;
+}
+
+.liverpool-text-body {
+  font-family: $liverpool-font-primary;
+  font-size: $liverpool-font-size-base;
+  font-weight: $liverpool-font-weight-regular;
+  line-height: $liverpool-line-height-relaxed;
+  color: $liverpool-text-primary;
+}
+
+.liverpool-text-body-sm {
+  font-family: $liverpool-font-primary;
+  font-size: $liverpool-font-size-sm;
+  font-weight: $liverpool-font-weight-regular;
+  line-height: $liverpool-line-height-relaxed;
+  color: $liverpool-text-primary;
+}
+
+.liverpool-text-caption {
+  font-family: $liverpool-font-primary;
+  font-size: $liverpool-font-size-xs;
+  font-weight: $liverpool-font-weight-regular;
+  line-height: $liverpool-line-height-normal;
+  color: $liverpool-text-muted;
+}
+
+// ============================================================================
+// 6. BADGE COMPONENTS
+// ============================================================================
+
+// Base badge
+%liverpool-badge-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: $liverpool-font-primary;
+  font-size: $liverpool-font-size-xs;
+  font-weight: $liverpool-font-weight-medium;
+  line-height: 1;
+  padding: $liverpool-space-1 $liverpool-space-3;
+  border-radius: $liverpool-radius-pill;
+  white-space: nowrap;
+}
+
+.liverpool-badge-primary {
+  @extend %liverpool-badge-base;
+  background-color: $liverpool-blue;
+  color: $liverpool-text-inverse;
+}
+
+.liverpool-badge-secondary {
+  @extend %liverpool-badge-base;
+  background-color: $liverpool-teal;
+  color: $liverpool-text-inverse;
+}
+
+.liverpool-badge-success {
+  @extend %liverpool-badge-base;
+  background-color: $liverpool-teal-100;
+  color: $liverpool-teal-700;
+  border: 1px solid $liverpool-teal-300;
+}
+
+.liverpool-badge-error {
+  @extend %liverpool-badge-base;
+  background-color: $liverpool-pink-100;
+  color: $liverpool-pink-600;
+  border: 1px solid $liverpool-pink-300;
+}
+
+.liverpool-badge-warning {
+  @extend %liverpool-badge-base;
+  background-color: $liverpool-feedback-warning-bg;
+  color: $liverpool-feedback-warning-color;
+  border: 1px solid #FFF6BF;
+}
+
+.liverpool-badge-info {
+  @extend %liverpool-badge-base;
+  background-color: $liverpool-feedback-info-bg;
+  color: $liverpool-feedback-info-color;
+  border: 1px solid #B3E5FF;
+}
+
+// ============================================================================
+// END OF COMPONENTS
+// ============================================================================

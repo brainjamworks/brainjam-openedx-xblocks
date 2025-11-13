@@ -1,0 +1,307 @@
+/**
+ * ARCHITECTURAL: Minimal Paragon styles for Accordion
+ *
+ * DON'T CHANGE: Core Paragon imports
+ * IMPLEMENTATION: Add custom styles below
+ *
+ * This imports only the essential Paragon styles needed for components to work.
+ * This keeps bundle size minimal while ensuring Paragon components render correctly.
+ */
+
+// ARCHITECTURAL: Core Paragon styles (required)
+@import '~@openedx/paragon/scss/core/core';
+
+// IMPLEMENTATION: Import Paragon Collapsible component
+@import '~@openedx/paragon/src/Collapsible/index.scss';
+
+// IMPLEMENTATION: Accordion styles with card design
+.accordion-student-view {
+  max-width: 100%;
+  margin: 2rem auto;
+  margin-bottom: 3rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  // ========================================
+  // ACCORDION WRAPPER
+  // ========================================
+  .accordion-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  // ========================================
+  // ACCORDION SECTION - Card Design
+  // ========================================
+  .accordion-section {
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    background: white;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: box-shadow 0.2s ease;
+
+    &:hover {
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    }
+  }
+
+  // ========================================
+  // SECTION TRIGGER - Clickable Header with Left Accent
+  // ========================================
+  .accordion-section-trigger {
+    width: 100%;
+    padding: 1.25rem 1.5rem;
+    background: white;
+    border: none;
+    border-left: 4px solid #0075b4; // Blue accent bar
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    position: relative;
+
+    // RESPONSIVE: Touch-friendly minimum size
+    min-height: 44px;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+
+    // HOVER STATE
+    &:hover {
+      background: #f8f9fa;
+    }
+
+    // FOCUS STATE (keyboard navigation)
+    &:focus {
+      outline: 2px solid #0075b4;
+      outline-offset: -2px;
+      z-index: 1;
+    }
+
+    &:focus:not(:focus-visible) {
+      outline: none;
+    }
+
+    // ACTIVE/OPEN STATE
+    .pgn__collapsible[open] & {
+      border-left-color: #0056a8; // Darker blue when open
+      background: #f8f9fa;
+    }
+
+    // PRESSED STATE
+    &:active {
+      background: #e9ecef;
+    }
+  }
+
+  .accordion-section-title {
+    flex: 1;
+    text-align: left;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #212529;
+    line-height: 1.4;
+  }
+
+  // ========================================
+  // SECTION BODY - Content Area
+  // ========================================
+  .accordion-section-body {
+    padding: 1.5rem;
+    background: white;
+    border-top: 1px solid #e9ecef;
+  }
+
+  .accordion-section-content {
+    color: #333;
+    line-height: 1.6;
+
+    // TYPOGRAPHY: Style HTML content from TinyMCE
+    h1, h2, h3, h4 {
+      margin-top: 0;
+      margin-bottom: 0.75rem;
+      color: #2c3e50;
+    }
+
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.25rem; }
+    h4 { font-size: 1.125rem; }
+
+    p {
+      margin: 0.75rem 0;
+    }
+
+    ul, ol {
+      margin: 0.75rem 0;
+      padding-left: 1.5rem;
+
+      li {
+        margin: 0.5rem 0;
+      }
+    }
+
+    a {
+      color: #0075b4;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 2px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+
+      th, td {
+        padding: 0.75rem;
+        border: 1px solid #dee2e6;
+        text-align: left;
+      }
+
+      th {
+        background: #f8f9fa;
+        font-weight: 600;
+      }
+    }
+
+    blockquote {
+      margin: 1rem 0;
+      padding: 1rem 1.5rem;
+      border-left: 4px solid #0075b4;
+      background: #f8f9fa;
+    }
+
+    strong {
+      font-weight: 600;
+    }
+
+    em {
+      font-style: italic;
+    }
+  }
+
+  // ========================================
+  // RESPONSIVE DESIGN - Tablet (max-width: 768px)
+  // ========================================
+  @media (max-width: 768px) {
+    margin: 1rem;
+
+    .accordion-section-trigger {
+      padding: 1rem 1.25rem;
+    }
+
+    .accordion-section-title {
+      font-size: 1rem;
+    }
+
+    .accordion-section-body {
+      padding: 1.25rem;
+    }
+  }
+
+  // ========================================
+  // RESPONSIVE DESIGN - Mobile (max-width: 480px)
+  // ========================================
+  @media (max-width: 480px) {
+    margin: 0.5rem;
+
+    .accordion-wrapper {
+      gap: 0.5rem;
+    }
+
+    .accordion-section-trigger {
+      padding: 0.875rem 1rem;
+      min-height: 48px;
+    }
+
+    .accordion-section-title {
+      font-size: 0.9375rem;
+    }
+
+    .accordion-section-body {
+      padding: 1rem;
+    }
+
+    .accordion-section-content {
+      h1 { font-size: 1.5rem; }
+      h2 { font-size: 1.25rem; }
+      h3 { font-size: 1.1rem; }
+      h4 { font-size: 1rem; }
+
+      // RESPONSIVE: Ensure images fit on mobile
+      img {
+        max-width: 100% !important;
+        height: auto !important;
+      }
+
+      // RESPONSIVE: Scrollable tables on mobile
+      table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+    }
+  }
+
+  // ========================================
+  // TOUCH DEVICE OPTIMIZATIONS
+  // ========================================
+  @media (hover: none) and (pointer: coarse) {
+    .accordion-section-trigger {
+      min-width: 44px;
+      min-height: 48px;
+
+      &:hover {
+        background: white;
+      }
+
+      &:active {
+        background: #e9ecef;
+      }
+
+      .pgn__collapsible[open] & {
+        &:hover {
+          background: #f8f9fa;
+        }
+      }
+    }
+  }
+
+  // ========================================
+  // HIGH CONTRAST MODE SUPPORT
+  // ========================================
+  @media (prefers-contrast: high) {
+    .accordion-section {
+      border-width: 2px;
+    }
+
+    .accordion-section-trigger {
+      border-left-width: 6px;
+
+      &:focus {
+        outline-width: 3px;
+      }
+    }
+  }
+
+  // ========================================
+  // REDUCED MOTION SUPPORT
+  // ========================================
+  @media (prefers-reduced-motion: reduce) {
+    .accordion-section,
+    .accordion-section-trigger {
+      transition: none;
+    }
+  }
+}
