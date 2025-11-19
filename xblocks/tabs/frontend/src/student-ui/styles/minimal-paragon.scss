@@ -167,9 +167,10 @@
       font-weight: $liverpool-font-weight-semibold;
     }
 
-    h1 { font-size: $liverpool-font-size-3xl; }
-    h2 { font-size: $liverpool-font-size-xl; }
-    h3 { font-size: $liverpool-font-size-lg; }
+    // NOTE: Font sizes are controlled by Liverpool Legacy theme
+    // See: tutor-liverpool-dental-legacy/cms/static/sass/course-unit-mfe-iframe-bundle.scss
+    // and: tutor-liverpool-dental-legacy/lms/static/sass/lms-chromeless.scss
+    // Headings inherit size/weight from theme (single source of truth)
 
     p {
       margin: $liverpool-space-3 0;
@@ -262,9 +263,8 @@
     }
 
     .tabs-content-html {
-      h1 { font-size: $liverpool-font-size-xl; }
-      h2 { font-size: $liverpool-font-size-lg; }
-      h3 { font-size: $liverpool-font-size-md; }
+      // NOTE: Mobile heading sizes also controlled by Liverpool Legacy theme
+      // Responsive adjustments should be made in the theme, not here
 
       // RESPONSIVE: Ensure images fit on mobile
       img {

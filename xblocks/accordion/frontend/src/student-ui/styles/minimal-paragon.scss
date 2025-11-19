@@ -138,19 +138,16 @@
     line-height: $liverpool-line-height-loose;
 
     // TYPOGRAPHY: Style HTML content from TinyMCE
+    // NOTE: Font sizes are controlled by Liverpool Legacy theme
+    // See: tutor-liverpool-dental-legacy/cms/static/sass/course-unit-mfe-iframe-bundle.scss
+    // and: tutor-liverpool-dental-legacy/lms/static/sass/lms-chromeless.scss
     h1, h2, h3, h4, h5, h6 {
       margin-top: 0;
       margin-bottom: $liverpool-space-3;
       color: $liverpool-text-primary;
-      font-weight: $liverpool-font-weight-semibold;
+      // font-size: Inherited from Liverpool Legacy theme (single source of truth)
+      // font-weight: Inherited from Liverpool Legacy theme (single source of truth)
     }
-
-    h1 { font-size: $liverpool-font-size-3xl; }
-    h2 { font-size: $liverpool-font-size-xl; }
-    h3 { font-size: $liverpool-font-size-lg; }
-    h4 { font-size: $liverpool-font-size-md; }
-    h5 { font-size: $liverpool-font-size-base; }
-    h6 { font-size: $liverpool-font-size-sm; }
 
     p {
       margin: $liverpool-space-3 0;
@@ -258,10 +255,8 @@
     }
 
     .accordion-section-content {
-      h1 { font-size: 1.5rem; }
-      h2 { font-size: 1.25rem; }
-      h3 { font-size: 1.1rem; }
-      h4 { font-size: 1rem; }
+      // NOTE: Mobile heading sizes also controlled by Liverpool Legacy theme
+      // Responsive adjustments should be made in the theme, not here
 
       // RESPONSIVE: Ensure images fit on mobile
       img {
