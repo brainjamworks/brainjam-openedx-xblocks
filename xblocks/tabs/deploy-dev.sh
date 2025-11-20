@@ -7,7 +7,7 @@
 set -e  # Exit on error
 
 # IMPLEMENTATION: Update these paths after copying template
-XBLOCK_DIR="/Users/brainjam/liverpool-dental-learning-hub/brainjam-openedx-xblocks/packages/xblocks/standard/tabs"
+XBLOCK_DIR="/Users/brainjam/brainjam-openedx-xblocks/xblocks/tabs"
 XBLOCK_NAME="tabs"
 
 echo "🚀 Deploying Tabs to Tutor dev..."

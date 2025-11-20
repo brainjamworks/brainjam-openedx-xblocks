@@ -4,7 +4,7 @@
 set -e  # Exit on error
 
 # Configuration
-XBLOCK_DIR="/Users/brainjam/liverpool-dental-learning-hub/brainjam-openedx-xblocks/packages/xblocks/problem/image-hotspot-xblock"
+XBLOCK_DIR="/Users/brainjam/brainjam-openedx-xblocks/xblocks/image-hotspot-xblock"
 XBLOCK_NAME="image_hotspot"
 
 echo "🚀 Deploying ImageHotspot to Tutor dev..."

@@ -7,7 +7,7 @@
 set -e  # Exit on error
 
 # IMPLEMENTATION: Update these paths after copying template
-XBLOCK_DIR="/Users/brainjam/liverpool-dental-learning-hub/brainjam-openedx-xblocks/packages/xblocks/standard/accordion"
+XBLOCK_DIR="/Users/brainjam/brainjam-openedx-xblocks/xblocks/accordion"
 XBLOCK_NAME="accordion"
 
 echo "🚀 Deploying Accordion to Tutor dev..."

@@ -7,7 +7,7 @@
 set -e  # Exit on error
 
 # IMPLEMENTATION: Update these paths after copying template
-XBLOCK_DIR="/Users/brainjam/liverpool-dental-learning-hub/brainjam-openedx-xblocks/packages/xblocks/standard/flashcards"
+XBLOCK_DIR="/Users/brainjam/brainjam-openedx-xblocks/xblocks/flashcards"
 XBLOCK_NAME="flashcards"
 
 echo "🚀 Deploying Flashcards to Tutor dev..."

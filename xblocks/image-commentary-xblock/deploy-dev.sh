@@ -7,7 +7,7 @@
 set -e  # Exit on error
 
 # IMPLEMENTATION: Update these paths after copying template
-XBLOCK_DIR="/Users/brainjam/liverpool-dental-learning-hub/brainjam-openedx-xblocks/packages/xblocks/standard/image-commentary-xblock"
+XBLOCK_DIR="/Users/brainjam/brainjam-openedx-xblocks/xblocks/image-commentary-xblock"
 XBLOCK_NAME="image_commentary"
 
 echo "🚀 Deploying ImageCommentary to Tutor dev..."

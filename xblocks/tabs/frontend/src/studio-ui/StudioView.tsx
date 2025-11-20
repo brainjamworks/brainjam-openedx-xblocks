@@ -29,6 +29,8 @@ interface StudioViewProps {
     display_name: string;
     tabs: Tab[];
   };
+  baseAssetUrl?: string | null;
+  courseId?: string | null;
 }
 
 /**
@@ -41,7 +43,9 @@ type ViewMode = 'list' | 'edit';
  */
 export const StudioView: React.FC<StudioViewProps> = ({
   runtime,
-  fields
+  fields,
+  baseAssetUrl = null,
+  courseId = null
 }) => {
   // State management for form fields
   const [displayName, setDisplayName] = useState(fields.display_name);
@@ -287,6 +291,9 @@ export const StudioView: React.FC<StudioViewProps> = ({
             totalTabs={tabs.length}
             onSave={handleSaveTab}
             onCancel={handleCancelEdit}
+            runtime={runtime}
+            courseId={courseId || ''}
+            baseAssetUrl={baseAssetUrl}
           />
         )}
 

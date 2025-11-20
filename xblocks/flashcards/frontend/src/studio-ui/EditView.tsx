@@ -10,6 +10,7 @@ import Button from '@openedx/paragon/dist/Button';
 import Form from '@openedx/paragon/dist/Form';
 import ArrowBack from '@openedx/paragon/icons/es5/ArrowBack';
 import { TinyMCEEditor } from './TinyMCEEditor';
+import { XBlockRuntime } from '../common/api';
 
 /**
  * Single flashcard structure
@@ -29,6 +30,9 @@ interface EditViewProps {
   totalCards: number;
   onSave: (card: FlashCard) => void;
   onCancel: () => void;
+  runtime: XBlockRuntime;
+  courseId: string;
+  baseAssetUrl?: string | null;
 }
 
 /**
@@ -39,7 +43,10 @@ export const EditView: React.FC<EditViewProps> = ({
   cardIndex,
   totalCards,
   onSave,
-  onCancel
+  onCancel,
+  runtime,
+  courseId,
+  baseAssetUrl
 }) => {
   // Local state for form fields
   const [frontTitle, setFrontTitle] = useState(card.front_title);
@@ -153,6 +160,9 @@ export const EditView: React.FC<EditViewProps> = ({
               onChange={setBackText}
               placeholder="Enter the content for the back of the card"
               height="400px"
+              runtime={runtime}
+              courseId={courseId}
+              baseAssetUrl={baseAssetUrl}
             />
             {errors.backText && (
               <div className="invalid-feedback d-block mt-2">

@@ -10,6 +10,7 @@ import Button from '@openedx/paragon/dist/Button';
 import Form from '@openedx/paragon/dist/Form';
 import ArrowBack from '@openedx/paragon/icons/es5/ArrowBack';
 import { TinyMCEEditor } from './TinyMCEEditor';
+import { XBlockRuntime } from '../common/api';
 
 /**
  * Single section structure
@@ -28,6 +29,9 @@ interface EditViewProps {
   totalSections: number;
   onSave: (section: Section) => void;
   onCancel: () => void;
+  baseAssetUrl?: string | null;
+  runtime: XBlockRuntime;
+  courseId: string;
 }
 
 /**
@@ -38,7 +42,10 @@ export const EditView: React.FC<EditViewProps> = ({
   sectionIndex,
   totalSections,
   onSave,
-  onCancel
+  onCancel,
+  baseAssetUrl,
+  runtime,
+  courseId
 }) => {
   // Local state for form fields
   const [title, setTitle] = useState(section.title);
@@ -125,7 +132,10 @@ export const EditView: React.FC<EditViewProps> = ({
               value={content}
               onChange={setContent}
               placeholder="Enter the content for this section"
-              height="400px"
+              height="435px"
+              baseAssetUrl={baseAssetUrl}
+              runtime={runtime}
+              courseId={courseId}
             />
             {errors.content && (
               <div className="invalid-feedback d-block mt-2">

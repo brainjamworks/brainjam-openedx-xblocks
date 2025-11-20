@@ -30,6 +30,8 @@ interface StudioViewProps {
     display_name: string;
     cards: FlashCard[];
   };
+  baseAssetUrl?: string | null;
+  courseId?: string | null;
 }
 
 /**
@@ -42,7 +44,9 @@ type ViewMode = 'list' | 'edit';
  */
 export const StudioView: React.FC<StudioViewProps> = ({
   runtime,
-  fields
+  fields,
+  baseAssetUrl,
+  courseId
 }) => {
   // State management for form fields
   const [displayName, setDisplayName] = useState(fields.display_name);
@@ -289,6 +293,9 @@ export const StudioView: React.FC<StudioViewProps> = ({
             totalCards={cards.length}
             onSave={handleSaveCard}
             onCancel={handleCancelEdit}
+            runtime={runtime}
+            courseId={courseId || ''}
+            baseAssetUrl={baseAssetUrl}
           />
         )}
 

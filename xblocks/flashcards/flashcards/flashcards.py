@@ -11,6 +11,21 @@ from xblock.core import XBlock
 from xblock.fields import String, Scope
 from xblock.fragment import Fragment
 
+# Import for getting course asset URL paths
+try:
+    from xmodule.contentstore.content import StaticContent
+    from xmodule.contentstore.django import contentstore
+    from xmodule.exceptions import NotFoundError
+    from pymongo import DESCENDING
+    HAS_STATIC_CONTENT = True
+except ImportError:
+    # Fallback if running outside full edx-platform
+    HAS_STATIC_CONTENT = False
+
+# Logging
+import logging
+logger = logging.getLogger(__name__)
+
 
 class Flashcards(XBlock):
     """
@@ -182,6 +197,19 @@ class Flashcards(XBlock):
         # ARCHITECTURAL: Add XBlock custom styles (minimal)
         frag.add_css_url(self.runtime.local_resource_url(self, 'public/studio-ui.css'))
 
+        # Get base asset URL and course ID for TinyMCE image handling
+        base_asset_url = None
+        course_id = None
+        if HAS_STATIC_CONTENT and hasattr(self, 'location'):
+            try:
+                base_asset_url = StaticContent.get_base_url_path_for_course_assets(
+                    self.location.course_key
+                )
+                course_id = str(self.location.course_key)
+            except Exception:
+                # Fallback if course assets not available
+                pass
+
         # ARCHITECTURAL: Initialize with bundle URL + data
         # Runtime is passed separately by XBlock framework to the bootstrap function
         # IMPLEMENTATION: Customize the fields dictionary
@@ -196,7 +224,9 @@ class Flashcards(XBlock):
                     'front_subtitle': '',
                     'back_text': 'Back of card - click to flip'
                 }]),
-            }
+            },
+            'baseAssetUrl': base_asset_url,
+            'courseId': course_id
         })
 
         return frag
@@ -325,6 +355,77 @@ class Flashcards(XBlock):
             return {
                 'success': False,
                 'error': 'An error occurred while saving. Please try again.'
+            }
+
+    # JSON handler to list course assets for image picker
+    @XBlock.json_handler
+    def list_course_assets(self, data, suffix=''):
+        """
+        List all image assets from the course contentstore.
+
+        Returns a list of image assets with URLs for display in image picker modal.
+        """
+        if not HAS_STATIC_CONTENT:
+            return {'success': False, 'error': 'Contentstore not available'}
+
+        try:
+            course_key = self.runtime.course_id
+
+            # Filter for image types only
+            image_types = [
+                'image/jpeg', 'image/png', 'image/gif',
+                'image/webp', 'image/svg+xml'
+            ]
+            filter_params = {'contentType': {'$in': image_types}}
+
+            # Get all image assets from contentstore
+            all_assets, total_count = contentstore().get_all_content_for_course(
+                course_key,
+                start=0,
+                maxresults=500,
+                sort=[('uploadDate', DESCENDING)],
+                filter_params=filter_params
+            )
+
+            # Format assets for frontend consumption
+            image_assets = []
+            for asset in all_assets:
+                asset_key = asset.get('asset_key')
+                if not asset_key:
+                    continue
+
+                # Get portable URL for storage
+                portable_url = StaticContent.get_static_path_from_location(asset_key)
+
+                # Get full URL for display
+                asset_url = StaticContent.get_canonicalized_asset_path(
+                    course_key, portable_url, '', []
+                )
+
+                # Get upload date
+                upload_date = asset.get('uploadDate')
+                upload_date_str = upload_date.isoformat() if upload_date else ''
+
+                image_assets.append({
+                    'filename': asset_key.block_id,
+                    'url': asset_url,
+                    'portable_url': portable_url,
+                    'content_type': asset.get('contentType', ''),
+                    'upload_date': upload_date_str,
+                    'thumbnail_url': asset_url  # Use same URL for thumbnail
+                })
+
+            return {
+                'success': True,
+                'assets': image_assets,
+                'count': len(image_assets)
+            }
+
+        except Exception as e:
+            logger.exception(f"Error listing course assets: {str(e)}")
+            return {
+                'success': False,
+                'error': 'Unable to load course assets'
             }
 
     # ARCHITECTURAL: Workbench scenarios for testing

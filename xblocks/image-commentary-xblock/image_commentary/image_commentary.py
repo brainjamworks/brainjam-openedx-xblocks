@@ -5,10 +5,26 @@ Perfect for annotating exam transcripts, diagrams, or other educational material
 """
 
 import json
+import logging
 import pkg_resources
 from xblock.core import XBlock
 from xblock.fields import String, List, Scope
 from xblock.fragment import Fragment
+
+# Contentstore imports for image upload and asset management
+try:
+    from xmodule.contentstore.content import StaticContent
+    from xmodule.contentstore.django import contentstore
+    from xmodule.exceptions import NotFoundError
+    from pymongo import DESCENDING
+    from django.conf import settings
+    CONTENTSTORE_AVAILABLE = True
+except ImportError:
+    CONTENTSTORE_AVAILABLE = False
+    logging.getLogger(__name__).warning("Contentstore not available - image upload will not work")
+
+# Module logger
+logger = logging.getLogger(__name__)
 
 
 class ImageCommentary(XBlock):
@@ -130,52 +146,91 @@ class ImageCommentary(XBlock):
     @XBlock.json_handler
     def list_course_assets(self, data, suffix=''):
         """
-        List image assets from course content store
+        List all image assets from the course contentstore.
 
-        Returns a list of uploaded course assets (images)
+        Returns a list of image assets with URLs for display in asset picker.
+
+        Args:
+            data (dict): Request data (unused)
+            suffix (str): URL suffix (unused)
+
+        Returns:
+            dict: Success response with assets array, or error response
         """
-        try:
-            from xmodule.contentstore.content import StaticContent
-            from xmodule.contentstore.django import contentstore
-            from opaque_keys.edx.keys import CourseKey
+        if not CONTENTSTORE_AVAILABLE:
+            return {
+                'success': False,
+                'error': 'Contentstore not available'
+            }
 
-            # Parse course_id from runtime
+        try:
             course_key = self.runtime.course_id
 
-            # Get all assets
-            assets, count = contentstore().get_all_content_for_course(course_key)
+            # Filter for image types only
+            image_types = [
+                'image/jpeg',
+                'image/png',
+                'image/gif',
+                'image/webp',
+                'image/svg+xml'
+            ]
+            filter_params = {'contentType': {'$in': image_types}}
 
-            # Filter for images only
+            # Get all image assets from contentstore
+            all_assets, total_count = contentstore().get_all_content_for_course(
+                course_key,
+                start=0,
+                maxresults=500,  # Reasonable limit for asset picker
+                sort=[('uploadDate', DESCENDING)],  # Most recent first
+                filter_params=filter_params
+            )
+
+            # Format assets for frontend consumption
             image_assets = []
-            for asset in assets:
-                if asset.content_type and asset.content_type.startswith('image/'):
-                    asset_location = asset.location
-                    image_assets.append({
-                        'display_name': asset.name,
-                        'filename': asset.name,
-                        'url': StaticContent.get_canonicalized_asset_path(
-                            course_key,
-                            asset.location.path,
-                            asset.location.revision
-                        ),
-                        'thumbnail_url': StaticContent.get_canonicalized_asset_path(
-                            course_key,
-                            asset.location.path,
-                            asset.location.revision
-                        ),
-                        'content_type': asset.content_type
-                    })
+            for asset in all_assets:
+                asset_key = asset.get('asset_key')
+
+                # Get portable URL (relative path)
+                portable_url = StaticContent.get_static_path_from_location(asset_key)
+
+                # Get full canonicalized URL for display
+                asset_url = StaticContent.get_canonicalized_asset_path(
+                    course_key,
+                    portable_url,
+                    '',
+                    []
+                )
+
+                # Extract filename from asset key
+                filename = asset_key.block_id
+
+                # Get upload date
+                upload_date = asset.get('uploadDate', '')
+                if upload_date:
+                    upload_date = upload_date.isoformat() if hasattr(upload_date, 'isoformat') else str(upload_date)
+
+                image_assets.append({
+                    'filename': filename,
+                    'url': asset_url,
+                    'portable_url': portable_url,
+                    'content_type': asset.get('contentType', ''),
+                    'upload_date': upload_date,
+                    'thumbnail_url': asset_url  # Could generate thumbnails in the future
+                })
+
+            logger.info(f"Listed {len(image_assets)} image assets for course {course_key}")
 
             return {
                 'success': True,
-                'assets': image_assets
+                'assets': image_assets,
+                'count': len(image_assets)
             }
+
         except Exception as e:
-            import traceback
-            traceback.print_exc()
+            logger.exception(f"Error listing course assets: {str(e)}")
             return {
                 'success': False,
-                'error': str(e)
+                'error': f'Failed to list assets: {str(e)}'
             }
 
     @XBlock.json_handler
