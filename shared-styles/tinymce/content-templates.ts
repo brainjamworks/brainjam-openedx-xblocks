@@ -87,21 +87,27 @@ export const contentTemplates = [
   },
   {
     title: '🖼️ Image Gallery (3 Columns)',
-    description: 'Display multiple images in a grid',
+    description: 'Display multiple images in a grid - images auto-crop to square cards',
     content: `
       <div class="content-card-grid">
         <div class="content-card">
-          <img src="https://via.placeholder.com/300x200/006272/ffffff?text=Image+1" alt="Case Study 1">
+          <div class="content-card-image">
+            <img src="https://via.placeholder.com/400x400/006272/ffffff?text=Image+1" alt="Case Study 1">
+          </div>
           <h4>Case Study 1</h4>
           <p>Brief description of this case...</p>
         </div>
         <div class="content-card">
-          <img src="https://via.placeholder.com/300x200/006272/ffffff?text=Image+2" alt="Case Study 2">
+          <div class="content-card-image">
+            <img src="https://via.placeholder.com/400x400/006272/ffffff?text=Image+2" alt="Case Study 2">
+          </div>
           <h4>Case Study 2</h4>
           <p>Brief description of this case...</p>
         </div>
         <div class="content-card">
-          <img src="https://via.placeholder.com/300x200/006272/ffffff?text=Image+3" alt="Case Study 3">
+          <div class="content-card-image">
+            <img src="https://via.placeholder.com/400x400/006272/ffffff?text=Image+3" alt="Case Study 3">
+          </div>
           <h4>Case Study 3</h4>
           <p>Brief description of this case...</p>
         </div>
@@ -169,17 +175,21 @@ export const contentTemplates = [
   },
   {
     title: '🔄 Before & After Comparison',
-    description: 'Visual comparison of treatment outcomes',
+    description: 'Visual comparison of treatment outcomes - images auto-crop to 4:3 ratio',
     content: `
       <div class="content-before-after">
         <div class="before-after-panel">
-          <img src="https://via.placeholder.com/400x300/006272/ffffff?text=Before+Treatment" alt="Before treatment">
+          <div class="before-after-image">
+            <img src="https://via.placeholder.com/400x300/006272/ffffff?text=Before+Treatment" alt="Before treatment">
+          </div>
           <div class="panel-label">Before Treatment</div>
           <p class="panel-description">Baseline presentation: Advanced periodontal disease with 6-7mm pockets</p>
         </div>
         <div class="before-after-arrow">→</div>
         <div class="before-after-panel">
-          <img src="https://via.placeholder.com/400x300/006272/ffffff?text=After+Treatment" alt="After treatment">
+          <div class="before-after-image">
+            <img src="https://via.placeholder.com/400x300/006272/ffffff?text=After+Treatment" alt="After treatment">
+          </div>
           <div class="panel-label">After Treatment (6 months)</div>
           <p class="panel-description">Post-treatment outcome: Reduced pocket depths to 2-3mm, healthy gingiva</p>
         </div>

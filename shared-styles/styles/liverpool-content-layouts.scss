@@ -136,9 +136,27 @@
     box-shadow: $liverpool-card-shadow-hover;
   }
 
-  img {
+  // Image container with fixed 1:1 aspect ratio
+  .content-card-image {
     width: 100%;
-    height: 200px;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 4px;
+    margin-bottom: $liverpool-space-3;
+    background: $liverpool-bg-subtle;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  // Legacy support for images without wrapper (backwards compatibility)
+  > img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
     object-fit: cover;
     border-radius: 4px;
     margin-bottom: $liverpool-space-3;
@@ -325,7 +343,7 @@
   flex-direction: column;
   gap: $liverpool-space-4;
   margin: $liverpool-space-5 0;
-  align-items: center;
+  align-items: stretch; // Fill container width
 
   @media (min-width: 768px) {
     flex-direction: row;
@@ -337,9 +355,29 @@
   flex: 1;
   text-align: center;
 
-  img {
+  // Image container with fixed aspect ratio
+  .before-after-image {
     width: 100%;
-    height: auto;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: $liverpool-card-border-radius;
+    border: $liverpool-card-border;
+    margin-bottom: $liverpool-space-3;
+    background: $liverpool-bg-subtle;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  // Legacy support for images without wrapper (backwards compatibility)
+  > img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
     border-radius: $liverpool-card-border-radius;
     border: $liverpool-card-border;
     margin-bottom: $liverpool-space-3;
@@ -368,6 +406,7 @@
   font-size: 2rem;
   font-weight: bold;
   padding: 0 $liverpool-space-3;
+  align-self: center; // Keep arrow centered vertically
 
   @media (max-width: 767px) {
     transform: rotate(90deg);
