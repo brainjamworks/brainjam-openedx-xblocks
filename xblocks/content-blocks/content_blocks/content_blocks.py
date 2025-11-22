@@ -341,6 +341,7 @@ class ContentBlocks(XBlock):
             return {
                 'success': True,
                 'display_name': self.display_name,
+                'title': self.title,
                 'sections': self.safe_json_loads(self.sections_data, default=[]),
             }
 
