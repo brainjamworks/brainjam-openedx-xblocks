@@ -28,6 +28,8 @@ interface StudioData {
     display_name: string;
     sections: Section[];
   };
+  baseAssetUrl?: string | null;
+  courseId?: string | null;
 }
 
 /**
@@ -56,6 +58,8 @@ export const renderBlock = (runtime: any, element: Element | null, data: StudioD
           <StudioView
             runtime={runtime}
             fields={data.fields}
+            baseAssetUrl={data.baseAssetUrl}
+            courseId={data.courseId}
           />
         </IntlProvider>    </React.StrictMode>
   );

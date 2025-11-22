@@ -22128,7 +22128,9 @@ const oI = ({
         lI,
         {
           runtime: e,
-          fields: n.fields
+          fields: n.fields,
+          baseAssetUrl: n.baseAssetUrl,
+          courseId: n.courseId
         }
       ) }),
       "    "
