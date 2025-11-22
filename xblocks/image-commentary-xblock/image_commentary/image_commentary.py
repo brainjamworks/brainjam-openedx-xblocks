@@ -48,6 +48,14 @@ class ImageCommentary(XBlock):
         help="The display name for this component"
     )
 
+    # Optional title displayed above content
+    title = String(
+        display_name="Title (Optional)",
+        default="",
+        scope=Scope.content,
+        help="Optional H3 heading displayed above the image. Leave empty to hide."
+    )
+
     image_url = String(
         display_name="Image URL",
         default="",
@@ -99,6 +107,7 @@ class ImageCommentary(XBlock):
             'url': self.runtime.local_resource_url(self, 'public/student-ui.js'),
             # IMPLEMENTATION: Pass your XBlock's data to React
             'displayName': self.display_name,
+            'title': self.title,
             'imageUrl': self.image_url,
             'markers': self.markers,
         })
@@ -134,6 +143,7 @@ class ImageCommentary(XBlock):
             'fields': {
                 # IMPLEMENTATION: Pass your editable fields to React
                 'display_name': self.display_name,
+                'title': self.title,
                 'image_url': self.image_url,
                 'markers': self.markers,
                 'course_id': str(self.runtime.course_id),  # For contentstore API calls
@@ -248,6 +258,8 @@ class ImageCommentary(XBlock):
                 'error': 'Display name is required'
             }
 
+        title = data.get('title', '').strip()
+
         image_url = data.get('image_url', '').strip()
         if not image_url:
             return {
@@ -293,6 +305,7 @@ class ImageCommentary(XBlock):
 
         # Save data
         self.display_name = display_name
+        self.title = title
         self.image_url = image_url
         self.markers = markers
 

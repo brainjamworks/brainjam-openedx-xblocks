@@ -29,6 +29,7 @@ export interface Marker {
  */
 export interface StudioViewFields {
   display_name: string;
+  title: string;
   image_url: string;
   markers: Marker[];
   course_id: string;  // Passed for asset uploads and picker
@@ -39,6 +40,7 @@ export interface StudioViewFields {
  */
 export interface StudentViewProps {
   displayName: string;
+  title: string;
   imageUrl: string;
   markers: Marker[];
 }

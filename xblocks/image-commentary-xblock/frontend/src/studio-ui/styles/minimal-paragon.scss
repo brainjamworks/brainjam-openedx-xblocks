@@ -125,44 +125,6 @@
     border-color: $liverpool-stepper-complete-border !important;
   }
 
-  // Asset Picker Grid
-  .asset-picker-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 1rem;
-  }
-
-  .asset-picker-item {
-    cursor: pointer;
-    border: 1px solid #ccc;
-    padding: 0.5rem;
-    border-radius: 4px;
-    transition: border-color 0.2s;
-
-    &:hover {
-      border-color: var(--pgn-color-primary-base, #0075b4);
-    }
-
-    &.selected {
-      border: 2px solid var(--pgn-color-primary-base, #0075b4);
-    }
-  }
-
-  .asset-picker-thumbnail {
-    width: 100%;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 2px;
-  }
-
-  .asset-picker-filename {
-    display: block;
-    margin-top: 0.5rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: $liverpool-modal-small-size; // 12px at 10px base
-  }
 }
 
 // Alert text sizing - scaled for 10px modal base

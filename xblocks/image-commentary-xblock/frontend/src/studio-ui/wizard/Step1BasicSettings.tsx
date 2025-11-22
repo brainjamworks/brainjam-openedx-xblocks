@@ -11,12 +11,16 @@ import Card from '@openedx/paragon/dist/Card';
 
 interface Step1Props {
   displayName: string;
+  title: string;
   onDisplayNameChange: (value: string) => void;
+  onTitleChange: (value: string) => void;
 }
 
 export const Step1BasicSettings: React.FC<Step1Props> = ({
   displayName,
-  onDisplayNameChange
+  title,
+  onDisplayNameChange,
+  onTitleChange
 }) => {
   return (
     <div className="wizard-step-content">
@@ -36,6 +40,19 @@ export const Step1BasicSettings: React.FC<Step1Props> = ({
             />
             <Form.Text className="text-muted">
               Internal name shown in Studio (not visible to students)
+            </Form.Text>
+          </Form.Group>
+
+          <Form.Group className="mt-3">
+            <Form.Label>Title (Optional)</Form.Label>
+            <Form.Control
+              type="text"
+              value={title}
+              onChange={(e) => onTitleChange(e.target.value)}
+              placeholder="e.g., Radiographic Analysis"
+            />
+            <Form.Text className="text-muted">
+              Optional H3 heading displayed above the image. Leave empty to hide.
             </Form.Text>
           </Form.Group>
         </Card.Section>

@@ -43,6 +43,7 @@ export const WizardView: React.FC<WizardViewProps> = ({
   // =========================================================================
 
   const [displayName, setDisplayName] = useState(fields.display_name);
+  const [title, setTitle] = useState(fields.title);
   const [markers, setMarkers] = useState<Marker[]>(fields.markers);
 
   // =========================================================================
@@ -157,6 +158,7 @@ export const WizardView: React.FC<WizardViewProps> = ({
       // Submit to backend
       const result = await xblockPost(runtime, 'save_data', {
         display_name: displayName.trim(),
+        title: title.trim(),
         image_url: imageUrl,
         markers: markers,
         course_id: fields.course_id,
@@ -251,7 +253,9 @@ export const WizardView: React.FC<WizardViewProps> = ({
         >
           <Step1BasicSettings
             displayName={displayName}
+            title={title}
             onDisplayNameChange={setDisplayName}
+            onTitleChange={setTitle}
           />
         </Stepper.Step>
 

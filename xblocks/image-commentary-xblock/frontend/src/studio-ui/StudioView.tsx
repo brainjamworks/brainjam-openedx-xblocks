@@ -152,19 +152,25 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
         ) : courseAssets.length === 0 ? (
           <p>No images found in course. Upload an image first.</p>
         ) : (
-          <div className="asset-picker-grid">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '1rem' }}>
             {courseAssets.map((asset) => (
               <div
                 key={asset.url}
                 onClick={() => handleSelectAsset(asset)}
-                className={`asset-picker-item ${imageUrl === asset.url ? 'selected' : ''}`}
+                style={{
+                  cursor: 'pointer',
+                  border: imageUrl === asset.url ? '2px solid #0075b4' : '1px solid #ccc',
+                  padding: '0.5rem',
+                  borderRadius: '4px',
+                  transition: 'border-color 0.2s'
+                }}
               >
                 <img
                   src={asset.thumbnail_url}
                   alt={asset.filename}
-                  className="asset-picker-thumbnail"
+                  style={{ width: '100%', height: '100px', objectFit: 'cover', borderRadius: '2px' }}
                 />
-                <small className="asset-picker-filename">
+                <small style={{ display: 'block', marginTop: '0.5rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {asset.filename}
                 </small>
               </div>

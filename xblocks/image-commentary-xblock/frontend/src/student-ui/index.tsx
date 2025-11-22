@@ -19,6 +19,7 @@ import './styles/minimal-paragon.scss';
  */
 interface StudentData {
   displayName: string;
+  title: string;
   imageUrl: string;
   markers: Marker[];
 }
@@ -40,10 +41,12 @@ export const renderBlock = (element: Element | null, data: StudentData) => {
   const root = createRoot(element!);
   root.render(
     <React.StrictMode>
-<StudentView
-          displayName={data.displayName}
-          imageUrl={data.imageUrl}
-          markers={data.markers}
-        />    </React.StrictMode>
+      <StudentView
+        displayName={data.displayName}
+        title={data.title}
+        imageUrl={data.imageUrl}
+        markers={data.markers}
+      />
+    </React.StrictMode>
   );
 };

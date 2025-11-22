@@ -11,6 +11,7 @@ import type { StudentViewProps, Marker } from '../common/types';
 
 export const StudentView: React.FC<StudentViewProps> = ({
   displayName,
+  title,
   imageUrl,
   markers
 }) => {
@@ -95,10 +96,8 @@ export const StudentView: React.FC<StudentViewProps> = ({
 
   return (
     <div className="image-commentary-student-view">
+      {title && <h3 className="image-commentary-main-title">{title}</h3>}
       <Card>
-        {displayName && (
-          <Card.Header title={displayName} />
-        )}
         <Card.Section>
           {!imageUrl ? (
             <div className="text-center p-4 bg-light rounded">
