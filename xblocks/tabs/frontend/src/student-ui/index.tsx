@@ -26,6 +26,7 @@ interface Tab {
  */
 interface StudentData {
   displayName: string;
+  title?: string;
   tabs: Tab[];
   currentTabIndex: number;
 }
@@ -50,6 +51,7 @@ export const renderBlock = (element: Element | null, data: StudentData, runtime:
 <IntlProvider locale="en">
           <StudentView
             displayName={data.displayName}
+            title={data.title}
             tabs={data.tabs}
             currentTabIndex={data.currentTabIndex}
             runtime={runtime}

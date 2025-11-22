@@ -8,6 +8,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { XBlockRuntime } from '../common/api';
 import { ImagePickerModal } from './ImagePickerModal';
+import { flashcardTemplates } from '../../../../../shared-styles/tinymce/content-templates.ts';
 
 /**
  * Props for TinyMCEEditor
@@ -230,8 +231,8 @@ export const TinyMCEEditor: React.FC<TinyMCEEditorProps> = ({
       // Disable visual aid
       visual: false,
 
-      // Plugins - removed 'image' plugin to avoid conflicts
-      plugins: 'lists, link, codemirror',
+      // Plugins - include CodeMirror and template
+      plugins: 'lists, link, codemirror, template',
 
       // CodeMirror configuration
       codemirror: {
@@ -241,12 +242,15 @@ export const TinyMCEEditor: React.FC<TinyMCEEditorProps> = ({
         cssFiles: ["CodeMirror/codemirror.css"]
       },
 
-      // Toolbar - with custom image button instead of default
+      // Template configuration - flashcard-specific templates only
+      templates: flashcardTemplates,
+
+      // Toolbar - with custom image button and template button
       toolbar:
         "formatselect fontselect bold italic underline forecolor wrapAsCode " +
         "alignleft aligncenter alignright alignjustify " +
         "bullist numlist outdent indent blockquote link unlink " +
-        "customImage code",
+        "customImage template code",
 
       // Block formats
       block_formats: getBlockFormats(),
@@ -259,10 +263,10 @@ export const TinyMCEEditor: React.FC<TinyMCEEditorProps> = ({
       menubar: false,
       statusbar: false,
 
-      // Allow any elements
+      // Allow any elements including iframes
       valid_children: '+body[style]',
       valid_elements: '*[*]',
-      extended_valid_elements: '*[*]',
+      extended_valid_elements: 'iframe[src|frameborder|style|scrolling|class|width|height|name|align|id|title|allow|allowfullscreen]',
       invalid_elements: '',
 
       // Callbacks

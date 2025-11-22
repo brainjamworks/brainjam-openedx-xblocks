@@ -27,6 +27,7 @@ interface FlashCard {
  */
 interface StudentViewProps {
   displayName: string;
+  title?: string;
   cards: FlashCard[];
 }
 
@@ -58,6 +59,7 @@ const FlashcardFace: React.FC<FlashcardFaceProps> = ({ children, className }) =>
  */
 export const StudentView: React.FC<StudentViewProps> = ({
   displayName,
+  title,
   cards,
 }) => {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -161,6 +163,7 @@ export const StudentView: React.FC<StudentViewProps> = ({
 
   return (
     <div className="flashcards-student-view">
+      {title && <h3 className="flashcards-main-title">{title}</h3>}
       <div
         className={`flashcard-container ${isFlipped ? 'flipped' : ''} ${isSliding ? `sliding-${slideDirection}` : ''}`}
         onClick={handleFlip}

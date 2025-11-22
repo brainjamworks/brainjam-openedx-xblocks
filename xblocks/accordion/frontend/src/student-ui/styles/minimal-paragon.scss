@@ -9,6 +9,9 @@
 // Import shared Liverpool design tokens
 @import '../../../../../../shared-styles/styles/liverpool-shared-tokens';
 
+// Import shared content layout patterns
+@import '../../../../../../shared-styles/styles/liverpool-content-layouts';
+
 // IMPLEMENTATION: Accordion styles with card design
 .accordion-student-view {
   max-width: 100%;
@@ -97,6 +100,9 @@
     font-weight: $liverpool-font-weight-semibold;
     color: $liverpool-text-primary;
     line-height: $liverpool-line-height-normal;
+    margin: 0 !important;
+    display: flex;
+    align-items: center;
   }
 
   // Plus/Minus Icon Indicator
@@ -191,7 +197,6 @@
       }
 
       th {
-        background: $liverpool-bg-subtle;
         font-weight: $liverpool-font-weight-semibold;
       }
     }

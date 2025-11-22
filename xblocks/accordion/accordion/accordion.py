@@ -44,6 +44,14 @@ class Accordion(XBlock):
         help="The display name for this component"
     )
 
+    # Optional title displayed above accordion
+    title = String(
+        display_name="Title (Optional)",
+        default="",
+        scope=Scope.content,
+        help="Optional H3 heading displayed above the accordion. Leave empty to hide."
+    )
+
     # Sections data - JSON-encoded array of section objects
     sections_data = String(
         display_name="Sections Data",
@@ -109,9 +117,9 @@ class Accordion(XBlock):
         if not html_content:
             return ''
 
-        # Remove dangerous tags
+        # Remove dangerous tags (iframe allowed for video embeds)
         dangerous_tags = [
-            'script', 'iframe', 'object', 'embed', 'link',
+            'script', 'object', 'embed', 'link',
             'meta', 'style', 'form', 'input', 'button'
         ]
 
@@ -181,6 +189,7 @@ class Accordion(XBlock):
         frag.initialize_js('AccordionStudentView', {
             'url': self.runtime.local_resource_url(self, 'public/student-ui.js'),
             'displayName': self.display_name,
+            'title': self.title,
             'sections': self.safe_json_loads(self.sections_data, default=[{
                 'title': 'Error',
                 'content': 'No sections configured. Please contact your instructor.'
@@ -228,6 +237,7 @@ class Accordion(XBlock):
             'url': self.runtime.local_resource_url(self, 'public/studio-ui.js'),
             'fields': {
                 'display_name': self.display_name,
+                'title': self.title,
                 'sections': self.safe_json_loads(self.sections_data, default=[
                     {
                         'title': 'Section 1',
@@ -257,8 +267,9 @@ class Accordion(XBlock):
                     'error': 'Invalid data format'
                 }
 
-            # SECURITY: Validate and sanitize display name
+            # SECURITY: Validate and sanitize display name and title
             display_name = data.get('display_name', '').strip()
+            title = data.get('title', '').strip()
             sections = data.get('sections', [])
 
             if not display_name:
@@ -302,11 +313,11 @@ class Accordion(XBlock):
                         'error': f'Section {i+1} must be an object'
                     }
 
-                title = section.get('title', '').strip()
+                section_title = section.get('title', '').strip()
                 content = section.get('content', '').strip()
 
                 # SECURITY: Validate required fields
-                if not title:
+                if not section_title:
                     return {
                         'success': False,
                         'error': f'Section {i+1}: Title is required'
@@ -320,7 +331,7 @@ class Accordion(XBlock):
                     }
 
                 # SECURITY: Validate field lengths
-                if len(title) > self.MAX_SECTION_TITLE_LENGTH:
+                if len(section_title) > self.MAX_SECTION_TITLE_LENGTH:
                     return {
                         'success': False,
                         'error': f'Section {i+1}: Title must be {self.MAX_SECTION_TITLE_LENGTH} characters or less'
@@ -337,12 +348,13 @@ class Accordion(XBlock):
 
                 # Add sanitized section
                 sanitized_sections.append({
-                    'title': title,
+                    'title': section_title,
                     'content': sanitized_content
                 })
 
             # SECURITY: Save sanitized data
             self.display_name = display_name
+            self.title = title
             self.sections_data = json.dumps(sanitized_sections)
 
             # Reset open sections if any are now out of bounds

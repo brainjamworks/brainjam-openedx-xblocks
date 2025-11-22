@@ -43,6 +43,14 @@ class Flashcards(XBlock):
         help="The display name for this component"
     )
 
+    # Optional title displayed above flashcards
+    title = String(
+        display_name="Title (Optional)",
+        default="",
+        scope=Scope.content,
+        help="Optional H3 heading displayed above the flashcards. Leave empty to hide."
+    )
+
     # Cards data - JSON-encoded list of flashcards (supports 1-100 cards)
     cards = String(
         display_name="Flashcards",
@@ -84,9 +92,9 @@ class Flashcards(XBlock):
         if not html_content:
             return ''
 
-        # Remove dangerous tags
+        # Remove dangerous tags (iframe allowed for video embeds)
         dangerous_tags = [
-            'script', 'iframe', 'object', 'embed', 'link',
+            'script', 'object', 'embed', 'link',
             'meta', 'style', 'form', 'input', 'button'
         ]
 
@@ -164,6 +172,7 @@ class Flashcards(XBlock):
             'url': self.runtime.local_resource_url(self, 'public/student-ui.js'),
             # IMPLEMENTATION: Pass your XBlock's data to React
             'displayName': self.display_name,
+            'title': self.title,
             # SECURITY: Use safe JSON parsing with fallback
             'cards': self.safe_json_loads(self.cards, default=[{
                 'front_title': 'Error loading cards',
@@ -218,6 +227,7 @@ class Flashcards(XBlock):
             'fields': {
                 # IMPLEMENTATION: Pass your editable fields to React
                 'display_name': self.display_name,
+                'title': self.title,
                 # SECURITY: Use safe JSON parsing with fallback
                 'cards': self.safe_json_loads(self.cards, default=[{
                     'front_title': 'Front of Card',
@@ -249,8 +259,9 @@ class Flashcards(XBlock):
                     'error': 'Invalid data format'
                 }
 
-            # SECURITY: Validate and sanitize display name
+            # SECURITY: Validate and sanitize display name and title
             display_name = data.get('display_name', '').strip()
+            title = data.get('title', '').strip()
             cards = data.get('cards', [])
 
             if not display_name:
@@ -342,6 +353,7 @@ class Flashcards(XBlock):
 
             # SECURITY: Save sanitized data
             self.display_name = display_name
+            self.title = title
             self.cards = json.dumps(sanitized_cards)
 
             return {

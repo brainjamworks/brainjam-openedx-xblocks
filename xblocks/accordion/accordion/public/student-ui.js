@@ -267,7 +267,7 @@ bi.Fragment = yp;
 bi.jsx = lf;
 bi.jsxs = lf;
 bs.exports = bi;
-var Je = bs.exports, of = { exports: {} }, Le = {}, uf = { exports: {} }, af = {};
+var Ge = bs.exports, of = { exports: {} }, Le = {}, uf = { exports: {} }, af = {};
 /**
  * @license React
  * scheduler.production.min.js
@@ -1214,7 +1214,7 @@ function $p(e) {
   } catch {
   }
 }
-var Qe = Math.clz32 ? Math.clz32 : Wp, Vp = Math.log, Gp = Math.LN2;
+var be = Math.clz32 ? Math.clz32 : Wp, Vp = Math.log, Gp = Math.LN2;
 function Wp(e) {
   return e >>>= 0, e === 0 ? 32 : 31 - (Vp(e) / Gp | 0) | 0;
 }
@@ -1278,7 +1278,7 @@ function Ci(e, t) {
   } else o = n & ~i, o !== 0 ? r = Jn(o) : l !== 0 && (r = Jn(l));
   if (r === 0) return 0;
   if (t !== 0 && t !== r && !(t & i) && (i = r & -r, l = t & -t, i >= l || i === 16 && (l & 4194240) !== 0)) return t;
-  if (r & 4 && (r |= n & 16), t = e.entangledLanes, t !== 0) for (e = e.entanglements, t &= r; 0 < t; ) n = 31 - Qe(t), i = 1 << n, r |= e[n], t &= ~i;
+  if (r & 4 && (r |= n & 16), t = e.entangledLanes, t !== 0) for (e = e.entanglements, t &= r; 0 < t; ) n = 31 - be(t), i = 1 << n, r |= e[n], t &= ~i;
   return r;
 }
 function Xp(e, t) {
@@ -1324,7 +1324,7 @@ function Xp(e, t) {
 }
 function Qp(e, t) {
   for (var n = e.suspendedLanes, r = e.pingedLanes, i = e.expirationTimes, l = e.pendingLanes; 0 < l; ) {
-    var o = 31 - Qe(l), u = 1 << o, a = i[o];
+    var o = 31 - be(l), u = 1 << o, a = i[o];
     a === -1 ? (!(u & n) || u & r) && (i[o] = Xp(u, t)) : a <= t && (e.expiredLanes |= u), l &= ~u;
   }
 }
@@ -1340,21 +1340,21 @@ function Ll(e) {
   return t;
 }
 function Or(e, t, n) {
-  e.pendingLanes |= t, t !== 536870912 && (e.suspendedLanes = 0, e.pingedLanes = 0), e = e.eventTimes, t = 31 - Qe(t), e[t] = n;
+  e.pendingLanes |= t, t !== 536870912 && (e.suspendedLanes = 0, e.pingedLanes = 0), e = e.eventTimes, t = 31 - be(t), e[t] = n;
 }
 function bp(e, t) {
   var n = e.pendingLanes & ~t;
   e.pendingLanes = t, e.suspendedLanes = 0, e.pingedLanes = 0, e.expiredLanes &= t, e.mutableReadLanes &= t, e.entangledLanes &= t, t = e.entanglements;
   var r = e.eventTimes;
   for (e = e.expirationTimes; 0 < n; ) {
-    var i = 31 - Qe(n), l = 1 << i;
+    var i = 31 - be(n), l = 1 << i;
     t[i] = 0, r[i] = -1, e[i] = -1, n &= ~l;
   }
 }
 function wu(e, t) {
   var n = e.entangledLanes |= t;
   for (e = e.entanglements; n; ) {
-    var r = 31 - Qe(n), i = 1 << r;
+    var r = 31 - be(n), i = 1 << r;
     i & t | e[r] & t && (e[r] |= t), n &= ~i;
   }
 }
@@ -1829,15 +1829,15 @@ function Rh(e, t) {
 function Mh(e, t) {
   return e === t && (e !== 0 || 1 / e === 1 / t) || e !== e && t !== t;
 }
-var Ze = typeof Object.is == "function" ? Object.is : Mh;
+var Ye = typeof Object.is == "function" ? Object.is : Mh;
 function yr(e, t) {
-  if (Ze(e, t)) return !0;
+  if (Ye(e, t)) return !0;
   if (typeof e != "object" || e === null || typeof t != "object" || t === null) return !1;
   var n = Object.keys(e), r = Object.keys(t);
   if (n.length !== r.length) return !1;
   for (r = 0; r < n.length; r++) {
     var i = n[r];
-    if (!io.call(t, i) || !Ze(e[i], t[i])) return !1;
+    if (!io.call(t, i) || !Ye(e[i], t[i])) return !1;
   }
   return !0;
 }
@@ -2391,12 +2391,12 @@ function lc(e, t, n) {
   Ae[De++] = ot, Ae[De++] = ut, Ae[De++] = Yt, Yt = e;
   var r = ot;
   e = ut;
-  var i = 32 - Qe(r) - 1;
+  var i = 32 - be(r) - 1;
   r &= ~(1 << i), n += 1;
-  var l = 32 - Qe(t) + i;
+  var l = 32 - be(t) + i;
   if (30 < l) {
     var o = i - i % 5;
-    l = (r & (1 << o) - 1).toString(32), r >>= o, i -= o, ot = 1 << 32 - Qe(t) + i | n << i | r, ut = l + e;
+    l = (r & (1 << o) - 1).toString(32), r >>= o, i -= o, ot = 1 << 32 - be(t) + i | n << i | r, ut = l + e;
   } else ot = 1 << l | n << i | r, ut = e;
 }
 function Iu(e) {
@@ -2406,7 +2406,7 @@ function Lu(e) {
   for (; e === Ii; ) Ii = mn[--vn], mn[vn] = null, Li = mn[--vn], mn[vn] = null;
   for (; e === Yt; ) Yt = Ae[--De], Ae[De] = null, ut = Ae[--De], Ae[De] = null, ot = Ae[--De], Ae[De] = null;
 }
-var Oe = null, ke = null, W = !1, Xe = null;
+var Oe = null, ke = null, W = !1, Qe = null;
 function oc(e, t) {
   var n = He(5, null, null, 0);
   n.elementType = "DELETED", n.stateNode = t, n.return = e, t = e.deletions, t === null ? (e.deletions = [n], e.flags |= 16) : t.push(n);
@@ -2484,7 +2484,7 @@ function kn() {
   ke = Oe = null, W = !1;
 }
 function Ru(e) {
-  Xe === null ? Xe = [e] : Xe.push(e);
+  Qe === null ? Qe = [e] : Qe.push(e);
 }
 var Qh = pt.ReactCurrentBatchConfig;
 function Xn(e, t, n) {
@@ -2914,7 +2914,7 @@ function se() {
 }
 function ju(e, t) {
   if (t === null) return !1;
-  for (var n = 0; n < t.length && n < e.length; n++) if (!Ze(e[n], t[n])) return !1;
+  for (var n = 0; n < t.length && n < e.length; n++) if (!Ye(e[n], t[n])) return !1;
   return !0;
 }
 function $u(e, t, n, r, i, l) {
@@ -2932,7 +2932,7 @@ function Vu() {
   var e = Tr !== 0;
   return Tr = 0, e;
 }
-function Ke() {
+function Je() {
   var e = { memoizedState: null, baseState: null, baseQueue: null, queue: null, next: null };
   return re === null ? Q.memoizedState = re = e : re = re.next = e, re;
 }
@@ -2982,7 +2982,7 @@ function Xl(e) {
       }
       s = s.next;
     } while (s !== null && s !== l);
-    a === null ? o = r : a.next = u, Ze(r, t.memoizedState) || (Ce = !0), t.memoizedState = r, t.baseState = o, t.baseQueue = a, n.lastRenderedState = r;
+    a === null ? o = r : a.next = u, Ye(r, t.memoizedState) || (Ce = !0), t.memoizedState = r, t.baseState = o, t.baseQueue = a, n.lastRenderedState = r;
   }
   if (e = n.interleaved, e !== null) {
     i = e;
@@ -3003,14 +3003,14 @@ function Ql(e) {
     do
       l = e(l, o.action), o = o.next;
     while (o !== i);
-    Ze(l, t.memoizedState) || (Ce = !0), t.memoizedState = l, t.baseQueue === null && (t.baseState = l), n.lastRenderedState = l;
+    Ye(l, t.memoizedState) || (Ce = !0), t.memoizedState = l, t.baseQueue === null && (t.baseState = l), n.lastRenderedState = l;
   }
   return [l, r];
 }
 function pc() {
 }
 function hc(e, t) {
-  var n = Q, r = Ue(), i = t(), l = !Ze(r.memoizedState, i);
+  var n = Q, r = Ue(), i = t(), l = !Ye(r.memoizedState, i);
   if (l && (r.memoizedState = i, Ce = !0), r = r.queue, Gu(gc.bind(null, n, r, e), [e]), r.getSnapshot !== t || l || re !== null && re.memoizedState.tag & 1) {
     if (n.flags |= 2048, Nr(9, vc.bind(null, n, r, i, t), void 0, null), ie === null) throw Error(E(349));
     Kt & 30 || mc(n, t, i);
@@ -3033,17 +3033,17 @@ function yc(e) {
   e = e.value;
   try {
     var n = t();
-    return !Ze(e, n);
+    return !Ye(e, n);
   } catch {
     return !0;
   }
 }
 function Ec(e) {
   var t = ct(e, 1);
-  t !== null && be(t, e, 1, -1);
+  t !== null && Ze(t, e, 1, -1);
 }
 function us(e) {
-  var t = Ke();
+  var t = Je();
   return typeof e == "function" && (e = e()), t.memoizedState = t.baseState = e, e = { pending: null, interleaved: null, lanes: 0, dispatch: null, lastRenderedReducer: _r, lastRenderedState: e }, t.queue = e, e = e.dispatch = Kh.bind(null, Q, e), [t.memoizedState, e];
 }
 function Nr(e, t, n, r) {
@@ -3053,7 +3053,7 @@ function xc() {
   return Ue().memoizedState;
 }
 function pi(e, t, n, r) {
-  var i = Ke();
+  var i = Je();
   Q.flags |= e, i.memoizedState = Nr(1 | t, n, void 0, r === void 0 ? null : r);
 }
 function tl(e, t, n, r) {
@@ -3107,7 +3107,7 @@ function Nc(e, t) {
   return r !== null && t !== null && ju(t, r[1]) ? r[0] : (e = e(), n.memoizedState = [e, t], e);
 }
 function Pc(e, t, n) {
-  return Kt & 21 ? (Ze(n, t) || (n = Rf(), Q.lanes |= n, Jt |= n, e.baseState = !0), t) : (e.baseState && (e.baseState = !1, Ce = !0), e.memoizedState = n);
+  return Kt & 21 ? (Ye(n, t) || (n = Rf(), Q.lanes |= n, Jt |= n, e.baseState = !0), t) : (e.baseState && (e.baseState = !1, Ce = !0), e.memoizedState = n);
 }
 function Zh(e, t) {
   var n = U;
@@ -3128,7 +3128,7 @@ function Yh(e, t, n) {
   if (n = { lane: r, action: n, hasEagerState: !1, eagerState: null, next: null }, Oc(e)) Ic(t, n);
   else if (n = fc(e, t, n, r), n !== null) {
     var i = Ee();
-    be(n, e, r, i), Lc(n, t, r);
+    Ze(n, e, r, i), Lc(n, t, r);
   }
 }
 function Kh(e, t, n) {
@@ -3138,7 +3138,7 @@ function Kh(e, t, n) {
     var l = e.alternate;
     if (e.lanes === 0 && (l === null || l.lanes === 0) && (l = t.lastRenderedReducer, l !== null)) try {
       var o = t.lastRenderedState, u = l(o, n);
-      if (i.hasEagerState = !0, i.eagerState = u, Ze(u, o)) {
+      if (i.hasEagerState = !0, i.eagerState = u, Ye(u, o)) {
         var a = t.interleaved;
         a === null ? (i.next = i, Hu(t)) : (i.next = a.next, a.next = i), t.interleaved = i;
         return;
@@ -3146,7 +3146,7 @@ function Kh(e, t, n) {
     } catch {
     } finally {
     }
-    n = fc(e, t, i, r), n !== null && (i = Ee(), be(n, e, r, i), Lc(n, t, r));
+    n = fc(e, t, i, r), n !== null && (i = Ee(), Ze(n, e, r, i), Lc(n, t, r));
   }
 }
 function Oc(e) {
@@ -3165,7 +3165,7 @@ function Lc(e, t, n) {
   }
 }
 var Fi = { readContext: Be, useCallback: se, useContext: se, useEffect: se, useImperativeHandle: se, useInsertionEffect: se, useLayoutEffect: se, useMemo: se, useReducer: se, useRef: se, useState: se, useDebugValue: se, useDeferredValue: se, useTransition: se, useMutableSource: se, useSyncExternalStore: se, useId: se, unstable_isNewReconciler: !1 }, Jh = { readContext: Be, useCallback: function(e, t) {
-  return Ke().memoizedState = [e, t === void 0 ? null : t], e;
+  return Je().memoizedState = [e, t === void 0 ? null : t], e;
 }, useContext: Be, useEffect: as, useImperativeHandle: function(e, t, n) {
   return n = n != null ? n.concat([e]) : null, pi(
     4194308,
@@ -3178,22 +3178,22 @@ var Fi = { readContext: Be, useCallback: se, useContext: se, useEffect: se, useI
 }, useInsertionEffect: function(e, t) {
   return pi(4, 2, e, t);
 }, useMemo: function(e, t) {
-  var n = Ke();
+  var n = Je();
   return t = t === void 0 ? null : t, e = e(), n.memoizedState = [e, t], e;
 }, useReducer: function(e, t, n) {
-  var r = Ke();
+  var r = Je();
   return t = n !== void 0 ? n(t) : t, r.memoizedState = r.baseState = t, e = { pending: null, interleaved: null, lanes: 0, dispatch: null, lastRenderedReducer: e, lastRenderedState: t }, r.queue = e, e = e.dispatch = Yh.bind(null, Q, e), [r.memoizedState, e];
 }, useRef: function(e) {
-  var t = Ke();
+  var t = Je();
   return e = { current: e }, t.memoizedState = e;
 }, useState: us, useDebugValue: Wu, useDeferredValue: function(e) {
-  return Ke().memoizedState = e;
+  return Je().memoizedState = e;
 }, useTransition: function() {
   var e = us(!1), t = e[0];
-  return e = Zh.bind(null, e[1]), Ke().memoizedState = e, [t, e];
+  return e = Zh.bind(null, e[1]), Je().memoizedState = e, [t, e];
 }, useMutableSource: function() {
 }, useSyncExternalStore: function(e, t, n) {
-  var r = Q, i = Ke();
+  var r = Q, i = Je();
   if (W) {
     if (n === void 0) throw Error(E(407));
     n = n();
@@ -3210,10 +3210,10 @@ var Fi = { readContext: Be, useCallback: se, useContext: se, useEffect: se, useI
     e
   ), [e]), r.flags |= 2048, Nr(9, vc.bind(null, r, l, n, t), void 0, null), n;
 }, useId: function() {
-  var e = Ke(), t = ie.identifierPrefix;
+  var e = Je(), t = ie.identifierPrefix;
   if (W) {
     var n = ut, r = ot;
-    n = (r & ~(1 << 32 - Qe(r) - 1)).toString(32) + n, t = ":" + t + "R" + n, n = Tr++, 0 < n && (t += "H" + n.toString(32)), t += ":";
+    n = (r & ~(1 << 32 - be(r) - 1)).toString(32) + n, t = ":" + t + "R" + n, n = Tr++, 0 < n && (t += "H" + n.toString(32)), t += ":";
   } else n = bh++, t = ":" + t + "r" + n.toString(32) + ":";
   return e.memoizedState = t;
 }, unstable_isNewReconciler: !1 }, qh = {
@@ -3252,7 +3252,7 @@ var Fi = { readContext: Be, useCallback: se, useContext: se, useEffect: se, useI
   var e = Ql(_r)[0], t = Ue().memoizedState;
   return [e, t];
 }, useMutableSource: pc, useSyncExternalStore: hc, useId: kc, unstable_isNewReconciler: !1 };
-function Ge(e, t) {
+function We(e, t) {
   if (e && e.defaultProps) {
     t = b({}, t), e = e.defaultProps;
     for (var n in e) t[n] === void 0 && (t[n] = e[n]);
@@ -3268,15 +3268,15 @@ var nl = { isMounted: function(e) {
 }, enqueueSetState: function(e, t, n) {
   e = e._reactInternals;
   var r = Ee(), i = Ot(e), l = at(r, i);
-  l.payload = t, n != null && (l.callback = n), t = Pt(e, l, i), t !== null && (be(t, e, i, r), ci(t, e, i));
+  l.payload = t, n != null && (l.callback = n), t = Pt(e, l, i), t !== null && (Ze(t, e, i, r), ci(t, e, i));
 }, enqueueReplaceState: function(e, t, n) {
   e = e._reactInternals;
   var r = Ee(), i = Ot(e), l = at(r, i);
-  l.tag = 1, l.payload = t, n != null && (l.callback = n), t = Pt(e, l, i), t !== null && (be(t, e, i, r), ci(t, e, i));
+  l.tag = 1, l.payload = t, n != null && (l.callback = n), t = Pt(e, l, i), t !== null && (Ze(t, e, i, r), ci(t, e, i));
 }, enqueueForceUpdate: function(e, t) {
   e = e._reactInternals;
   var n = Ee(), r = Ot(e), i = at(n, r);
-  i.tag = 2, t != null && (i.callback = t), t = Pt(e, i, r), t !== null && (be(t, e, r, n), ci(t, e, r));
+  i.tag = 2, t != null && (i.callback = t), t = Pt(e, i, r), t !== null && (Ze(t, e, r, n), ci(t, e, r));
 } };
 function ss(e, t, n, r, i, l, o) {
   return e = e.stateNode, typeof e.shouldComponentUpdate == "function" ? e.shouldComponentUpdate(r, l, o) : t.prototype && t.prototype.isPureReactComponent ? !yr(n, r) || !yr(i, l) : !0;
@@ -3428,7 +3428,7 @@ function vs(e, t, n, r, i) {
     var p = t.memoizedState;
     o.state = p, Ai(t, r, o, i), a = t.memoizedState, u !== r || p !== a || Te.current || vt ? (typeof f == "function" && (Do(t, n, f, r), a = t.memoizedState), (u = vt || ss(t, n, u, r, p, a, s)) ? (h || typeof o.UNSAFE_componentWillMount != "function" && typeof o.componentWillMount != "function" || (typeof o.componentWillMount == "function" && o.componentWillMount(), typeof o.UNSAFE_componentWillMount == "function" && o.UNSAFE_componentWillMount()), typeof o.componentDidMount == "function" && (t.flags |= 4194308)) : (typeof o.componentDidMount == "function" && (t.flags |= 4194308), t.memoizedProps = r, t.memoizedState = a), o.props = r, o.state = a, o.context = s, r = u) : (typeof o.componentDidMount == "function" && (t.flags |= 4194308), r = !1);
   } else {
-    o = t.stateNode, cc(e, t), u = t.memoizedProps, s = t.type === t.elementType ? u : Ge(t.type, u), o.props = s, h = t.pendingProps, p = o.context, a = n.contextType, typeof a == "object" && a !== null ? a = Be(a) : (a = _e(n) ? Zt : de.current, a = Pn(t, a));
+    o = t.stateNode, cc(e, t), u = t.memoizedProps, s = t.type === t.elementType ? u : We(t.type, u), o.props = s, h = t.pendingProps, p = o.context, a = n.contextType, typeof a == "object" && a !== null ? a = Be(a) : (a = _e(n) ? Zt : de.current, a = Pn(t, a));
     var y = n.getDerivedStateFromProps;
     (f = typeof y == "function" || typeof o.getSnapshotBeforeUpdate == "function") || typeof o.UNSAFE_componentWillReceiveProps != "function" && typeof o.componentWillReceiveProps != "function" || (u !== h || p !== a) && fs(t, o, r, a), vt = !1, p = t.memoizedState, o.state = p, Ai(t, r, o, i);
     var g = t.memoizedState;
@@ -3519,11 +3519,11 @@ function rm(e, t, n, r, i, l, o) {
         default:
           i = 0;
       }
-      i = i & (r.suspendedLanes | o) ? 0 : i, i !== 0 && i !== l.retryLane && (l.retryLane = i, ct(e, i), be(r, e, i, -1));
+      i = i & (r.suspendedLanes | o) ? 0 : i, i !== 0 && i !== l.retryLane && (l.retryLane = i, ct(e, i), Ze(r, e, i, -1));
     }
     return Ju(), r = bl(Error(E(421))), Jr(e, t, o, r);
   }
-  return i.data === "$?" ? (t.flags |= 128, t.child = e.child, t = vm.bind(null, e), i._reactRetry = t, null) : (e = l.treeContext, ke = Nt(i.nextSibling), Oe = t, W = !0, Xe = null, e !== null && (Ae[De++] = ot, Ae[De++] = ut, Ae[De++] = Yt, ot = e.id, ut = e.overflow, Yt = t), t = Xu(t, r.children), t.flags |= 4096, t);
+  return i.data === "$?" ? (t.flags |= 128, t.child = e.child, t = vm.bind(null, e), i._reactRetry = t, null) : (e = l.treeContext, ke = Nt(i.nextSibling), Oe = t, W = !0, Qe = null, e !== null && (Ae[De++] = ot, Ae[De++] = ut, Ae[De++] = Yt, ot = e.id, ut = e.overflow, Yt = t), t = Xu(t, r.children), t.flags |= 4096, t);
 }
 function ys(e, t, n) {
   e.lanes |= t;
@@ -3724,7 +3724,7 @@ function lm(e, t, n) {
     case 1:
       return _e(t.type) && ki(), fe(t), null;
     case 3:
-      return r = t.stateNode, In(), G(Te), G(de), zu(), r.pendingContext && (r.context = r.pendingContext, r.pendingContext = null), (e === null || e.child === null) && (Yr(t) ? t.flags |= 4 : e === null || e.memoizedState.isDehydrated && !(t.flags & 256) || (t.flags |= 1024, Xe !== null && (Yo(Xe), Xe = null))), $o(e, t), fe(t), null;
+      return r = t.stateNode, In(), G(Te), G(de), zu(), r.pendingContext && (r.context = r.pendingContext, r.pendingContext = null), (e === null || e.child === null) && (Yr(t) ? t.flags |= 4 : e === null || e.memoizedState.isDehydrated && !(t.flags & 256) || (t.flags |= 1024, Qe !== null && (Yo(Qe), Qe = null))), $o(e, t), fe(t), null;
     case 5:
       Uu(t);
       var i = Wt(Cr.current);
@@ -3913,7 +3913,7 @@ function lm(e, t, n) {
             l[qe] = t;
           } else kn(), !(t.flags & 128) && (t.memoizedState = null), t.flags |= 4;
           fe(t), l = !1;
-        } else Xe !== null && (Yo(Xe), Xe = null), l = !0;
+        } else Qe !== null && (Yo(Qe), Qe = null), l = !0;
         if (!l) return t.flags & 65536 ? t : null;
       }
       return t.flags & 128 ? (t.lanes = n, t) : (r = r !== null, r !== (e !== null && e.memoizedState !== null) && r && (t.child.flags |= 8192, t.mode & 1 && (e === null || X.current & 1 ? te === 0 && (te = 3) : Ju())), t.updateQueue !== null && (t.flags |= 4), fe(t), null);
@@ -4044,7 +4044,7 @@ function am(e, t) {
           break;
         case 1:
           if (g !== null) {
-            var x = g.memoizedProps, I = g.memoizedState, d = t.stateNode, c = d.getSnapshotBeforeUpdate(t.elementType === t.type ? x : Ge(t.type, x), I);
+            var x = g.memoizedProps, I = g.memoizedState, d = t.stateNode, c = d.getSnapshotBeforeUpdate(t.elementType === t.type ? x : We(t.type, x), I);
             d.__reactInternalSnapshotBeforeUpdate = c;
           }
           break;
@@ -4140,7 +4140,7 @@ function Xo(e, t, n) {
   if (r === 5 || r === 6) e = e.stateNode, t ? n.insertBefore(e, t) : n.appendChild(e);
   else if (r !== 4 && (e = e.child, e !== null)) for (Xo(e, t, n), e = e.sibling; e !== null; ) Xo(e, t, n), e = e.sibling;
 }
-var oe = null, We = !1;
+var oe = null, Xe = !1;
 function ht(e, t, n) {
   for (n = n.child; n !== null; ) Xc(e, t, n), n = n.sibling;
 }
@@ -4153,14 +4153,14 @@ function Xc(e, t, n) {
     case 5:
       ce || yn(n, t);
     case 6:
-      var r = oe, i = We;
-      oe = null, ht(e, t, n), oe = r, We = i, oe !== null && (We ? (e = oe, n = n.stateNode, e.nodeType === 8 ? e.parentNode.removeChild(n) : e.removeChild(n)) : oe.removeChild(n.stateNode));
+      var r = oe, i = Xe;
+      oe = null, ht(e, t, n), oe = r, Xe = i, oe !== null && (Xe ? (e = oe, n = n.stateNode, e.nodeType === 8 ? e.parentNode.removeChild(n) : e.removeChild(n)) : oe.removeChild(n.stateNode));
       break;
     case 18:
-      oe !== null && (We ? (e = oe, n = n.stateNode, e.nodeType === 8 ? $l(e.parentNode, n) : e.nodeType === 1 && $l(e, n), vr(e)) : $l(oe, n.stateNode));
+      oe !== null && (Xe ? (e = oe, n = n.stateNode, e.nodeType === 8 ? $l(e.parentNode, n) : e.nodeType === 1 && $l(e, n), vr(e)) : $l(oe, n.stateNode));
       break;
     case 4:
-      r = oe, i = We, oe = n.stateNode.containerInfo, We = !0, ht(e, t, n), oe = r, We = i;
+      r = oe, i = Xe, oe = n.stateNode.containerInfo, Xe = !0, ht(e, t, n), oe = r, Xe = i;
       break;
     case 0:
     case 11:
@@ -4213,19 +4213,19 @@ function Ve(e, t) {
       e: for (; u !== null; ) {
         switch (u.tag) {
           case 5:
-            oe = u.stateNode, We = !1;
+            oe = u.stateNode, Xe = !1;
             break e;
           case 3:
-            oe = u.stateNode.containerInfo, We = !0;
+            oe = u.stateNode.containerInfo, Xe = !0;
             break e;
           case 4:
-            oe = u.stateNode.containerInfo, We = !0;
+            oe = u.stateNode.containerInfo, Xe = !0;
             break e;
         }
         u = u.return;
       }
       if (oe === null) throw Error(E(160));
-      Xc(l, o, i), oe = null, We = !1;
+      Xc(l, o, i), oe = null, Xe = !1;
       var a = i.alternate;
       a !== null && (a.return = null), i.return = null;
     } catch (s) {
@@ -4241,7 +4241,7 @@ function Qc(e, t) {
     case 11:
     case 14:
     case 15:
-      if (Ve(t, e), Ye(e), r & 4) {
+      if (Ve(t, e), Ke(e), r & 4) {
         try {
           ar(3, e, e.return), rl(3, e);
         } catch (x) {
@@ -4255,10 +4255,10 @@ function Qc(e, t) {
       }
       break;
     case 1:
-      Ve(t, e), Ye(e), r & 512 && n !== null && yn(n, n.return);
+      Ve(t, e), Ke(e), r & 512 && n !== null && yn(n, n.return);
       break;
     case 5:
-      if (Ve(t, e), Ye(e), r & 512 && n !== null && yn(n, n.return), e.flags & 32) {
+      if (Ve(t, e), Ke(e), r & 512 && n !== null && yn(n, n.return), e.flags & 32) {
         var i = e.stateNode;
         try {
           dr(i, "");
@@ -4300,7 +4300,7 @@ function Qc(e, t) {
       }
       break;
     case 6:
-      if (Ve(t, e), Ye(e), r & 4) {
+      if (Ve(t, e), Ke(e), r & 4) {
         if (e.stateNode === null) throw Error(E(162));
         i = e.stateNode, l = e.memoizedProps;
         try {
@@ -4311,20 +4311,20 @@ function Qc(e, t) {
       }
       break;
     case 3:
-      if (Ve(t, e), Ye(e), r & 4 && n !== null && n.memoizedState.isDehydrated) try {
+      if (Ve(t, e), Ke(e), r & 4 && n !== null && n.memoizedState.isDehydrated) try {
         vr(t.containerInfo);
       } catch (x) {
         Z(e, e.return, x);
       }
       break;
     case 4:
-      Ve(t, e), Ye(e);
+      Ve(t, e), Ke(e);
       break;
     case 13:
-      Ve(t, e), Ye(e), i = e.child, i.flags & 8192 && (l = i.memoizedState !== null, i.stateNode.isHidden = l, !l || i.alternate !== null && i.alternate.memoizedState !== null || (Zu = J())), r & 4 && Ss(e);
+      Ve(t, e), Ke(e), i = e.child, i.flags & 8192 && (l = i.memoizedState !== null, i.stateNode.isHidden = l, !l || i.alternate !== null && i.alternate.memoizedState !== null || (Zu = J())), r & 4 && Ss(e);
       break;
     case 22:
-      if (f = n !== null && n.memoizedState !== null, e.mode & 1 ? (ce = (s = ce) || f, Ve(t, e), ce = s) : Ve(t, e), Ye(e), r & 8192) {
+      if (f = n !== null && n.memoizedState !== null, e.mode & 1 ? (ce = (s = ce) || f, Ve(t, e), ce = s) : Ve(t, e), Ke(e), r & 8192) {
         if (s = e.memoizedState !== null, (e.stateNode.isHidden = s) && !f && e.mode & 1) for (w = e, f = e.child; f !== null; ) {
           for (h = w = f; w !== null; ) {
             switch (p = w, y = p.child, p.tag) {
@@ -4389,7 +4389,7 @@ function Qc(e, t) {
       }
       break;
     case 19:
-      Ve(t, e), Ye(e), r & 4 && Ss(e);
+      Ve(t, e), Ke(e), r & 4 && Ss(e);
       break;
     case 21:
       break;
@@ -4397,10 +4397,10 @@ function Qc(e, t) {
       Ve(
         t,
         e
-      ), Ye(e);
+      ), Ke(e);
   }
 }
-function Ye(e) {
+function Ke(e) {
   var t = e.flags;
   if (t & 2) {
     try {
@@ -4472,7 +4472,7 @@ function ws(e) {
             var r = t.stateNode;
             if (t.flags & 4 && !ce) if (n === null) r.componentDidMount();
             else {
-              var i = t.elementType === t.type ? n.memoizedProps : Ge(t.type, n.memoizedProps);
+              var i = t.elementType === t.type ? n.memoizedProps : We(t.type, n.memoizedProps);
               r.componentDidUpdate(i, n.memoizedState, r.__reactInternalSnapshotBeforeUpdate);
             }
             var l = t.updateQueue;
@@ -4629,7 +4629,7 @@ function Ee() {
 function Ot(e) {
   return e.mode & 1 ? B & 2 && ue !== 0 ? ue & -ue : Qh.transition !== null ? (vi === 0 && (vi = Rf()), vi) : (e = U, e !== 0 || (e = window.event, e = e === void 0 ? 16 : Uf(e.type)), e) : 1;
 }
-function be(e, t, n, r) {
+function Ze(e, t, n, r) {
   if (50 < fr) throw fr = 0, bo = null, Error(E(185));
   Or(e, n, r), (!(B & 2) || e !== ie) && (e === ie && (!(B & 2) && (il |= n), te === 4 && xt(e, ue)), Ne(e, r), n === 1 && B === 0 && !(t.mode & 1) && (Rn = J() + 500, el && Dt()));
 }
@@ -4714,7 +4714,7 @@ function Zc(e, t) {
         case 4:
           if (xt(e, r), (r & 4194240) === r) break;
           for (t = e.eventTimes, i = -1; 0 < r; ) {
-            var o = 31 - Qe(r);
+            var o = 31 - be(r);
             l = 1 << o, o = t[o], o > i && (i = o), r &= ~l;
           }
           if (r = i, r = J() - r, r = (120 > r ? 120 : 480 > r ? 480 : 1080 > r ? 1080 : 1920 > r ? 1920 : 3e3 > r ? 3e3 : 4320 > r ? 4320 : 1960 * fm(r / 1960)) - r, 10 < r) {
@@ -4748,7 +4748,7 @@ function cm(e) {
         var i = n[r], l = i.getSnapshot;
         i = i.value;
         try {
-          if (!Ze(l(), i)) return !1;
+          if (!Ye(l(), i)) return !1;
         } catch {
           return !1;
         }
@@ -4768,7 +4768,7 @@ function cm(e) {
 }
 function xt(e, t) {
   for (t &= ~bu, t &= ~il, e.suspendedLanes |= t, e.pingedLanes &= ~t, e = e.expirationTimes; 0 < t; ) {
-    var n = 31 - Qe(t), r = 1 << n;
+    var n = 31 - be(t), r = 1 << n;
     e[n] = -1, t &= ~r;
   }
 }
@@ -5200,7 +5200,7 @@ td = function(e, t, n) {
     case 16:
       r = t.elementType;
       e: {
-        switch (hi(e, t), e = t.pendingProps, i = r._init, r = i(r._payload), t.type = r, i = t.tag = Em(r), e = Ge(r, e), i) {
+        switch (hi(e, t), e = t.pendingProps, i = r._init, r = i(r._payload), t.type = r, i = t.tag = Em(r), e = We(r, e), i) {
           case 0:
             t = Bo(null, t, r, e, n);
             break e;
@@ -5211,7 +5211,7 @@ td = function(e, t, n) {
             t = hs(null, t, r, e, n);
             break e;
           case 14:
-            t = ms(null, t, r, Ge(r.type, e), n);
+            t = ms(null, t, r, We(r.type, e), n);
             break e;
         }
         throw Error(E(
@@ -5222,9 +5222,9 @@ td = function(e, t, n) {
       }
       return t;
     case 0:
-      return r = t.type, i = t.pendingProps, i = t.elementType === r ? i : Ge(r, i), Bo(e, t, r, i, n);
+      return r = t.type, i = t.pendingProps, i = t.elementType === r ? i : We(r, i), Bo(e, t, r, i, n);
     case 1:
-      return r = t.type, i = t.pendingProps, i = t.elementType === r ? i : Ge(r, i), vs(e, t, r, i, n);
+      return r = t.type, i = t.pendingProps, i = t.elementType === r ? i : We(r, i), vs(e, t, r, i, n);
     case 3:
       e: {
         if (Bc(t), e === null) throw Error(E(387));
@@ -5236,7 +5236,7 @@ td = function(e, t, n) {
         } else if (r !== i) {
           i = Ln(Error(E(424)), t), t = gs(e, t, r, n, i);
           break e;
-        } else for (ke = Nt(t.stateNode.containerInfo.firstChild), Oe = t, W = !0, Xe = null, n = sc(t, null, r, n), t.child = n; n; ) n.flags = n.flags & -3 | 4096, n = n.sibling;
+        } else for (ke = Nt(t.stateNode.containerInfo.firstChild), Oe = t, W = !0, Qe = null, n = sc(t, null, r, n), t.child = n; n; ) n.flags = n.flags & -3 | 4096, n = n.sibling;
         else {
           if (kn(), r === i) {
             t = dt(e, t, n);
@@ -5256,7 +5256,7 @@ td = function(e, t, n) {
     case 4:
       return Bu(t, t.stateNode.containerInfo), r = t.pendingProps, e === null ? t.child = On(t, null, r, n) : he(e, t, r, n), t.child;
     case 11:
-      return r = t.type, i = t.pendingProps, i = t.elementType === r ? i : Ge(r, i), hs(e, t, r, i, n);
+      return r = t.type, i = t.pendingProps, i = t.elementType === r ? i : We(r, i), hs(e, t, r, i, n);
     case 7:
       return he(e, t, t.pendingProps, n), t.child;
     case 8:
@@ -5265,7 +5265,7 @@ td = function(e, t, n) {
       return he(e, t, t.pendingProps.children, n), t.child;
     case 10:
       e: {
-        if (r = t.type._context, i = t.pendingProps, l = t.memoizedProps, o = i.value, j(Ri, r._currentValue), r._currentValue = o, l !== null) if (Ze(l.value, o)) {
+        if (r = t.type._context, i = t.pendingProps, l = t.memoizedProps, o = i.value, j(Ri, r._currentValue), r._currentValue = o, l !== null) if (Ye(l.value, o)) {
           if (l.children === i.children && !Te.current) {
             t = dt(e, t, n);
             break e;
@@ -5319,11 +5319,11 @@ td = function(e, t, n) {
     case 9:
       return i = t.type, r = t.pendingProps.children, Tn(t, n), i = Be(i), r = r(i), t.flags |= 1, he(e, t, r, n), t.child;
     case 14:
-      return r = t.type, i = Ge(r, t.pendingProps), i = Ge(r.type, i), ms(e, t, r, i, n);
+      return r = t.type, i = We(r, t.pendingProps), i = We(r.type, i), ms(e, t, r, i, n);
     case 15:
       return Dc(e, t, t.type, t.pendingProps, n);
     case 17:
-      return r = t.type, i = t.pendingProps, i = t.elementType === r ? i : Ge(r, i), hi(e, t), t.tag = 1, _e(r) ? (e = !0, Oi(t)) : e = !1, Tn(t, n), Rc(t, r, i), Ho(t, r, i, n), Uo(null, t, r, !0, e, n);
+      return r = t.type, i = t.pendingProps, i = t.elementType === r ? i : We(r, i), hi(e, t), t.tag = 1, _e(r) ? (e = !0, Oi(t)) : e = !1, Tn(t, n), Rc(t, r, i), Ho(t, r, i, n), Uo(null, t, r, !0, e, n);
     case 19:
       return zc(e, t, n);
     case 22:
@@ -5449,7 +5449,7 @@ function id(e, t, n, r, i, l, o, u, a) {
 }
 function ol(e, t, n, r) {
   var i = t.current, l = Ee(), o = Ot(i);
-  return n = rd(n), t.context === null ? t.context = n : t.pendingContext = n, t = at(l, o), t.payload = { element: e }, r = r === void 0 ? null : r, r !== null && (t.callback = r), e = Pt(i, t, o), e !== null && (be(e, i, o, l), ci(e, i, o)), o;
+  return n = rd(n), t.context === null ? t.context = n : t.pendingContext = n, t = at(l, o), t.payload = { element: e }, r = r === void 0 ? null : r, r !== null && (t.callback = r), e = Pt(i, t, o), e !== null && (Ze(e, i, o, l), ci(e, i, o)), o;
 }
 function $i(e) {
   if (e = e.current, !e.child) return null;
@@ -5566,7 +5566,7 @@ Af = function(e) {
         var r = ct(e, 1);
         if (r !== null) {
           var i = Ee();
-          be(r, e, 1, i);
+          Ze(r, e, 1, i);
         }
       }), ta(e, 1);
   }
@@ -5576,7 +5576,7 @@ Cu = function(e) {
     var t = ct(e, 134217728);
     if (t !== null) {
       var n = Ee();
-      be(t, e, 134217728, n);
+      Ze(t, e, 134217728, n);
     }
     ta(e, 134217728);
   }
@@ -5586,7 +5586,7 @@ Df = function(e) {
     var t = Ot(e), n = ct(e, t);
     if (n !== null) {
       var r = Ee();
-      be(n, e, t, r);
+      Ze(n, e, t, r);
     }
     ta(e, t);
   }
@@ -10547,41 +10547,46 @@ ye.Visible = ya;
 ye.Context = Hr;
 const j0 = ({
   displayName: e,
-  sections: t,
-  openSections: n,
-  allowMultipleOpen: r,
-  runtime: i
+  title: t,
+  sections: n,
+  openSections: r,
+  allowMultipleOpen: i,
+  runtime: l
 }) => {
-  const [l, o] = R.useState(n || [0]), u = (a) => {
-    let s;
-    l.includes(a) ? s = l.filter((f) => f !== a) : r ? s = [...l, a] : s = [a], o(s);
+  const [o, u] = R.useState(r || [0]), a = (s) => {
+    let f;
+    o.includes(s) ? f = o.filter((h) => h !== s) : i ? f = [...o, s] : f = [s], u(f);
   };
-  return /* @__PURE__ */ Je.jsx("div", { className: "accordion-student-view", children: /* @__PURE__ */ Je.jsx("div", { className: "accordion-wrapper", children: t.map((a, s) => /* @__PURE__ */ Je.jsxs(
-    ye.Advanced,
-    {
-      open: l.includes(s),
-      onToggle: () => u(s),
-      className: "accordion-section",
-      children: [
-        /* @__PURE__ */ Je.jsx(ye.Trigger, { className: "accordion-section-trigger", children: /* @__PURE__ */ Je.jsx("div", { className: "accordion-section-title", children: a.title }) }),
-        /* @__PURE__ */ Je.jsx(ye.Body, { className: "accordion-section-body", children: /* @__PURE__ */ Je.jsx(
-          "div",
-          {
-            className: "accordion-section-content",
-            dangerouslySetInnerHTML: { __html: a.content }
-          }
-        ) })
-      ]
-    },
-    s
-  )) }) });
+  return /* @__PURE__ */ Ge.jsxs("div", { className: "accordion-student-view", children: [
+    t && /* @__PURE__ */ Ge.jsx("h3", { className: "accordion-main-title", children: t }),
+    /* @__PURE__ */ Ge.jsx("div", { className: "accordion-wrapper", children: n.map((s, f) => /* @__PURE__ */ Ge.jsxs(
+      ye.Advanced,
+      {
+        open: o.includes(f),
+        onToggle: () => a(f),
+        className: "accordion-section",
+        children: [
+          /* @__PURE__ */ Ge.jsx(ye.Trigger, { className: "accordion-section-trigger", children: /* @__PURE__ */ Ge.jsx("h4", { className: "accordion-section-title", children: s.title }) }),
+          /* @__PURE__ */ Ge.jsx(ye.Body, { className: "accordion-section-body", children: /* @__PURE__ */ Ge.jsx(
+            "div",
+            {
+              className: "accordion-section-content",
+              dangerouslySetInnerHTML: { __html: s.content }
+            }
+          ) })
+        ]
+      },
+      f
+    )) })
+  ] });
 }, V0 = (e, t, n) => {
   ad(e).render(
-    /* @__PURE__ */ Je.jsxs(R.StrictMode, { children: [
-      /* @__PURE__ */ Je.jsx(e0, { locale: "en", children: /* @__PURE__ */ Je.jsx(
+    /* @__PURE__ */ Ge.jsxs(R.StrictMode, { children: [
+      /* @__PURE__ */ Ge.jsx(e0, { locale: "en", children: /* @__PURE__ */ Ge.jsx(
         j0,
         {
           displayName: t.displayName,
+          title: t.title,
           sections: t.sections,
           openSections: t.openSections,
           allowMultipleOpen: t.allowMultipleOpen,

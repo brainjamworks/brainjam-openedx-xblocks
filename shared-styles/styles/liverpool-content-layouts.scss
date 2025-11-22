@@ -1,0 +1,1016 @@
+/**
+ * Liverpool Dental - Shared Content Layout Patterns
+ *
+ * Reusable flexbox/grid layout components for structured educational content
+ * Used across accordion, tabs, and flashcards xblocks
+ *
+ * ARCHITECTURE:
+ * - Flexbox for one-dimensional layouts (rows/columns)
+ * - CSS Grid for two-dimensional layouts (galleries)
+ * - Mobile-first responsive design
+ * - Liverpool design token integration
+ */
+
+@import 'liverpool-shared-tokens';
+
+// ========================================
+// MEDIA OBJECT PATTERN (Flexbox)
+// Image + text side by side
+// Use for: Diagrams with explanations, procedures, anatomy
+// ========================================
+.content-media-object {
+  display: flex;
+  flex-direction: column;
+  gap: $liverpool-space-4;
+  margin: $liverpool-space-5 0;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    gap: $liverpool-space-5;
+  }
+}
+
+.content-media-figure {
+  flex-shrink: 0;
+
+  img {
+    width: 100%;
+    height: auto;
+    border-radius: $liverpool-card-border-radius;
+    border: $liverpool-card-border;
+  }
+
+  @media (min-width: 768px) {
+    width: 250px;
+  }
+}
+
+.content-media-body {
+  flex: 1;
+
+  h3, h4 {
+    margin-top: 0;
+    margin-bottom: $liverpool-space-3;
+    color: $liverpool-text-primary;
+    font-weight: $liverpool-font-weight-semibold;
+  }
+
+  p {
+    color: $liverpool-text-secondary;
+    line-height: $liverpool-line-height-loose;
+    margin: $liverpool-space-3 0;
+  }
+}
+
+// ========================================
+// TWO COLUMN LAYOUT (Flexbox)
+// Side-by-side comparison or dual content
+// Use for: Before/after, normal vs pathological, pros vs cons
+// ========================================
+.content-two-column {
+  display: flex;
+  flex-direction: column;
+  gap: $liverpool-space-4;
+  margin: $liverpool-space-5 0;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    gap: $liverpool-space-5;
+  }
+}
+
+.content-column {
+  flex: 1;
+
+  h4 {
+    margin-top: 0;
+    margin-bottom: $liverpool-space-3;
+    color: $liverpool-text-primary;
+    font-weight: $liverpool-font-weight-semibold;
+  }
+
+  p {
+    color: $liverpool-text-secondary;
+    line-height: $liverpool-line-height-loose;
+    margin: $liverpool-space-3 0;
+  }
+
+  img {
+    width: 100%;
+    height: auto;
+    border-radius: $liverpool-card-border-radius;
+    border: $liverpool-card-border;
+    margin-bottom: $liverpool-space-3;
+  }
+}
+
+// ========================================
+// CARD GRID PATTERN (CSS Grid)
+// Image gallery with auto-responsive columns
+// Use for: Case studies, examples, image collections
+// ========================================
+.content-card-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $liverpool-space-4;
+  margin: $liverpool-space-5 0;
+
+  @media (min-width: 480px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.content-card {
+  border: $liverpool-card-border;
+  border-radius: $liverpool-card-border-radius;
+  padding: $liverpool-space-4;
+  background: $liverpool-card-bg;
+  box-shadow: $liverpool-card-shadow;
+  transition: box-shadow $liverpool-duration-base $liverpool-easing-out;
+
+  &:hover {
+    box-shadow: $liverpool-card-shadow-hover;
+  }
+
+  img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: $liverpool-space-3;
+  }
+
+  h4 {
+    margin: 0 0 $liverpool-space-2;
+    color: $liverpool-text-primary;
+    font-weight: $liverpool-font-weight-semibold;
+  }
+
+  p {
+    margin: 0;
+    color: $liverpool-text-secondary;
+    font-size: $liverpool-font-size-sm;
+    line-height: $liverpool-line-height-normal;
+  }
+}
+
+// ========================================
+// CALLOUT BOXES (Flexbox)
+// Highlighted info, warning, success boxes
+// Use for: Important notes, warnings, best practices
+// ========================================
+.content-callout {
+  display: flex;
+  gap: $liverpool-space-3;
+  padding: $liverpool-space-4;
+  border-left: 4px solid;
+  border-radius: $liverpool-card-border-radius;
+  margin: $liverpool-space-5 0;
+
+  &.callout-info {
+    background: rgba($liverpool-blue, 0.08);
+    border-color: $liverpool-blue;
+
+    .callout-icon {
+      color: $liverpool-blue;
+    }
+  }
+
+  &.callout-warning {
+    background: rgba(#ff9800, 0.08);
+    border-color: #ff9800;
+
+    .callout-icon {
+      color: #ff9800;
+    }
+  }
+
+  &.callout-success {
+    background: rgba(#4caf50, 0.08);
+    border-color: #4caf50;
+
+    .callout-icon {
+      color: #4caf50;
+    }
+  }
+}
+
+.callout-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.callout-content {
+  flex: 1;
+
+  h5 {
+    margin: 0 0 $liverpool-space-2;
+    color: $liverpool-text-primary;
+    font-size: $liverpool-font-size-md;
+    font-weight: $liverpool-font-weight-semibold;
+  }
+
+  p {
+    margin: 0;
+    color: $liverpool-text-secondary;
+    line-height: $liverpool-line-height-normal;
+  }
+}
+
+// ========================================
+// FIGURE WITH CAPTION (Flexbox)
+// Academic-style images with detailed captions
+// Use for: Scientific diagrams, medical images
+// ========================================
+.content-figure {
+  display: flex;
+  flex-direction: column;
+  gap: $liverpool-space-3;
+  margin: $liverpool-space-5 0;
+
+  img {
+    width: 100%;
+    height: auto;
+    border-radius: $liverpool-card-border-radius;
+    border: $liverpool-card-border;
+  }
+
+  figcaption {
+    font-size: $liverpool-font-size-sm;
+    color: $liverpool-text-secondary;
+    text-align: center;
+    padding: 0 $liverpool-space-4;
+    line-height: $liverpool-line-height-normal;
+
+    strong {
+      color: $liverpool-text-primary;
+      font-weight: $liverpool-font-weight-semibold;
+    }
+  }
+}
+
+// ========================================
+// CLINICAL CASE STUDY (Flexbox)
+// SOAP format case presentation
+// Use for: Patient cases, clinical scenarios, treatment planning
+// ========================================
+.content-case-study {
+  border: $liverpool-card-border;
+  border-radius: $liverpool-card-border-radius;
+  background: $liverpool-card-bg;
+  padding: $liverpool-space-5;
+  margin: $liverpool-space-5 0;
+  box-shadow: $liverpool-card-shadow;
+}
+
+.case-study-header {
+  border-bottom: 2px solid $liverpool-border-default;
+  padding-bottom: $liverpool-space-3;
+  margin-bottom: $liverpool-space-4;
+
+  h4 {
+    margin: 0;
+    color: $liverpool-text-primary;
+    font-weight: $liverpool-font-weight-semibold;
+  }
+}
+
+.case-study-section {
+  margin-bottom: $liverpool-space-4;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .section-label {
+    display: inline-block;
+    background: $liverpool-blue;
+    color: $liverpool-neutral-white;
+    padding: $liverpool-space-1 $liverpool-space-3;
+    border-radius: $liverpool-radius-xs;
+    font-size: $liverpool-font-size-sm;
+    font-weight: $liverpool-font-weight-semibold;
+    margin-bottom: $liverpool-space-2;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .section-content {
+    color: $liverpool-text-secondary;
+    line-height: $liverpool-line-height-loose;
+
+    ul {
+      margin: $liverpool-space-2 0;
+      padding-left: $liverpool-space-5;
+
+      li {
+        margin: $liverpool-space-1 0;
+      }
+    }
+  }
+}
+
+// ========================================
+// BEFORE & AFTER COMPARISON (Flexbox)
+// Visual comparison with timeline indicator
+// Use for: Treatment outcomes, procedural results
+// ========================================
+.content-before-after {
+  display: flex;
+  flex-direction: column;
+  gap: $liverpool-space-4;
+  margin: $liverpool-space-5 0;
+  align-items: center;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    gap: $liverpool-space-3;
+  }
+}
+
+.before-after-panel {
+  flex: 1;
+  text-align: center;
+
+  img {
+    width: 100%;
+    height: auto;
+    border-radius: $liverpool-card-border-radius;
+    border: $liverpool-card-border;
+    margin-bottom: $liverpool-space-3;
+  }
+
+  .panel-label {
+    display: inline-block;
+    background: $liverpool-bg-subtle;
+    color: $liverpool-text-primary;
+    padding: $liverpool-space-2 $liverpool-space-4;
+    border-radius: $liverpool-radius-xs;
+    font-weight: $liverpool-font-weight-semibold;
+    margin-bottom: $liverpool-space-2;
+  }
+
+  .panel-description {
+    color: $liverpool-text-secondary;
+    font-size: $liverpool-font-size-sm;
+    line-height: $liverpool-line-height-normal;
+  }
+}
+
+.before-after-arrow {
+  flex-shrink: 0;
+  color: $liverpool-blue;
+  font-size: 2rem;
+  font-weight: bold;
+  padding: 0 $liverpool-space-3;
+
+  @media (max-width: 767px) {
+    transform: rotate(90deg);
+  }
+}
+
+// ========================================
+// STEP-BY-STEP PROCEDURE (Flexbox)
+// Numbered procedural instructions
+// Use for: Clinical procedures, protocols, techniques
+// ========================================
+.content-procedure {
+  margin: $liverpool-space-5 0;
+  counter-reset: procedure-counter;
+}
+
+.procedure-step {
+  display: flex;
+  gap: $liverpool-space-4;
+  margin-bottom: $liverpool-space-4;
+  padding-bottom: $liverpool-space-4;
+  border-bottom: 1px solid $liverpool-border-default;
+
+  &:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+}
+
+.procedure-number {
+  flex-shrink: 0;
+  counter-increment: procedure-counter;
+  width: 40px;
+  height: 40px;
+  background: $liverpool-blue;
+  color: $liverpool-neutral-white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: $liverpool-font-weight-bold;
+  font-size: $liverpool-font-size-md;
+
+  &::before {
+    content: counter(procedure-counter);
+  }
+}
+
+.procedure-content {
+  flex: 1;
+
+  h5 {
+    margin: 0 0 $liverpool-space-2;
+    color: $liverpool-text-primary;
+    font-weight: $liverpool-font-weight-semibold;
+  }
+
+  p {
+    margin: 0;
+    color: $liverpool-text-secondary;
+    line-height: $liverpool-line-height-loose;
+  }
+
+  ul {
+    margin: $liverpool-space-2 0 0;
+    padding-left: $liverpool-space-5;
+    color: $liverpool-text-secondary;
+
+    li {
+      margin: $liverpool-space-1 0;
+    }
+  }
+}
+
+// ========================================
+// DEFINITION/TERMINOLOGY CARD (Flexbox)
+// Term + pronunciation + definition
+// Use for: Dental terminology, condition definitions
+// ========================================
+.content-definition {
+  border: $liverpool-card-border;
+  border-left: 4px solid $liverpool-blue;
+  border-radius: $liverpool-card-border-radius;
+  background: $liverpool-card-bg;
+  padding: $liverpool-space-4;
+  margin: $liverpool-space-5 0;
+  box-shadow: $liverpool-card-shadow;
+}
+
+.definition-term {
+  font-size: $liverpool-font-size-xl;
+  font-weight: $liverpool-font-weight-bold;
+  color: $liverpool-text-primary;
+  margin: 0 0 $liverpool-space-2;
+}
+
+.definition-pronunciation {
+  font-size: $liverpool-font-size-base;
+  color: $liverpool-text-muted;
+  font-style: italic;
+  margin: 0 0 $liverpool-space-3;
+}
+
+.definition-meaning {
+  color: $liverpool-text-secondary;
+  line-height: $liverpool-line-height-loose;
+  margin: 0;
+}
+
+// ========================================
+// TIMELINE/PROCESS FLOW (Flexbox)
+// Connected timeline nodes
+// Use for: Treatment timelines, multi-phase procedures
+// ========================================
+.content-timeline {
+  margin: $liverpool-space-5 0;
+  position: relative;
+}
+
+.timeline-item {
+  display: flex;
+  gap: $liverpool-space-4;
+  margin-bottom: $liverpool-space-5;
+  position: relative;
+
+  &:last-child {
+    margin-bottom: 0;
+
+    &::before {
+      display: none;
+    }
+  }
+
+  // Connecting line between nodes
+  &::before {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 40px;
+    width: 2px;
+    height: calc(100% + #{$liverpool-space-5});
+    background: $liverpool-border-default;
+  }
+}
+
+.timeline-marker {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  background: $liverpool-neutral-white;
+  border: 3px solid $liverpool-blue;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+
+  &.timeline-marker-complete {
+    background: $liverpool-blue;
+
+    &::after {
+      content: '✓';
+      color: $liverpool-neutral-white;
+      font-weight: bold;
+    }
+  }
+}
+
+.timeline-content {
+  flex: 1;
+  padding-top: $liverpool-space-1;
+
+  h5 {
+    margin: 0 0 $liverpool-space-2;
+    color: $liverpool-text-primary;
+    font-weight: $liverpool-font-weight-semibold;
+  }
+
+  p {
+    margin: 0;
+    color: $liverpool-text-secondary;
+    line-height: $liverpool-line-height-normal;
+  }
+
+  .timeline-date {
+    display: block;
+    font-size: $liverpool-font-size-sm;
+    color: $liverpool-text-muted;
+    margin-top: $liverpool-space-1;
+  }
+}
+
+// ========================================
+// EVIDENCE SUMMARY BOX (Flexbox)
+// Research citation with key findings
+// Use for: Evidence-based practice, clinical guidelines
+// ========================================
+.content-evidence {
+  border: $liverpool-card-border;
+  border-top: 4px solid $liverpool-blue;
+  border-radius: $liverpool-card-border-radius;
+  background: $liverpool-card-bg;
+  padding: $liverpool-space-4;
+  margin: $liverpool-space-5 0;
+  box-shadow: $liverpool-card-shadow;
+}
+
+.evidence-header {
+  display: flex;
+  gap: $liverpool-space-3;
+  align-items: flex-start;
+  margin-bottom: $liverpool-space-3;
+
+  .evidence-icon {
+    flex-shrink: 0;
+    font-size: 1.5rem;
+    color: $liverpool-blue;
+  }
+
+  .evidence-citation {
+    flex: 1;
+    font-size: $liverpool-font-size-sm;
+    color: $liverpool-text-secondary;
+    line-height: $liverpool-line-height-normal;
+    font-style: italic;
+  }
+}
+
+.evidence-label {
+  display: inline-block;
+  background: rgba($liverpool-blue, 0.1);
+  color: $liverpool-blue;
+  padding: $liverpool-space-1 $liverpool-space-3;
+  border-radius: $liverpool-radius-xs;
+  font-size: $liverpool-font-size-sm;
+  font-weight: $liverpool-font-weight-semibold;
+  margin-bottom: $liverpool-space-3;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.evidence-findings {
+  margin: 0;
+  padding-left: $liverpool-space-5;
+  color: $liverpool-text-secondary;
+  line-height: $liverpool-line-height-loose;
+
+  li {
+    margin: $liverpool-space-2 0;
+  }
+}
+
+// ========================================
+// QUICK REFERENCE TABLE (CSS Grid)
+// Responsive data table
+// Use for: Dosing charts, material properties
+// ========================================
+.content-reference-table {
+  margin: $liverpool-space-5 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: $liverpool-card-border-radius;
+  border: $liverpool-card-border;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: $liverpool-card-bg;
+
+    thead {
+      background: $liverpool-blue;
+      color: $liverpool-neutral-white;
+
+      th {
+        padding: $liverpool-space-3 $liverpool-space-4;
+        text-align: left;
+        font-weight: $liverpool-font-weight-semibold;
+        font-size: $liverpool-font-size-base;
+        border-bottom: 2px solid darken($liverpool-blue, 10%);
+      }
+    }
+
+    tbody {
+      tr {
+        &:nth-child(even) {
+          background: $liverpool-bg-subtle;
+        }
+
+        &:hover {
+          background: rgba($liverpool-blue, 0.05);
+        }
+      }
+
+      td {
+        padding: $liverpool-space-3 $liverpool-space-4;
+        color: $liverpool-text-secondary;
+        border-bottom: 1px solid $liverpool-border-default;
+
+        &:first-child {
+          font-weight: $liverpool-font-weight-medium;
+          color: $liverpool-text-primary;
+        }
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+    }
+  }
+}
+
+// ========================================
+// VIDEO EMBED WITH CONTEXT (Flexbox)
+// Video container with description and takeaways
+// Use for: Clinical demonstrations, recorded lectures
+// ========================================
+.content-video-embed {
+  border: $liverpool-card-border;
+  border-radius: $liverpool-card-border-radius;
+  background: $liverpool-card-bg;
+  padding: $liverpool-space-5;
+  margin: $liverpool-space-5 0;
+  box-shadow: $liverpool-card-shadow;
+}
+
+.video-header {
+  margin-bottom: $liverpool-space-4;
+
+  h4 {
+    margin: 0 0 $liverpool-space-2;
+    color: $liverpool-text-primary;
+    font-weight: $liverpool-font-weight-semibold;
+  }
+
+  .video-description {
+    color: $liverpool-text-secondary;
+    line-height: $liverpool-line-height-normal;
+    margin: 0;
+  }
+}
+
+.video-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; // 16:9 aspect ratio
+  height: 0;
+  overflow: hidden;
+  border-radius: $liverpool-radius-xs;
+  background: $liverpool-neutral-900;
+  margin-bottom: $liverpool-space-4;
+
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+}
+
+.video-takeaways {
+  border-top: 2px solid $liverpool-border-default;
+  padding-top: $liverpool-space-3;
+
+  h5 {
+    margin: 0 0 $liverpool-space-2;
+    color: $liverpool-text-primary;
+    font-size: $liverpool-font-size-base;
+    font-weight: $liverpool-font-weight-semibold;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: $liverpool-space-5;
+    color: $liverpool-text-secondary;
+    line-height: $liverpool-line-height-loose;
+
+    li {
+      margin: $liverpool-space-2 0;
+    }
+  }
+}
+
+// ========================================
+// RESPONSIVE: Mobile adjustments
+// ========================================
+@media (max-width: 480px) {
+  .content-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .content-callout {
+    flex-direction: column;
+    gap: $liverpool-space-2;
+    padding: $liverpool-space-3;
+  }
+
+  .content-media-object,
+  .content-two-column {
+    gap: $liverpool-space-3;
+  }
+
+  .content-case-study {
+    padding: $liverpool-space-4;
+  }
+
+  .procedure-step {
+    gap: $liverpool-space-3;
+  }
+
+  .procedure-number {
+    width: 32px;
+    height: 32px;
+    font-size: $liverpool-font-size-sm;
+  }
+
+  .timeline-item {
+    gap: $liverpool-space-3;
+
+    &::before {
+      left: 15px;
+    }
+  }
+
+  .timeline-marker {
+    width: 32px;
+    height: 32px;
+    font-size: $liverpool-font-size-sm;
+  }
+
+  .content-evidence {
+    padding: $liverpool-space-3;
+  }
+
+  .content-video-embed {
+    padding: $liverpool-space-4;
+  }
+
+  .content-reference-table {
+    font-size: $liverpool-font-size-sm;
+
+    table {
+      thead th,
+      tbody td {
+        padding: $liverpool-space-2 $liverpool-space-3;
+      }
+    }
+  }
+}
+
+// ========================================
+// FLASHCARD-SPECIFIC TEMPLATES
+// Simple, focused templates optimized for 500px flashcard height
+// ========================================
+
+// Simple Text - just heading and paragraph
+.fc-simple-text {
+  margin: 0;
+  text-align: center;
+
+  h4 {
+    color: $liverpool-blue;
+    font-size: 24px;
+    font-weight: $liverpool-font-weight-bold;
+    margin-bottom: $liverpool-space-4;
+  }
+
+  p {
+    font-size: 17px;
+    line-height: $liverpool-line-height-normal;
+    color: $liverpool-text-secondary;
+    margin: 0;
+  }
+}
+
+// True/False Card with badge
+.fc-truefalse-card {
+  text-align: center;
+
+  .fc-statement {
+    font-size: 18px;
+    font-weight: $liverpool-font-weight-medium;
+    color: $liverpool-text-primary;
+    line-height: $liverpool-line-height-normal;
+    margin-bottom: $liverpool-space-4;
+  }
+
+  .fc-verdict-badge {
+    display: inline-block;
+    padding: $liverpool-space-3 $liverpool-space-6;
+    border-radius: $liverpool-radius-lg;
+    font-weight: $liverpool-font-weight-bold;
+    font-size: 20px;
+    margin-bottom: $liverpool-space-4;
+    box-shadow: $liverpool-shadow-sm;
+
+    &.fc-false {
+      background: #f44336;
+      color: $liverpool-neutral-white;
+    }
+
+    &.fc-true {
+      background: #4caf50;
+      color: $liverpool-neutral-white;
+    }
+  }
+
+  .fc-why {
+    text-align: left;
+    background: $liverpool-bg-subtle;
+    padding: $liverpool-space-4;
+    border-radius: $liverpool-radius-sm;
+    font-size: 17px;
+    line-height: $liverpool-line-height-normal;
+    color: $liverpool-text-secondary;
+    margin: 0;
+    border-left: 4px solid $liverpool-neutral-400;
+
+    strong {
+      color: $liverpool-text-primary;
+    }
+  }
+}
+
+// Compact figure for flashcards
+.content-figure.fc-compact {
+  margin: 0;
+
+  img {
+    max-width: 250px;
+    max-height: 180px;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto $liverpool-space-3 auto;
+    border-radius: $liverpool-radius-xs;
+    box-shadow: $liverpool-shadow-sm;
+  }
+
+  figcaption {
+    font-size: 17px;
+    line-height: $liverpool-line-height-normal;
+    text-align: center;
+    margin: 0;
+    color: $liverpool-text-secondary;
+  }
+}
+
+// Compare Two boxes
+.fc-compare-boxes {
+  display: flex;
+  align-items: stretch;
+  gap: $liverpool-space-3;
+
+  .fc-compare-item {
+    flex: 1;
+    padding: $liverpool-space-4;
+    border-radius: $liverpool-radius-sm;
+    border: 2px solid;
+
+    .fc-compare-label {
+      font-weight: $liverpool-font-weight-bold;
+      font-size: $liverpool-font-size-sm;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: $liverpool-space-2;
+    }
+
+    p {
+      font-size: $liverpool-font-size-base;
+      line-height: $liverpool-line-height-normal;
+      margin: 0;
+    }
+
+    &.fc-item-a {
+      background: rgba($liverpool-blue, 0.10);
+      border-color: rgba($liverpool-blue, 0.30);
+
+      .fc-compare-label {
+        color: $liverpool-blue;
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 3px;
+      }
+
+      p {
+        color: $liverpool-text-primary;
+        font-size: 17px;
+      }
+    }
+
+    &.fc-item-b {
+      background: rgba(#4caf50, 0.10);
+      border-color: rgba(#4caf50, 0.30);
+
+      .fc-compare-label {
+        color: #4caf50;
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 3px;
+      }
+
+      p {
+        color: $liverpool-text-primary;
+        font-size: 17px;
+      }
+    }
+  }
+
+  .fc-compare-vs {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    font-weight: $liverpool-font-weight-bold;
+    font-size: $liverpool-font-size-md;
+    color: $liverpool-text-muted;
+  }
+}
+
+// ========================================
+// TOUCH DEVICE OPTIMIZATIONS
+// ========================================
+@media (hover: none) and (pointer: coarse) {
+  .content-card {
+    // Disable hover effect on touch devices
+    &:hover {
+      box-shadow: $liverpool-card-shadow;
+    }
+  }
+
+  .content-reference-table table tbody tr:hover {
+    background: inherit;
+  }
+}
+
+// ========================================
+// REDUCED MOTION SUPPORT
+// ========================================
+@media (prefers-reduced-motion: reduce) {
+  .content-card {
+    transition: none;
+  }
+}

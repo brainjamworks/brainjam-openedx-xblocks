@@ -44,6 +44,14 @@ class Tabs(XBlock):
         help="The display name for this component"
     )
 
+    # Optional title displayed above tabs
+    title = String(
+        display_name="Title (Optional)",
+        default="",
+        scope=Scope.content,
+        help="Optional H3 heading displayed above the tabs. Leave empty to hide."
+    )
+
     # Tabs data - JSON-encoded array of tab objects
     tabs_data = String(
         display_name="Tabs Data",
@@ -101,9 +109,9 @@ class Tabs(XBlock):
         if not html_content:
             return ''
 
-        # Remove dangerous tags
+        # Remove dangerous tags (iframe allowed for video embeds)
         dangerous_tags = [
-            'script', 'iframe', 'object', 'embed', 'link',
+            'script', 'object', 'embed', 'link',
             'meta', 'style', 'form', 'input', 'button'
         ]
 
@@ -173,6 +181,7 @@ class Tabs(XBlock):
         frag.initialize_js('TabsStudentView', {
             'url': self.runtime.local_resource_url(self, 'public/student-ui.js'),
             'displayName': self.display_name,
+            'title': self.title,
             'tabs': self.safe_json_loads(self.tabs_data, default=[{
                 'label': 'Error',
                 'content': 'No tabs configured. Please contact your instructor.'
@@ -219,6 +228,7 @@ class Tabs(XBlock):
             'url': self.runtime.local_resource_url(self, 'public/studio-ui.js'),
             'fields': {
                 'display_name': self.display_name,
+                'title': self.title,
                 'tabs': self.safe_json_loads(self.tabs_data, default=[
                     {
                         'label': 'Tab 1',
@@ -248,8 +258,9 @@ class Tabs(XBlock):
                     'error': 'Invalid data format'
                 }
 
-            # SECURITY: Validate and sanitize display name
+            # SECURITY: Validate and sanitize display name and title
             display_name = data.get('display_name', '').strip()
+            title = data.get('title', '').strip()
             tabs = data.get('tabs', [])
 
             if not display_name:
@@ -334,6 +345,7 @@ class Tabs(XBlock):
 
             # SECURITY: Save sanitized data
             self.display_name = display_name
+            self.title = title
             self.tabs_data = json.dumps(sanitized_tabs)
 
             # Reset current tab if it's now out of bounds

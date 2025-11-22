@@ -26,6 +26,7 @@ interface FlashCard {
  */
 interface StudentData {
   displayName: string;
+  title?: string;
   cards: FlashCard[];
 }
 
@@ -49,6 +50,7 @@ export const renderBlock = (element: Element | null, data: StudentData) => {
 <IntlProvider locale="en">
           <StudentView
             displayName={data.displayName}
+            title={data.title}
             cards={data.cards}
           />
         </IntlProvider>    </React.StrictMode>

@@ -21,6 +21,7 @@ interface Tab {
  */
 interface StudentViewProps {
   displayName: string;
+  title?: string;
   tabs: Tab[];
   currentTabIndex: number;
   runtime: XBlockRuntime;
@@ -31,6 +32,7 @@ interface StudentViewProps {
  */
 export const StudentView: React.FC<StudentViewProps> = ({
   displayName,
+  title,
   tabs,
   currentTabIndex,
   runtime
@@ -123,6 +125,7 @@ export const StudentView: React.FC<StudentViewProps> = ({
 
   return (
     <div className="tabs-student-view">
+      {title && <h3 className="tabs-main-title">{title}</h3>}
       {/* Unified shadow wrapper - Legacy Design */}
       <div className="tabs-wrapper">
         {/* Tab Bar */}
@@ -144,7 +147,7 @@ export const StudentView: React.FC<StudentViewProps> = ({
               onClick={() => handleTabClick(index)}
               onKeyDown={(e) => handleKeyDown(e, index)}
             >
-              {tab.label}
+              <h4 className="tabs-tab-label">{tab.label}</h4>
             </button>
           ))}
         </div>

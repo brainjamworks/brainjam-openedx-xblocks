@@ -23,6 +23,7 @@ interface Section {
  */
 interface StudentViewProps {
   displayName: string;
+  title?: string;
   sections: Section[];
   openSections: number[];
   allowMultipleOpen: boolean;
@@ -34,6 +35,7 @@ interface StudentViewProps {
  */
 export const StudentView: React.FC<StudentViewProps> = ({
   displayName,
+  title,
   sections,
   openSections: initialOpenSections,
   allowMultipleOpen,
@@ -65,6 +67,7 @@ export const StudentView: React.FC<StudentViewProps> = ({
 
   return (
     <div className="accordion-student-view">
+      {title && <h3 className="accordion-main-title">{title}</h3>}
       <div className="accordion-wrapper">
         {/* Render each section as a Paragon Collapsible card */}
         {sections.map((section, index) => (
@@ -75,9 +78,9 @@ export const StudentView: React.FC<StudentViewProps> = ({
             className="accordion-section"
           >
             <Collapsible.Trigger className="accordion-section-trigger">
-              <div className="accordion-section-title">
+              <h4 className="accordion-section-title">
                 {section.title}
-              </div>
+              </h4>
             </Collapsible.Trigger>
             <Collapsible.Body className="accordion-section-body">
               <div

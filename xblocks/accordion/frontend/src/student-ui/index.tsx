@@ -26,6 +26,7 @@ interface Section {
  */
 interface StudentData {
   displayName: string;
+  title?: string;
   sections: Section[];
   openSections: number[];
   allowMultipleOpen: boolean;
@@ -51,6 +52,7 @@ export const renderBlock = (element: Element | null, data: StudentData, runtime:
 <IntlProvider locale="en">
           <StudentView
             displayName={data.displayName}
+            title={data.title}
             sections={data.sections}
             openSections={data.openSections}
             allowMultipleOpen={data.allowMultipleOpen}

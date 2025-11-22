@@ -1,0 +1,176 @@
+/**
+ * ARCHITECTURAL: XBlock structural styles only
+ *
+ * Paragon CSS is loaded from CDN at runtime (via Python fragment)
+ * This file contains ONLY XBlock-specific layout and structural styles
+ * Uses shared Liverpool design tokens for consistency
+ */
+
+// Import shared Liverpool design tokens
+@import '../../../../../../shared-styles/styles/liverpool-shared-tokens';
+
+// Import shared content layout patterns
+@import '../../../../../../shared-styles/styles/liverpool-content-layouts';
+
+// IMPLEMENTATION: Content Blocks styles - simple vertical layout
+.content-blocks-student-view {
+  max-width: 100%;
+  margin: 2rem auto;
+  margin-bottom: 3rem;
+  font-family: $liverpool-font-primary;
+
+  // ========================================
+  // CONTENT BLOCKS WRAPPER
+  // ========================================
+  .content-blocks-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: $liverpool-space-3;
+  }
+
+  // ========================================
+  // CONTENT BLOCK - Simple container
+  // ========================================
+  .content-block {
+    // No card styling - just spacing
+  }
+
+  .content-block-title {
+    font-size: $liverpool-font-size-md;
+    font-weight: $liverpool-font-weight-semibold;
+    color: $liverpool-text-primary;
+    line-height: $liverpool-line-height-normal;
+    margin: 0 0 $liverpool-space-4 0;
+  }
+
+  .content-block-content {
+    color: $liverpool-text-secondary;
+    line-height: $liverpool-line-height-loose;
+
+    // TYPOGRAPHY: Style HTML content from TinyMCE
+    // NOTE: Font sizes are controlled by Liverpool Legacy theme
+    // See: tutor-liverpool-dental-legacy/cms/static/sass/course-unit-mfe-iframe-bundle.scss
+    // and: tutor-liverpool-dental-legacy/lms/static/sass/lms-chromeless.scss
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 0;
+      margin-bottom: $liverpool-space-3;
+      color: $liverpool-text-primary;
+      // font-size: Inherited from Liverpool Legacy theme (single source of truth)
+      // font-weight: Inherited from Liverpool Legacy theme (single source of truth)
+    }
+
+    p {
+      margin: $liverpool-space-3 0;
+    }
+
+    ul, ol {
+      margin: $liverpool-space-3 0;
+      padding-left: $liverpool-space-5;
+
+      li {
+        margin: $liverpool-space-2 0;
+      }
+    }
+
+    a {
+      color: $liverpool-link-default;
+      text-decoration: none;
+      transition: color $liverpool-duration-fast $liverpool-easing-out;
+
+      &:hover {
+        color: $liverpool-link-hover;
+        text-decoration: underline;
+      }
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 2px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: $liverpool-space-4 0;
+
+      th, td {
+        padding: $liverpool-space-3;
+        border: 1px solid $liverpool-border-default;
+        text-align: left;
+      }
+
+      th {
+        font-weight: $liverpool-font-weight-semibold;
+      }
+    }
+
+    blockquote {
+      margin: $liverpool-space-4 0;
+      padding: $liverpool-space-4 $liverpool-space-5;
+      border-left: 4px solid $liverpool-blue;
+      background: $liverpool-bg-subtle;
+    }
+
+    strong {
+      font-weight: $liverpool-font-weight-semibold;
+    }
+
+    em {
+      font-style: italic;
+    }
+  }
+
+  // ========================================
+  // RESPONSIVE DESIGN - Tablet (max-width: 768px)
+  // ========================================
+  @media (max-width: 768px) {
+    margin: 1rem;
+
+    .content-block-title {
+      font-size: 1rem;
+    }
+  }
+
+  // ========================================
+  // RESPONSIVE DESIGN - Mobile (max-width: 480px)
+  // ========================================
+  @media (max-width: 480px) {
+    margin: 0.5rem;
+
+    .content-blocks-wrapper {
+      gap: 0.5rem;
+    }
+
+    .content-block-title {
+      font-size: 0.9375rem;
+    }
+
+    .content-block-content {
+      // NOTE: Mobile heading sizes also controlled by Liverpool Legacy theme
+      // Responsive adjustments should be made in the theme, not here
+
+      // RESPONSIVE: Ensure images fit on mobile
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+
+      // RESPONSIVE: Scrollable tables on mobile
+      table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+    }
+  }
+
+  // ========================================
+  // REDUCED MOTION SUPPORT
+  // ========================================
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      transition: none;
+    }
+  }
+}

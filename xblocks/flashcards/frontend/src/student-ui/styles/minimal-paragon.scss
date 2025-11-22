@@ -9,6 +9,9 @@
 // Import shared Liverpool design tokens
 @import '../../../../../../shared-styles/styles/liverpool-shared-tokens';
 
+// Import shared content layout patterns
+@import '../../../../../../shared-styles/styles/liverpool-content-layouts';
+
 // IMPLEMENTATION: Flashcard styles - Liverpool design
 .flashcards-student-view {
   padding: 2rem 0;
@@ -18,8 +21,8 @@
   .flashcard-container {
     perspective: 1200px;
     width: 100%;
-    max-width: 700px;
-    height: 400px;
+    max-width: 900px;
+    height: 500px;
     margin: 0 auto;
     cursor: pointer;
     // RESPONSIVE: Prevent double-tap zoom on mobile
@@ -241,8 +244,8 @@
     padding: 1.5rem 1rem;
 
     .flashcard-container {
-      height: 350px;
-      max-width: 600px;
+      height: 450px;
+      max-width: 750px;
     }
 
     .flashcard-face .flashcard-card .pgn__card-section {
@@ -283,7 +286,7 @@
     padding: 1rem 0.5rem;
 
     .flashcard-container {
-      height: 320px;
+      height: 400px;
       max-width: 100%;
       // RESPONSIVE: Prevent text overflow on mobile
       overflow: hidden;

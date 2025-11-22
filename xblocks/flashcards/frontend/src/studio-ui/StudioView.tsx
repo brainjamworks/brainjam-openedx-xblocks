@@ -28,6 +28,7 @@ interface StudioViewProps {
   runtime: XBlockRuntime;
   fields: {
     display_name: string;
+    title: string;
     cards: FlashCard[];
   };
   baseAssetUrl?: string | null;
@@ -50,6 +51,7 @@ export const StudioView: React.FC<StudioViewProps> = ({
 }) => {
   // State management for form fields
   const [displayName, setDisplayName] = useState(fields.display_name);
+  const [title, setTitle] = useState(fields.title || '');
   const [cards, setCards] = useState<FlashCard[]>(fields.cards);
 
   // UI state
@@ -209,6 +211,7 @@ export const StudioView: React.FC<StudioViewProps> = ({
       // ARCHITECTURAL: Use xblockPost helper for CSRF-protected requests
       const result = await xblockPost(runtime, 'save_data', {
         display_name: displayName,
+        title: title,
         cards: cards,
       });
 
@@ -273,6 +276,20 @@ export const StudioView: React.FC<StudioViewProps> = ({
             onChange={(e) => setDisplayName(e.target.value)}
             placeholder="Enter display name"
           />
+        </Form.Group>
+
+        {/* Optional Title field */}
+        <Form.Group className="mb-4">
+          <Form.Label>Title (Optional)</Form.Label>
+          <Form.Control
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Optional H3 heading displayed above flashcards"
+          />
+          <Form.Text className="text-muted">
+            Leave empty to hide the title.
+          </Form.Text>
         </Form.Group>
 
         {/* Render ListView or EditView based on mode */}
