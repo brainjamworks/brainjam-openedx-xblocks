@@ -22243,7 +22243,7 @@ const tN = ({
   const [l, u] = w.useState(e.title), [c, f] = w.useState(e.content), [p, g] = w.useState({});
   w.useEffect(() => {
     r({ title: l, content: c });
-  }, [l, c, r]);
+  }, [l, c]);
   const E = () => {
     const d = {};
     l.trim() && l.length > 100 && (d.title = "Section title must be 100 characters or less"), c.trim() || (d.content = "Section content is required"), g(d);

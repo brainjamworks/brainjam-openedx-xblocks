@@ -57,7 +57,8 @@ export const EditView: React.FC<EditViewProps> = ({
    */
   useEffect(() => {
     onSave({ title: sectionTitle, content: sectionContent });
-  }, [sectionTitle, sectionContent, onSave]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sectionTitle, sectionContent]);
 
   /**
    * Validate form fields (for display only, not blocking)

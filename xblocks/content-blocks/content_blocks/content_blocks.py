@@ -298,11 +298,8 @@ class ContentBlocks(XBlock):
                 content = section.get('content', '').strip()
 
                 # SECURITY: Validate required fields
-                if not section_title:
-                    return {
-                        'success': False,
-                        'error': f'Section {i+1}: Title is required'
-                    }
+                # Note: Section title is optional, only content is required
+                # (Removed section title validation to allow empty titles)
 
                 # Content can be empty, but field must exist
                 if 'content' not in section:
@@ -337,6 +334,8 @@ class ContentBlocks(XBlock):
             self.display_name = display_name
             self.title = title
             self.sections_data = json.dumps(sanitized_sections)
+
+            logger.info(f"ContentBlocks save_data: title='{title}' (len={len(title)}), self.title='{self.title}'")
 
             return {
                 'success': True,
