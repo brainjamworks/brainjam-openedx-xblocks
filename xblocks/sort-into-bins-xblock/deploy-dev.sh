@@ -1,5 +1,5 @@
 #!/bin/bash
-# ARCHITECTURAL: Deployment script for DragDropMatching to Tutor dev
+# ARCHITECTURAL: Deployment script for SortIntoBins to Tutor dev
 #
 # DON'T CHANGE: The validation and deployment logic
 # IMPLEMENTATION: Update XBLOCK_DIR and XBLOCK_NAME after copying template
@@ -7,10 +7,10 @@
 set -e  # Exit on error
 
 # IMPLEMENTATION: Update these paths after copying template
-XBLOCK_DIR="/Users/brainjam/brainjam-openedx-xblocks/xblocks/drag-drop-matching-xblock"
-XBLOCK_NAME="drag_drop_matching"
+XBLOCK_DIR="/Users/brainjam/brainjam-openedx-xblocks/xblocks/sort-into-bins-xblock"
+XBLOCK_NAME="sort_into_bins"
 
-echo "🚀 Deploying DragDropMatching to Tutor dev..."
+echo "🚀 Deploying SortIntoBins to Tutor dev..."
 echo ""
 
 # ARCHITECTURAL: Step 1 - Verify build exists
@@ -37,15 +37,15 @@ echo ""
 # DON'T CHANGE: Excludes frontend source files for security
 echo "📦 Step 2: Creating deployment package..."
 TEMP_DIR=$(mktemp -d)
-mkdir -p "$TEMP_DIR/drag-drop-matching-xblock"
+mkdir -p "$TEMP_DIR/sort-into-bins-xblock"
 
 # Copy only what's needed (exclude frontend/ directory entirely)
-cp "$XBLOCK_DIR/setup.py" "$TEMP_DIR/drag-drop-matching-xblock/"
-[ -f "$XBLOCK_DIR/MANIFEST.in" ] && cp "$XBLOCK_DIR/MANIFEST.in" "$TEMP_DIR/drag-drop-matching-xblock/"
-cp -r "$XBLOCK_DIR/$XBLOCK_NAME" "$TEMP_DIR/drag-drop-matching-xblock/"
+cp "$XBLOCK_DIR/setup.py" "$TEMP_DIR/sort-into-bins-xblock/"
+[ -f "$XBLOCK_DIR/MANIFEST.in" ] && cp "$XBLOCK_DIR/MANIFEST.in" "$TEMP_DIR/sort-into-bins-xblock/"
+cp -r "$XBLOCK_DIR/$XBLOCK_NAME" "$TEMP_DIR/sort-into-bins-xblock/"
 
 # Remove frontend source directory (we only need public/ with built bundles)
-rm -rf "$TEMP_DIR/drag-drop-matching-xblock/$XBLOCK_NAME/frontend"
+rm -rf "$TEMP_DIR/sort-into-bins-xblock/$XBLOCK_NAME/frontend"
 
 echo "   ✓ Created clean deployment package"
 echo "   ✓ Included: setup.py, $XBLOCK_NAME/*.py, $XBLOCK_NAME/public/*.js"
@@ -54,8 +54,8 @@ echo ""
 # ARCHITECTURAL: Step 3 - Copy to containers
 # DON'T CHANGE: This pattern works with standard Tutor dev setup
 echo "📤 Step 3: Copying to containers..."
-docker cp "$TEMP_DIR/drag-drop-matching-xblock" tutor_dev-cms-1:/tmp/
-docker cp "$TEMP_DIR/drag-drop-matching-xblock" tutor_dev-lms-1:/tmp/
+docker cp "$TEMP_DIR/sort-into-bins-xblock" tutor_dev-cms-1:/tmp/
+docker cp "$TEMP_DIR/sort-into-bins-xblock" tutor_dev-lms-1:/tmp/
 rm -rf "$TEMP_DIR"
 echo "   ✓ Copied to both CMS and LMS containers"
 echo ""
@@ -63,8 +63,8 @@ echo ""
 # ARCHITECTURAL: Step 4 - Install in containers
 # DON'T CHANGE: The pip install pattern
 echo "🔧 Step 4: Installing XBlock in containers..."
-docker exec tutor_dev-cms-1 bash -c "cd /tmp/drag-drop-matching-xblock && pip install -e . --force-reinstall --no-deps"
-docker exec tutor_dev-lms-1 bash -c "cd /tmp/drag-drop-matching-xblock && pip install -e . --force-reinstall --no-deps"
+docker exec tutor_dev-cms-1 bash -c "cd /tmp/sort-into-bins-xblock && pip install -e . --force-reinstall --no-deps"
+docker exec tutor_dev-lms-1 bash -c "cd /tmp/sort-into-bins-xblock && pip install -e . --force-reinstall --no-deps"
 echo "   ✓ Installed in both containers"
 echo ""
 
@@ -81,7 +81,7 @@ echo "⏳ Wait ~60 seconds for services to start, then:"
 echo "   1. Open Studio: http://apps.local.openedx.io:2001"
 echo "   2. Go to Settings → Advanced Settings"
 echo "   3. Add '$XBLOCK_NAME' to Advanced Module List"
-echo "   4. Add the XBlock to a unit: Advanced → DragDropMatching"
+echo "   4. Add the XBlock to a unit: Advanced → SortIntoBins"
 echo ""
 echo "📝 To check logs:"
 echo "   docker logs -f tutor_dev-lms-1 | grep $XBLOCK_NAME"

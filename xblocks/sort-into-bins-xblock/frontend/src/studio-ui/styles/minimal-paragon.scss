@@ -1,0 +1,152 @@
+/**
+ * Sort Into Bins - Studio View Styles
+ * Using Liverpool Dental Design System Tokens
+ *
+ * Paragon CSS is loaded from CDN at runtime (via Python fragment)
+ * This file contains ONLY XBlock-specific layout and structural styles
+ */
+
+// Import Liverpool shared tokens
+@import '../../../../../../shared-styles/styles/liverpool-shared-tokens';
+
+.sort-into-bins-studio-view {
+  font-family: $liverpool-font-primary;
+  padding: $liverpool-space-5;
+
+  .studio-header {
+    margin-bottom: $liverpool-space-6;
+    border-bottom: 2px solid $liverpool-border-default;
+    padding-bottom: $liverpool-space-4;
+
+    h2 {
+      color: $liverpool-blue;
+      font-weight: $liverpool-font-weight-semibold;
+      margin-bottom: $liverpool-space-2;
+    }
+  }
+
+  .wizard-navigation {
+    display: flex;
+    gap: $liverpool-space-3;
+    margin-bottom: $liverpool-space-6;
+    padding-bottom: $liverpool-space-4;
+    border-bottom: 2px solid $liverpool-border-default;
+
+    .wizard-nav-button {
+      flex: 1;
+      padding: $liverpool-space-4;
+      background: white;
+      border: 2px solid $liverpool-border-default;
+      border-radius: $liverpool-radius-sm;
+      cursor: pointer;
+      transition: all $liverpool-duration-base $liverpool-easing-in-out;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: $liverpool-space-2;
+
+      &:hover {
+        border-color: $liverpool-teal;
+        background: $liverpool-feedback-success-bg;
+      }
+
+      &.active {
+        border-color: $liverpool-blue;
+        background: $liverpool-blue-100;
+        box-shadow: $liverpool-shadow-base;
+      }
+
+      .wizard-nav-icon {
+        font-size: 1.5rem;
+      }
+
+      .wizard-nav-label {
+        font-weight: $liverpool-font-weight-medium;
+      }
+    }
+  }
+
+  .wizard-content {
+    margin-bottom: $liverpool-space-6;
+    min-height: 400px;
+  }
+
+  .step-header {
+    margin-bottom: $liverpool-space-5;
+
+    h3 {
+      color: $liverpool-blue;
+      font-weight: $liverpool-font-weight-semibold;
+      margin-bottom: $liverpool-space-2;
+    }
+  }
+
+  .empty-state {
+    background: $liverpool-feedback-info-bg;
+    border: 2px dashed $liverpool-blue;
+    border-radius: $liverpool-radius-sm;
+    padding: $liverpool-space-6;
+    text-align: center;
+    margin-bottom: $liverpool-space-5;
+  }
+
+  .bin-card,
+  .item-card {
+    background: white;
+    border-radius: $liverpool-radius-sm;
+    box-shadow: $liverpool-shadow-sm;
+    border: 1px solid $liverpool-border-default;
+    transition: all $liverpool-duration-base $liverpool-easing-in-out;
+
+    &:hover {
+      box-shadow: $liverpool-shadow-base;
+    }
+  }
+
+  .bin-display,
+  .item-display {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: $liverpool-space-4;
+
+    strong {
+      color: $liverpool-blue;
+      font-weight: $liverpool-font-weight-semibold;
+    }
+  }
+
+  .bin-actions,
+  .item-actions {
+    display: flex;
+    gap: $liverpool-space-2;
+  }
+
+  .bin-edit-form,
+  .item-edit-form {
+    .form-actions {
+      display: flex;
+      gap: $liverpool-space-2;
+      margin-top: $liverpool-space-3;
+    }
+  }
+
+  .item-type-badge {
+    display: inline-block;
+    background: $liverpool-blue;
+    color: white;
+    padding: $liverpool-space-1 $liverpool-space-2;
+    border-radius: 4px;
+    font-size: $liverpool-font-size-xs;
+    font-weight: $liverpool-font-weight-semibold;
+    text-transform: uppercase;
+  }
+
+  .studio-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: $liverpool-space-3;
+    padding-top: $liverpool-space-5;
+    border-top: 2px solid $liverpool-border-default;
+  }
+}

@@ -21724,21 +21724,27 @@ const tN = ({
   },
   {
     title: "🖼️ Image Gallery (3 Columns)",
-    description: "Display multiple images in a grid",
+    description: "Display multiple images in a grid - images auto-crop to square cards",
     content: `
       <div class="content-card-grid">
         <div class="content-card">
-          <img src="https://via.placeholder.com/300x200/006272/ffffff?text=Image+1" alt="Case Study 1">
+          <div class="content-card-image">
+            <img src="https://via.placeholder.com/400x400/006272/ffffff?text=Image+1" alt="Case Study 1">
+          </div>
           <h4>Case Study 1</h4>
           <p>Brief description of this case...</p>
         </div>
         <div class="content-card">
-          <img src="https://via.placeholder.com/300x200/006272/ffffff?text=Image+2" alt="Case Study 2">
+          <div class="content-card-image">
+            <img src="https://via.placeholder.com/400x400/006272/ffffff?text=Image+2" alt="Case Study 2">
+          </div>
           <h4>Case Study 2</h4>
           <p>Brief description of this case...</p>
         </div>
         <div class="content-card">
-          <img src="https://via.placeholder.com/300x200/006272/ffffff?text=Image+3" alt="Case Study 3">
+          <div class="content-card-image">
+            <img src="https://via.placeholder.com/400x400/006272/ffffff?text=Image+3" alt="Case Study 3">
+          </div>
           <h4>Case Study 3</h4>
           <p>Brief description of this case...</p>
         </div>
@@ -21806,17 +21812,21 @@ const tN = ({
   },
   {
     title: "🔄 Before & After Comparison",
-    description: "Visual comparison of treatment outcomes",
+    description: "Visual comparison of treatment outcomes - images auto-crop to 4:3 ratio",
     content: `
       <div class="content-before-after">
         <div class="before-after-panel">
-          <img src="https://via.placeholder.com/400x300/006272/ffffff?text=Before+Treatment" alt="Before treatment">
+          <div class="before-after-image">
+            <img src="https://via.placeholder.com/400x300/006272/ffffff?text=Before+Treatment" alt="Before treatment">
+          </div>
           <div class="panel-label">Before Treatment</div>
           <p class="panel-description">Baseline presentation: Advanced periodontal disease with 6-7mm pockets</p>
         </div>
         <div class="before-after-arrow">→</div>
         <div class="before-after-panel">
-          <img src="https://via.placeholder.com/400x300/006272/ffffff?text=After+Treatment" alt="After treatment">
+          <div class="before-after-image">
+            <img src="https://via.placeholder.com/400x300/006272/ffffff?text=After+Treatment" alt="After treatment">
+          </div>
           <div class="panel-label">After Treatment (6 months)</div>
           <p class="panel-description">Post-treatment outcome: Reduced pocket depths to 2-3mm, healthy gingiva</p>
         </div>
@@ -22018,6 +22028,333 @@ const tN = ({
             <li>Smooth, continuous preparation margins essential for impression accuracy</li>
           </ul>
         </div>
+      </div>
+    `
+  },
+  {
+    title: "🔀 Complexity Classification (Chevron Flow)",
+    description: "Horizontal progression showing case complexity levels - ideal for AAE classifications",
+    content: `
+      <div class="content-complexity-chevron">
+        <div class="complexity-chevron-item">
+          <div class="complexity-chevron-badge badge-class-1">1</div>
+          <div class="complexity-chevron-content content-class-1">
+            <div class="chevron-title">Class 1: Uncomplicated</div>
+            <div class="chevron-description">Low risk of adverse events • Suitable for recent graduates or dentists with limited endodontic experience</div>
+          </div>
+        </div>
+        <div class="complexity-chevron-item">
+          <div class="complexity-chevron-badge badge-class-2">2</div>
+          <div class="complexity-chevron-content content-class-2">
+            <div class="chevron-title">Class 2: Moderately Complex</div>
+            <div class="chevron-description">Moderate risk of complications or compromised outcome • Ideally suited for practitioners with enhanced clinical experience</div>
+          </div>
+        </div>
+        <div class="complexity-chevron-item">
+          <div class="complexity-chevron-badge badge-class-3">3</div>
+          <div class="complexity-chevron-content content-class-3">
+            <div class="chevron-title">Class 3: Highly Complex</div>
+            <div class="chevron-description">Higher risk of complications or compromised outcome • Ideally suited for specialist endodontic practitioners</div>
+          </div>
+        </div>
+      </div>
+    `
+  },
+  {
+    title: "🔽 Complexity Classification (Vertical Blocks)",
+    description: "Stacked complexity tiers with detailed criteria - perfect for referral guidelines",
+    content: `
+      <div class="content-complexity-blocks">
+        <div class="complexity-block-item">
+          <div class="complexity-block-badge badge-class-1">
+            <div class="badge-label">Class</div>
+            <div class="badge-number">1</div>
+          </div>
+          <div class="complexity-block-content content-class-1">
+            <h5>Uncomplicated Cases</h5>
+            <ul>
+              <li>Low risk of adverse events</li>
+              <li>Vital or necrotic single-canal teeth</li>
+              <li>Straight forward access and canal identification</li>
+              <li>No anatomical complications</li>
+              <li>Suitable for general practitioners</li>
+            </ul>
+          </div>
+        </div>
+        <div class="complexity-block-item">
+          <div class="complexity-block-badge badge-class-2">
+            <div class="badge-label">Class</div>
+            <div class="badge-number">2</div>
+          </div>
+          <div class="complexity-block-content content-class-2">
+            <h5>Moderately Complex Cases</h5>
+            <ul>
+              <li>Moderate risk of complications</li>
+              <li>Multi-rooted teeth with curved canals</li>
+              <li>Limited access or visibility challenges</li>
+              <li>Previous endodontic treatment requiring revision</li>
+              <li>Requires enhanced clinical experience</li>
+            </ul>
+          </div>
+        </div>
+        <div class="complexity-block-item">
+          <div class="complexity-block-badge badge-class-3">
+            <div class="badge-label">Class</div>
+            <div class="badge-number">3</div>
+          </div>
+          <div class="complexity-block-content content-class-3">
+            <h5>Highly Complex Cases</h5>
+            <ul>
+              <li>Higher risk of complications</li>
+              <li>Severe canal calcification or blockage</li>
+              <li>Open apex or root resorption present</li>
+              <li>Fractured instruments or perforation</li>
+              <li>Requires specialist referral</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    `
+  },
+  {
+    title: "📊 Progressive Scale with Examples",
+    description: "Chevron progression with radiographic or clinical examples below - shows disease stages or anatomical variations",
+    content: `
+      <div class="content-progressive-scale">
+        <div class="progressive-scale-header">
+          <h4>Pulp Chamber or Canal Visibility with Previous RCT</h4>
+          <p>Progressive scale showing decreasing visibility when gutta-percha is short</p>
+        </div>
+        <div class="progressive-scale-chevrons">
+          <div class="progressive-chevron" style="background: #4caf50;">GP can be traced to apex</div>
+          <div class="progressive-chevron" style="background: #8bc34a;">Canal space visible beyond GP (when GP short)</div>
+          <div class="progressive-chevron" style="background: #ffc107;">Canal space visible beyond GP but reduced diameter</div>
+          <div class="progressive-chevron" style="background: #ff5722;">Canal space completely invisible beyond GP</div>
+        </div>
+        <div class="progressive-scale-examples">
+          <div class="progressive-example">
+            <div class="example-image">
+              <img src="https://via.placeholder.com/300x225/4caf50/ffffff?text=Stage+1" alt="GP traced to apex">
+            </div>
+            <div class="example-label">Optimal filling - full canal visibility</div>
+          </div>
+          <div class="progressive-example">
+            <div class="example-image">
+              <img src="https://via.placeholder.com/300x225/8bc34a/ffffff?text=Stage+2" alt="Canal visible beyond GP">
+            </div>
+            <div class="example-label">Short fill - canal still visible</div>
+          </div>
+          <div class="progressive-example">
+            <div class="example-image">
+              <img src="https://via.placeholder.com/300x225/ffc107/333333?text=Stage+3" alt="Reduced diameter">
+            </div>
+            <div class="example-label">Short fill - reduced canal diameter</div>
+          </div>
+          <div class="progressive-example">
+            <div class="example-image">
+              <img src="https://via.placeholder.com/300x225/ff5722/ffffff?text=Stage+4" alt="Canal invisible">
+            </div>
+            <div class="example-label">Short fill - canal completely invisible</div>
+          </div>
+        </div>
+      </div>
+    `
+  },
+  {
+    title: "🌳 Vertical Decision Tree with Callout",
+    description: "Flowchart with rounded nodes and optional risk panel - perfect for previous endodontics assessment",
+    content: `
+      <div class="content-decision-tree">
+        <div class="decision-tree-flow">
+          <div class="decision-node">
+            <p><strong>Previously initiated but not obturated</strong> endodontic treatment</p>
+          </div>
+          <div class="decision-arrow">↓</div>
+          <div class="decision-node">
+            <p><strong>Canal(s) suboptimally obturated</strong> with gutta-percha</p>
+          </div>
+          <div class="decision-arrow">↓</div>
+          <div class="decision-node">
+            <p><strong>Canal(s) well obturated</strong> with gutta-percha or obturation is &gt;2mm overfilled</p>
+          </div>
+          <div class="decision-arrow">↓</div>
+          <div class="decision-node">
+            <p><strong>Canal(s) obturated with other materials</strong> (e.g. Silver cones, resin based filling, bioceramic material)</p>
+          </div>
+        </div>
+        <div class="decision-tree-callout">
+          <h5>Risks & Challenges</h5>
+          <ul>
+            <li>Negotiating potential pre-operative ledge</li>
+            <li>Removing RCF material in entirety</li>
+            <li>Locating missed canals or anatomy</li>
+            <li>Managing perforations or strip perforations</li>
+            <li>Dealing with separated instruments</li>
+          </ul>
+        </div>
+      </div>
+    `
+  },
+  {
+    title: "✅ Diagnostic Criteria Checklist",
+    description: "Assessment grid with present/absent/unknown indicators - for clinical diagnosis",
+    content: `
+      <div class="content-diagnostic-checklist">
+        <div class="diagnostic-checklist-header">
+          <h4 class="diagnostic-header-title">Pulpal Diagnosis Criteria</h4>
+        </div>
+        <div class="diagnostic-section">
+          <div class="diagnostic-section-header">Clinical Tests</div>
+          <div class="diagnostic-item">
+            <div class="diagnostic-item-indicator indicator-present"></div>
+            <div class="diagnostic-item-label">Positive response to cold test (prolonged pain)</div>
+          </div>
+          <div class="diagnostic-item">
+            <div class="diagnostic-item-indicator indicator-absent"></div>
+            <div class="diagnostic-item-label">Response to heat test</div>
+          </div>
+          <div class="diagnostic-item">
+            <div class="diagnostic-item-indicator indicator-present"></div>
+            <div class="diagnostic-item-label">Spontaneous pain (unprovoked)</div>
+          </div>
+        </div>
+        <div class="diagnostic-section">
+          <div class="diagnostic-section-header">Radiographic Findings</div>
+          <div class="diagnostic-item">
+            <div class="diagnostic-item-indicator indicator-absent"></div>
+            <div class="diagnostic-item-label">Periapical radiolucency present</div>
+          </div>
+          <div class="diagnostic-item">
+            <div class="diagnostic-item-indicator indicator-present"></div>
+            <div class="diagnostic-item-label">Widened PDL space</div>
+          </div>
+          <div class="diagnostic-item">
+            <div class="diagnostic-item-indicator indicator-unknown"></div>
+            <div class="diagnostic-item-label">Internal resorption visible</div>
+          </div>
+        </div>
+        <div class="diagnostic-interpretation">
+          <h5>Diagnosis: Symptomatic Irreversible Pulpitis</h5>
+          <p>Based on prolonged response to cold, spontaneous pain, and absence of periapical pathology. Recommend root canal treatment or extraction.</p>
+        </div>
+      </div>
+    `
+  },
+  {
+    title: "⚖️ Treatment Comparison Matrix",
+    description: "Side-by-side treatment options with color-coded pros/cons - evidence-based decision making",
+    content: `
+      <div class="content-treatment-matrix">
+        <table class="treatment-matrix-table">
+          <thead>
+            <tr>
+              <th>Criteria</th>
+              <th class="matrix-recommended">Root Canal Treatment</th>
+              <th>Extraction & Implant</th>
+              <th>Extraction Only</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Preserves natural tooth</td>
+              <td class="matrix-cell-advantage">Yes - maintains natural dentition</td>
+              <td class="matrix-cell-disadvantage">No - tooth removed</td>
+              <td class="matrix-cell-disadvantage">No - tooth removed</td>
+            </tr>
+            <tr>
+              <td>Treatment duration</td>
+              <td class="matrix-cell-advantage">2-3 visits over 2 weeks</td>
+              <td class="matrix-cell-disadvantage">4-6 months total (healing + restoration)</td>
+              <td class="matrix-cell-advantage">Single visit</td>
+            </tr>
+            <tr>
+              <td>Long-term success rate</td>
+              <td class="matrix-cell-advantage">85-97% at 8-10 years</td>
+              <td class="matrix-cell-advantage">90-95% at 10 years</td>
+              <td class="matrix-cell-neutral">N/A - creates edentulous space</td>
+            </tr>
+            <tr>
+              <td>Cost (approximate)</td>
+              <td class="matrix-cell-advantage">£400-800 (+ crown £500-1200)</td>
+              <td class="matrix-cell-disadvantage">£2000-3000 total</td>
+              <td class="matrix-cell-advantage">£50-150</td>
+            </tr>
+            <tr>
+              <td>Bone preservation</td>
+              <td class="matrix-cell-advantage">Maintains alveolar bone</td>
+              <td class="matrix-cell-neutral">Initial loss, then maintained</td>
+              <td class="matrix-cell-disadvantage">Progressive bone resorption</td>
+            </tr>
+            <tr>
+              <td>Adjacent teeth impact</td>
+              <td class="matrix-cell-advantage">No impact on adjacent teeth</td>
+              <td class="matrix-cell-neutral">No impact (may require grafting)</td>
+              <td class="matrix-cell-disadvantage">Potential drifting/tilting</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    `
+  },
+  {
+    title: "🧬 Differential Diagnosis Grid",
+    description: "Match diagnoses against clinical findings with visual indicators - systematic diagnostic approach",
+    content: `
+      <div class="content-differential-diagnosis">
+        <table class="diagnosis-grid">
+          <thead>
+            <tr>
+              <th>Candidate Diagnosis</th>
+              <th>Cold Test +</th>
+              <th>Heat Test +</th>
+              <th>Percussion +</th>
+              <th>Palpation +</th>
+              <th>PAP Visible</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Normal Pulp</td>
+              <td class="diagnosis-match-positive"></td>
+              <td class="diagnosis-match-negative"></td>
+              <td class="diagnosis-match-negative"></td>
+              <td class="diagnosis-match-negative"></td>
+              <td class="diagnosis-match-negative"></td>
+            </tr>
+            <tr>
+              <td>Reversible Pulpitis</td>
+              <td class="diagnosis-match-positive"></td>
+              <td class="diagnosis-match-variable"></td>
+              <td class="diagnosis-match-negative"></td>
+              <td class="diagnosis-match-negative"></td>
+              <td class="diagnosis-match-negative"></td>
+            </tr>
+            <tr class="diagnosis-conclusion">
+              <td>Symptomatic Irreversible Pulpitis</td>
+              <td class="diagnosis-match-positive"></td>
+              <td class="diagnosis-match-positive"></td>
+              <td class="diagnosis-match-variable"></td>
+              <td class="diagnosis-match-negative"></td>
+              <td class="diagnosis-match-negative"></td>
+            </tr>
+            <tr>
+              <td>Pulpal Necrosis</td>
+              <td class="diagnosis-match-negative"></td>
+              <td class="diagnosis-match-negative"></td>
+              <td class="diagnosis-match-positive"></td>
+              <td class="diagnosis-match-positive"></td>
+              <td class="diagnosis-match-positive"></td>
+            </tr>
+            <tr>
+              <td>Symptomatic Apical Periodontitis</td>
+              <td class="diagnosis-match-negative"></td>
+              <td class="diagnosis-match-negative"></td>
+              <td class="diagnosis-match-positive"></td>
+              <td class="diagnosis-match-positive"></td>
+              <td class="diagnosis-match-variable"></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     `
   }

@@ -180,6 +180,7 @@ export const StudentView: React.FC<StudentViewProps> = ({
   const totalPairs = terms.length;
   const correctMatches = Object.values(matches).filter(m => m.correct).length;
   const percentage = totalPairs > 0 ? (correctMatches / totalPairs) * 100 : 0;
+  const allCorrect = correctMatches === totalPairs && totalPairs > 0;
 
   // =======================================================================
   // RENDER
@@ -199,16 +200,16 @@ export const StudentView: React.FC<StudentViewProps> = ({
         {/* Question Text */}
         <div className="problem-question" dangerouslySetInnerHTML={{ __html: questionText }} />
 
-        {/* Error Display */}
-        {error && (
+        {/* Error Display - shows errors OR attempts exhausted */}
+        {(error || attemptsRemaining === 0) && (
           <Alert variant="danger" className="mb-3">
-            {error}
+            {error || (attemptsRemaining === 0 ? 'Maximum attempts exceeded' : null)}
           </Alert>
         )}
 
         {/* Score Display - only show in immediate mode (notifications show score in on_submit mode) */}
         {feedbackMode === 'immediate' && (
-          <div className="score-display">
+          <div className={`score-display ${allCorrect ? 'score-correct' : 'score-incorrect'}`}>
             <strong>Current Score:</strong> {localScore.toFixed(2)} / {maxScore.toFixed(2)}
             ({percentage.toFixed(0)}% - {correctMatches} of {totalPairs} correct)
           </div>
@@ -347,7 +348,7 @@ export const StudentView: React.FC<StudentViewProps> = ({
                 type="button"
                 className="submit btn-brand"
                 onClick={handleSubmit}
-                disabled={submitting || Object.keys(matches).length === 0 || hasSubmitted}
+                disabled={submitting || Object.keys(matches).length === 0 || hasSubmitted || attemptsRemaining === 0}
                 aria-label="Submit answer"
               >
                 {submitting ? 'Submitting...' : 'Submit'}

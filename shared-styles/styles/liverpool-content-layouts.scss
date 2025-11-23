@@ -670,8 +670,9 @@
   margin: $liverpool-space-5 0;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  border-radius: $liverpool-card-border-radius;
-  border: $liverpool-card-border;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
 
   table {
     width: 100%;
@@ -1051,5 +1052,826 @@
 @media (prefers-reduced-motion: reduce) {
   .content-card {
     transition: none;
+  }
+}
+
+// ========================================
+// NEW DENTAL EDUCATION TEMPLATES
+// ========================================
+
+// ========================================
+// TEMPLATE 1: COMPLEXITY CLASSIFICATION (CHEVRON FLOW)
+// Horizontal arrow progression for case complexity
+// Use for: AAE complexity classes, SAC classification, risk levels
+// ========================================
+.content-complexity-chevron {
+  display: flex;
+  flex-direction: column;
+  gap: $liverpool-space-3;
+  margin: $liverpool-space-5 0;
+
+  @media (min-width: 768px) {
+    gap: $liverpool-space-2;
+  }
+}
+
+.complexity-chevron-item {
+  display: flex;
+  align-items: center;
+  position: relative;
+  min-height: 80px;
+
+  @media (min-width: 768px) {
+    min-height: 100px;
+  }
+}
+
+.complexity-chevron-badge {
+  flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: $liverpool-neutral-white;
+  border: 3px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: $liverpool-font-weight-bold;
+  position: relative;
+  z-index: 2;
+  box-shadow: $liverpool-shadow-sm;
+
+  @media (min-width: 768px) {
+    width: 100px;
+    height: 100px;
+    font-size: 2.5rem;
+  }
+
+  &.badge-class-1 {
+    color: $liverpool-teal;
+    border-color: $liverpool-teal;
+  }
+
+  &.badge-class-2 {
+    color: $liverpool-yellow;
+    border-color: $liverpool-yellow;
+  }
+
+  &.badge-class-3 {
+    color: $liverpool-pink;
+    border-color: $liverpool-pink;
+  }
+}
+
+.complexity-chevron-content {
+  flex: 1;
+  margin-left: $liverpool-space-3;
+  padding: $liverpool-space-4;
+  border-radius: $liverpool-radius-sm;
+  color: $liverpool-neutral-white;
+  font-weight: $liverpool-font-weight-medium;
+
+  @media (min-width: 768px) {
+    margin-left: $liverpool-space-4;
+    padding: $liverpool-space-5;
+    clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 50%, calc(100% - 30px) 100%, 0 100%);
+  }
+
+  &.content-class-1 {
+    background: $liverpool-teal;
+  }
+
+  &.content-class-2 {
+    background: $liverpool-yellow;
+    color: $liverpool-neutral-900;
+  }
+
+  &.content-class-3 {
+    background: $liverpool-pink;
+  }
+
+  .chevron-title {
+    font-size: $liverpool-font-size-lg;
+    font-weight: $liverpool-font-weight-bold;
+    margin: 0 0 $liverpool-space-2;
+
+    @media (min-width: 768px) {
+      font-size: $liverpool-font-size-xl;
+    }
+  }
+
+  .chevron-description {
+    font-size: $liverpool-font-size-sm;
+    margin: 0;
+    line-height: $liverpool-line-height-normal;
+
+    @media (min-width: 768px) {
+      font-size: $liverpool-font-size-base;
+    }
+  }
+}
+
+// ========================================
+// TEMPLATE 2: COMPLEXITY CLASSIFICATION (VERTICAL BLOCKS)
+// Stacked blocks with arrow connectors
+// Use for: Detailed complexity criteria, tiered classification
+// ========================================
+.content-complexity-blocks {
+  margin: $liverpool-space-5 0;
+  display: flex;
+  flex-direction: column;
+  gap: $liverpool-space-4;
+}
+
+.complexity-block-item {
+  display: flex;
+  gap: $liverpool-space-4;
+  position: relative;
+}
+
+.complexity-block-badge {
+  flex-shrink: 0;
+  width: 70px;
+  height: 70px;
+  border-radius: $liverpool-radius-sm;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: $liverpool-neutral-white;
+  font-weight: $liverpool-font-weight-bold;
+  box-shadow: $liverpool-shadow-md;
+
+  @media (min-width: 768px) {
+    width: 90px;
+    height: 90px;
+  }
+
+  .badge-label {
+    font-size: $liverpool-font-size-xs;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: $liverpool-space-1;
+  }
+
+  .badge-number {
+    font-size: 2rem;
+
+    @media (min-width: 768px) {
+      font-size: 2.5rem;
+    }
+  }
+
+  &.badge-class-1 {
+    background: $liverpool-teal;
+  }
+
+  &.badge-class-2 {
+    background: $liverpool-yellow;
+    color: $liverpool-neutral-900;
+  }
+
+  &.badge-class-3 {
+    background: $liverpool-pink;
+  }
+}
+
+.complexity-block-content {
+  flex: 1;
+  border: 2px solid;
+  border-radius: $liverpool-radius-sm;
+  padding: $liverpool-space-4;
+  background: $liverpool-neutral-white;
+
+  &.content-class-1 {
+    border-color: $liverpool-teal;
+    background: rgba($liverpool-teal, 0.05);
+  }
+
+  &.content-class-2 {
+    border-color: $liverpool-yellow;
+    background: rgba($liverpool-yellow, 0.1);
+  }
+
+  &.content-class-3 {
+    border-color: $liverpool-pink;
+    background: rgba($liverpool-pink, 0.05);
+  }
+
+  h5 {
+    margin: 0 0 $liverpool-space-2;
+    color: $liverpool-text-primary;
+    font-size: $liverpool-font-size-md;
+    font-weight: $liverpool-font-weight-bold;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: $liverpool-space-5;
+    color: $liverpool-text-secondary;
+    line-height: $liverpool-line-height-loose;
+
+    li {
+      margin: $liverpool-space-1 0;
+    }
+  }
+}
+
+// ========================================
+// TEMPLATE 3: PROGRESSIVE SCALE WITH EXAMPLES
+// Horizontal chevron scale with image examples
+// Use for: Disease stages, canal visibility, treatment outcomes
+// ========================================
+.content-progressive-scale {
+  margin: $liverpool-space-5 0;
+}
+
+.progressive-scale-header {
+  margin-bottom: $liverpool-space-4;
+
+  h4 {
+    margin: 0 0 $liverpool-space-2;
+    color: $liverpool-text-primary;
+    font-weight: $liverpool-font-weight-bold;
+  }
+
+  p {
+    margin: 0;
+    color: $liverpool-text-secondary;
+    font-style: italic;
+  }
+}
+
+.progressive-scale-chevrons {
+  display: flex;
+  flex-direction: column;
+  gap: $liverpool-space-2;
+  margin-bottom: $liverpool-space-5;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    gap: 0;
+  }
+}
+
+.progressive-chevron {
+  flex: 1;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $liverpool-space-3;
+  color: $liverpool-neutral-white;
+  font-weight: $liverpool-font-weight-semibold;
+  font-size: $liverpool-font-size-sm;
+  text-align: center;
+  line-height: $liverpool-line-height-tight;
+  position: relative;
+  border-radius: $liverpool-radius-xs;
+
+  @media (min-width: 768px) {
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%, 20px 50%);
+    border-radius: 0;
+    font-size: $liverpool-font-size-base;
+
+    &:first-child {
+      clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%);
+    }
+
+    &:last-child {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 20px 50%);
+    }
+  }
+}
+
+.progressive-scale-examples {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $liverpool-space-4;
+
+  @media (min-width: 480px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.progressive-example {
+  text-align: center;
+
+  .example-image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: $liverpool-radius-sm;
+    border: $liverpool-card-border;
+    margin-bottom: $liverpool-space-2;
+    background: $liverpool-neutral-100;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  .example-label {
+    font-size: $liverpool-font-size-sm;
+    color: $liverpool-text-secondary;
+    line-height: $liverpool-line-height-normal;
+  }
+}
+
+// ========================================
+// TEMPLATE 4: VERTICAL DECISION TREE
+// Flowchart with rounded boxes and optional callout
+// Use for: Previous endodontics assessment, treatment pathways
+// ========================================
+.content-decision-tree {
+  margin: $liverpool-space-5 0;
+  display: flex;
+  flex-direction: column;
+  gap: $liverpool-space-5;
+
+  @media (min-width: 1024px) {
+    flex-direction: row;
+    gap: $liverpool-space-6;
+  }
+}
+
+.decision-tree-flow {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $liverpool-space-3;
+}
+
+.decision-node {
+  max-width: 400px;
+  width: 100%;
+  padding: $liverpool-space-4;
+  border-radius: $liverpool-radius-md;
+  background: $liverpool-sky-blue;
+  color: $liverpool-neutral-white;
+  text-align: center;
+  box-shadow: $liverpool-shadow-md;
+
+  p {
+    margin: 0;
+    font-size: $liverpool-font-size-base;
+    font-weight: $liverpool-font-weight-medium;
+    line-height: $liverpool-line-height-normal;
+  }
+
+  strong {
+    display: block;
+    margin-bottom: $liverpool-space-1;
+    font-size: $liverpool-font-size-md;
+  }
+}
+
+.decision-arrow {
+  font-size: 2rem;
+  color: $liverpool-blue;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.decision-tree-callout {
+  flex-shrink: 0;
+  max-width: 100%;
+
+  @media (min-width: 1024px) {
+    max-width: 320px;
+  }
+
+  border: 2px solid $liverpool-yellow;
+  border-radius: $liverpool-radius-sm;
+  background: rgba($liverpool-yellow, 0.1);
+  padding: $liverpool-space-4;
+
+  h5 {
+    margin: 0 0 $liverpool-space-3;
+    color: darken($liverpool-yellow, 30%);
+    font-size: $liverpool-font-size-md;
+    font-weight: $liverpool-font-weight-bold;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: $liverpool-space-5;
+    color: $liverpool-text-secondary;
+    line-height: $liverpool-line-height-loose;
+
+    li {
+      margin: $liverpool-space-2 0;
+    }
+  }
+}
+
+// ========================================
+// TEMPLATE 5: DIAGNOSTIC CRITERIA CHECKLIST
+// Assessment grid with status indicators
+// Use for: Pulpal diagnosis, periodontal assessment
+// ========================================
+.content-diagnostic-checklist {
+  margin: $liverpool-space-5 0;
+  border: $liverpool-card-border;
+  border-radius: $liverpool-radius-sm;
+  background: $liverpool-card-bg;
+  box-shadow: $liverpool-card-shadow;
+  overflow: hidden;
+}
+
+.diagnostic-checklist-header {
+  background: $liverpool-blue;
+  color: $liverpool-neutral-white;
+  padding: $liverpool-space-4;
+
+  h4 {
+    margin: 0 !important;
+    font-size: $liverpool-font-size-lg !important;
+    font-weight: $liverpool-font-weight-bold !important;
+    color: $liverpool-neutral-white !important;
+  }
+}
+
+.diagnostic-header-title {
+  margin: 0 !important;
+  margin-bottom: 0 !important;
+  font-size: $liverpool-font-size-lg !important;
+  font-weight: $liverpool-font-weight-bold !important;
+  color: $liverpool-neutral-white !important;
+}
+
+.diagnostic-section {
+  border-bottom: 2px solid $liverpool-border-default;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.diagnostic-section-header {
+  background: $liverpool-neutral-100;
+  padding: $liverpool-space-3 $liverpool-space-4;
+  font-weight: $liverpool-font-weight-bold;
+  color: $liverpool-text-primary;
+  font-size: $liverpool-font-size-base;
+}
+
+.diagnostic-item {
+  display: flex;
+  align-items: center;
+  gap: $liverpool-space-3;
+  padding: $liverpool-space-3 $liverpool-space-4;
+  border-bottom: 1px solid $liverpool-border-default;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:nth-child(even) {
+    background: rgba($liverpool-neutral-100, 0.5);
+  }
+}
+
+.diagnostic-item-indicator {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: $liverpool-font-size-md;
+
+  &.indicator-present {
+    background: $liverpool-teal;
+    color: $liverpool-neutral-white;
+
+    &::after {
+      content: '✓';
+    }
+  }
+
+  &.indicator-absent {
+    background: $liverpool-pink;
+    color: $liverpool-neutral-white;
+
+    &::after {
+      content: '✗';
+    }
+  }
+
+  &.indicator-unknown {
+    background: $liverpool-neutral-400;
+    color: $liverpool-neutral-white;
+
+    &::after {
+      content: '?';
+    }
+  }
+}
+
+.diagnostic-item-label {
+  flex: 1;
+  color: $liverpool-text-secondary;
+  font-size: $liverpool-font-size-base;
+  line-height: $liverpool-line-height-normal;
+}
+
+.diagnostic-interpretation {
+  padding: $liverpool-space-4;
+  background: rgba($liverpool-blue, 0.08);
+  border-top: 3px solid $liverpool-blue;
+
+  h5 {
+    margin: 0 0 $liverpool-space-2;
+    color: $liverpool-blue;
+    font-size: $liverpool-font-size-md;
+    font-weight: $liverpool-font-weight-bold;
+  }
+
+  p {
+    margin: 0;
+    color: $liverpool-text-primary;
+    font-size: $liverpool-font-size-base;
+    line-height: $liverpool-line-height-normal;
+  }
+}
+
+// ========================================
+// TEMPLATE 6: TREATMENT COMPARISON MATRIX
+// Grid comparing treatment options
+// Use for: Root canal vs extraction, material selection
+// ========================================
+.content-treatment-matrix {
+  margin: $liverpool-space-5 0;
+  overflow-x: auto;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+.treatment-matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: $liverpool-card-bg;
+
+  thead {
+    th {
+      padding: $liverpool-space-4;
+      text-align: center;
+      font-weight: $liverpool-font-weight-bold;
+      font-size: $liverpool-font-size-base;
+      border-bottom: 2px solid $liverpool-border-default;
+
+      &:first-child {
+        background: $liverpool-neutral-100;
+        text-align: left;
+        font-size: $liverpool-font-size-sm;
+        color: $liverpool-text-muted;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      &.matrix-recommended {
+        background: $liverpool-blue;
+        color: $liverpool-neutral-white;
+        position: relative;
+
+        &::after {
+          content: '★ Recommended';
+          display: block;
+          font-size: $liverpool-font-size-xs;
+          font-weight: normal;
+          margin-top: $liverpool-space-1;
+        }
+      }
+    }
+  }
+
+  tbody {
+    tr:nth-child(even) {
+      background: rgba($liverpool-neutral-100, 0.5);
+    }
+
+    td {
+      padding: $liverpool-space-3 $liverpool-space-4;
+      border-bottom: 1px solid $liverpool-border-default;
+      text-align: center;
+      font-size: $liverpool-font-size-sm;
+
+      &:first-child {
+        text-align: left;
+        font-weight: $liverpool-font-weight-semibold;
+        color: $liverpool-text-primary;
+        font-size: $liverpool-font-size-base;
+      }
+
+      &.matrix-cell-advantage {
+        background: rgba($liverpool-teal, 0.15);
+        color: darken($liverpool-teal, 15%);
+        font-weight: $liverpool-font-weight-medium;
+      }
+
+      &.matrix-cell-disadvantage {
+        background: rgba($liverpool-pink, 0.15);
+        color: darken($liverpool-pink, 10%);
+        font-weight: $liverpool-font-weight-medium;
+      }
+
+      &.matrix-cell-neutral {
+        background: rgba($liverpool-neutral-400, 0.1);
+        color: $liverpool-text-secondary;
+      }
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+  }
+}
+
+// ========================================
+// TEMPLATE 7: DIFFERENTIAL DIAGNOSIS GRID
+// Diagnoses vs findings match table
+// Use for: Pulpal diagnosis, pathology identification
+// ========================================
+.content-differential-diagnosis {
+  margin: $liverpool-space-5 0;
+  overflow-x: auto;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+.diagnosis-grid {
+  width: 100%;
+  border-collapse: collapse;
+  background: $liverpool-card-bg;
+
+  thead {
+    th {
+      padding: $liverpool-space-3 $liverpool-space-4;
+      text-align: center;
+      font-weight: $liverpool-font-weight-bold;
+      font-size: $liverpool-font-size-sm;
+      background: $liverpool-neutral-100;
+      border-bottom: 2px solid $liverpool-border-default;
+      color: $liverpool-text-primary;
+
+      &:first-child {
+        text-align: left;
+        background: $liverpool-blue;
+        color: $liverpool-neutral-white;
+        font-size: $liverpool-font-size-base;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      &:nth-child(even) {
+        background: rgba($liverpool-neutral-100, 0.5);
+      }
+
+      &.diagnosis-conclusion {
+        background: rgba($liverpool-blue, 0.1);
+        border-left: 4px solid $liverpool-blue;
+
+        td:first-child {
+          font-weight: $liverpool-font-weight-bold;
+          color: $liverpool-blue;
+
+          &::before {
+            content: '★ ';
+          }
+        }
+      }
+    }
+
+    td {
+      padding: $liverpool-space-3 $liverpool-space-4;
+      border-bottom: 1px solid $liverpool-border-default;
+      text-align: center;
+      font-size: $liverpool-font-size-lg;
+
+      &:first-child {
+        text-align: left;
+        font-weight: $liverpool-font-weight-medium;
+        color: $liverpool-text-primary;
+        font-size: $liverpool-font-size-base;
+      }
+
+      &.diagnosis-match-positive {
+        color: $liverpool-teal;
+
+        &::after {
+          content: '✓';
+        }
+      }
+
+      &.diagnosis-match-negative {
+        color: $liverpool-pink;
+
+        &::after {
+          content: '✗';
+        }
+      }
+
+      &.diagnosis-match-variable {
+        color: $liverpool-neutral-400;
+
+        &::after {
+          content: '○';
+        }
+      }
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+  }
+}
+
+// ========================================
+// RESPONSIVE ADJUSTMENTS FOR NEW TEMPLATES
+// ========================================
+@media (max-width: 480px) {
+  .complexity-chevron-badge {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+  }
+
+  .complexity-chevron-content {
+    padding: $liverpool-space-3;
+
+    .chevron-title {
+      font-size: $liverpool-font-size-base;
+    }
+
+    .chevron-description {
+      font-size: $liverpool-font-size-xs;
+    }
+  }
+
+  .complexity-block-badge {
+    width: 60px;
+    height: 60px;
+
+    .badge-number {
+      font-size: 1.5rem;
+    }
+  }
+
+  .progressive-chevron {
+    font-size: $liverpool-font-size-xs;
+    padding: $liverpool-space-2;
+    min-height: 60px;
+  }
+
+  .flowchart-node-start,
+  .flowchart-node-end {
+    width: 150px;
+    height: 150px;
+    font-size: $liverpool-font-size-base;
+  }
+
+  .flowchart-node-decision {
+    width: 180px;
+    height: 180px;
+
+    span {
+      font-size: $liverpool-font-size-sm;
+    }
+  }
+
+  .risk-score-total .total-value {
+    font-size: 3rem;
+  }
+
+  .risk-scale-indicator {
+    width: 48px;
+    height: 48px;
+  }
+
+  .anatomy-marker {
+    width: 30px;
+    height: 30px;
+    font-size: $liverpool-font-size-xs;
+  }
+
+  .content-risk-assessment,
+  .content-diagnostic-checklist {
+    padding: $liverpool-space-4;
   }
 }
