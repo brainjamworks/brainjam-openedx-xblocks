@@ -1,0 +1,160 @@
+/**
+ * Audio Player - Student View Styles
+ * Using Liverpool Dental Design System Tokens
+ *
+ * Paragon CSS is loaded from CDN at runtime (via Python fragment)
+ * This file contains ONLY XBlock-specific layout and structural styles
+ */
+
+// Import Liverpool shared tokens
+@import '../../../../../../shared-styles/styles/liverpool-shared-tokens';
+
+// Main Container
+.audio-player-student-view {
+  font-family: $liverpool-font-primary;
+  max-width: 100%;
+  margin: 2rem auto;
+
+  // Title (optional)
+  .audio-player-title {
+    font-size: $liverpool-font-size-sm;
+    font-weight: $liverpool-font-weight-medium;
+    color: $liverpool-text-muted;
+    margin-bottom: $liverpool-space-1;
+    line-height: $liverpool-line-height-normal;
+  }
+
+  // Description (optional text content)
+  .audio-player-description {
+    background: $liverpool-card-bg;
+    border: 1px solid $liverpool-border-default;
+    border-radius: $liverpool-card-border-radius;
+    padding: $liverpool-space-6;
+    margin-bottom: $liverpool-space-5;
+    line-height: $liverpool-line-height-loose;
+    color: $liverpool-text-primary;
+
+    p {
+      margin-bottom: $liverpool-space-4;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    ul, ol {
+      margin-bottom: $liverpool-space-4;
+      padding-left: $liverpool-space-6;
+    }
+
+    strong {
+      font-weight: $liverpool-font-weight-semibold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    a {
+      color: $liverpool-blue;
+      text-decoration: underline;
+
+      &:hover {
+        color: darken($liverpool-blue, 15%);
+      }
+    }
+  }
+
+  // Audio Player Container (no card styling)
+  .audio-player-container {
+    // HTML5 Audio Element
+    audio.audio-player {
+      width: 100%;
+      margin-bottom: $liverpool-space-3;
+      outline: none;
+
+      // Use browser's default audio controls (best accessibility & contrast)
+      // Webkit controls have very limited customization options
+
+      &:focus {
+        outline: 2px solid $liverpool-blue;
+        outline-offset: 2px;
+      }
+    }
+
+    // Download Link
+    .audio-player-download-link {
+      display: inline-flex;
+      align-items: center;
+      gap: $liverpool-space-2;
+      padding: $liverpool-space-3 $liverpool-space-4;
+      background-color: transparent;
+      color: $liverpool-blue;
+      font-family: $liverpool-font-primary;
+      font-weight: $liverpool-font-weight-medium;
+      font-size: $liverpool-font-size-sm;
+      text-decoration: none;
+      border: 2px solid $liverpool-blue;
+      border-radius: $liverpool-btn-border-radius;
+      transition: all $liverpool-duration-base $liverpool-easing-in-out;
+      cursor: pointer;
+
+      .download-icon {
+        width: 18px;
+        height: 18px;
+      }
+
+      &:hover {
+        background-color: $liverpool-blue;
+        color: white;
+        box-shadow: $liverpool-shadow-base;
+        transform: translateY(-1px);
+      }
+
+      &:active {
+        transform: translateY(0);
+        box-shadow: none;
+      }
+
+      &:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba($liverpool-blue, 0.2);
+      }
+    }
+  }
+
+  // Error State
+  .audio-player-error {
+    background: $liverpool-feedback-error-bg;
+    border-left: 4px solid $liverpool-pink;
+    border-radius: $liverpool-radius-sm;
+    padding: $liverpool-space-4;
+    color: $liverpool-text-primary;
+
+    p {
+      margin: 0;
+      font-weight: $liverpool-font-weight-medium;
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .audio-player-student-view {
+    margin: 1rem auto;
+
+    .audio-player-title {
+      font-size: $liverpool-font-size-lg;
+    }
+
+    .audio-player-description,
+    .audio-player-container {
+      padding: $liverpool-space-4;
+    }
+
+    .audio-player-download-link {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}

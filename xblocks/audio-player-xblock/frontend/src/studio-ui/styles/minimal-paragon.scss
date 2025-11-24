@@ -1,0 +1,200 @@
+/**
+ * Audio Player - Studio View Styles
+ * Using Liverpool Dental Design System Tokens
+ *
+ * Paragon CSS is loaded from CDN at runtime (via Python fragment)
+ * This file contains ONLY XBlock-specific layout and structural styles
+ */
+
+// ARCHITECTURAL: Core Paragon styles (required)
+@import '~@openedx/paragon/scss/core/core';
+
+// Import Paragon components used in studio
+@import '~@openedx/paragon/src/Card/index.scss';
+@import '~@openedx/paragon/src/Button/index.scss';
+@import '~@openedx/paragon/src/Form/index.scss';
+@import '~@openedx/paragon/src/Alert/index.scss';
+
+// Import Liverpool shared tokens
+@import '../../../../../../shared-styles/styles/liverpool-shared-tokens';
+
+// Studio View Container
+.audio-player-studio-view {
+  font-family: $liverpool-font-primary;
+  padding: $liverpool-space-4;
+  max-width: 800px;
+  margin: 0 auto;
+
+  // Cards
+  .pgn__card {
+    border: 1px solid $liverpool-border-default;
+    border-radius: $liverpool-card-border-radius;
+    box-shadow: $liverpool-card-shadow;
+    margin-bottom: $liverpool-space-4;
+
+    .pgn__card-header-content {
+      font-family: $liverpool-font-primary;
+      font-weight: $liverpool-font-weight-semibold;
+      color: $liverpool-blue;
+    }
+  }
+
+  // Form elements
+  .form-label {
+    font-family: $liverpool-font-primary;
+    font-weight: $liverpool-font-weight-medium;
+    color: $liverpool-text-primary;
+    margin-bottom: $liverpool-space-2;
+  }
+
+  .form-control {
+    font-family: $liverpool-font-primary;
+    border: 1px solid $liverpool-border-default;
+    border-radius: $liverpool-radius-sm;
+    padding: $liverpool-space-3;
+
+    &:focus {
+      border-color: $liverpool-blue;
+      box-shadow: 0 0 0 3px rgba($liverpool-blue, 0.2);
+    }
+  }
+
+  .form-text {
+    font-family: $liverpool-font-primary;
+    font-size: $liverpool-font-size-sm;
+    color: $liverpool-text-muted;
+    margin-top: $liverpool-space-2;
+
+    &.text-warning {
+      color: $liverpool-yellow;
+    }
+  }
+
+  // Form switches - Enhanced visibility with rounded pill shape
+  .pgn__form-switch {
+    // OFF state (unchecked) - Gray background, rounded pill
+    .pgn__form-switch-label::before {
+      background-color: #ccc !important;
+      border-color: #999 !important;
+      border-radius: 50rem !important; // Pill shape
+      opacity: 1 !important;
+    }
+
+    // ON state (checked) - Blue background, rounded pill
+    .pgn__form-switch-input:checked ~ .pgn__form-switch-label::before {
+      background-color: $liverpool-blue !important;
+      border-color: $liverpool-blue !important;
+      border-radius: 50rem !important; // Pill shape
+    }
+
+    // Toggle circle (slider) - fully rounded
+    .pgn__form-switch-label::after {
+      background-color: white !important;
+      border-radius: 50% !important; // Perfect circle
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    // Focus state
+    .pgn__form-switch-input:focus ~ .pgn__form-switch-label::before {
+      box-shadow: 0 0 0 3px rgba($liverpool-blue, 0.3) !important;
+      border-radius: 50rem !important; // Maintain pill shape on focus
+    }
+
+    // Label text
+    .pgn__form-switch-label {
+      font-weight: $liverpool-font-weight-medium;
+      color: $liverpool-text-primary;
+    }
+  }
+
+  // Audio preview
+  .audio-preview {
+    background: $liverpool-bg-subtle;
+    border: 1px solid $liverpool-border-default;
+    border-radius: $liverpool-radius-sm;
+    padding: $liverpool-space-4;
+
+    audio {
+      outline: none;
+
+      &:focus {
+        outline: 2px solid $liverpool-blue;
+        outline-offset: 2px;
+      }
+    }
+  }
+
+  // Buttons
+  .btn {
+    font-family: $liverpool-font-primary;
+    font-weight: $liverpool-font-weight-medium;
+    border-radius: $liverpool-btn-border-radius;
+    padding: $liverpool-space-3 $liverpool-space-5;
+    transition: all $liverpool-duration-base $liverpool-easing-in-out;
+
+    &.btn-primary {
+      background-color: $liverpool-btn-primary-bg;
+      border-color: $liverpool-btn-primary-bg;
+      color: $liverpool-btn-primary-color;
+      box-shadow: $liverpool-btn-primary-shadow;
+
+      &:hover:not(:disabled) {
+        background-color: $liverpool-btn-primary-bg-hover;
+        border-color: $liverpool-btn-primary-bg-hover;
+        box-shadow: $liverpool-btn-primary-shadow-hover;
+        transform: translateY(-1px);
+      }
+
+      &:active:not(:disabled) {
+        box-shadow: $liverpool-btn-primary-shadow-active;
+        transform: translateY(0);
+      }
+    }
+
+    &.btn-tertiary {
+      background-color: transparent;
+      border-color: $liverpool-border-default;
+      color: $liverpool-text-primary;
+
+      &:hover:not(:disabled) {
+        background-color: $liverpool-bg-subtle;
+        border-color: $liverpool-border-default;
+      }
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba($liverpool-blue, 0.2);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  // Alerts
+  .alert {
+    font-family: $liverpool-font-primary;
+    border-radius: $liverpool-radius-sm;
+
+    &.alert-success {
+      background-color: $liverpool-feedback-success-bg;
+      border-left: 4px solid $liverpool-teal;
+      color: $liverpool-text-primary;
+    }
+
+    &.alert-danger {
+      background-color: $liverpool-feedback-error-bg;
+      border-left: 4px solid $liverpool-pink;
+      color: $liverpool-text-primary;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .audio-player-studio-view {
+    padding: $liverpool-space-2;
+    max-width: 100%;
+  }
+}
