@@ -7,7 +7,7 @@
  */
 
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { IntlProvider } from 'react-intl';
 import { StudentView } from './StudentView';
 import './styles/minimal-paragon.scss';
@@ -32,7 +32,13 @@ interface StudentData {
  * @param data - Data from Python's student_view()
  */
 export const renderBlock = (element: Element | null, data: StudentData) => {
-  ReactDOM.render(
+  if (!element) {
+    console.error('No element provided to renderBlock');
+    return;
+  }
+
+  const root = createRoot(element);
+  root.render(
     <React.StrictMode>
       <IntlProvider locale="en">
         <StudentView
@@ -45,7 +51,6 @@ export const renderBlock = (element: Element | null, data: StudentData) => {
           showDownload={data.showDownload}
         />
       </IntlProvider>
-    </React.StrictMode>,
-    element
+    </React.StrictMode>
   );
 };

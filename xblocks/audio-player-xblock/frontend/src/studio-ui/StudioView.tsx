@@ -48,6 +48,7 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [wasUploaded, setWasUploaded] = useState(false);
+  const [urlModifiedSinceUpload, setUrlModifiedSinceUpload] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   // Helper: Get CSRF token from cookies
@@ -132,8 +133,9 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
         return;
       }
 
-      // Validate URL format only if manually entered (skip for uploaded files)
-      if (!wasUploaded) {
+      // Validate URL format only if manually entered (skip for just-uploaded files)
+      // If URL was modified after upload, validate it
+      if (!wasUploaded || urlModifiedSinceUpload) {
         try {
           new URL(audioUrl);
         } catch {
@@ -283,7 +285,9 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
                 value={audioUrl}
                 onChange={(e) => {
                   setAudioUrl(e.target.value);
-                  setWasUploaded(false); // Reset flag when manually editing
+                  if (wasUploaded) {
+                    setUrlModifiedSinceUpload(true); // Mark as modified after upload
+                  }
                 }}
                 placeholder="https://example.com/audio.mp3"
                 disabled={uploading}

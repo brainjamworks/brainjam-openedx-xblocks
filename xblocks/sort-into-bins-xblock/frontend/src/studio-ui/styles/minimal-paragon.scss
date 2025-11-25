@@ -9,144 +9,353 @@
 // Import Liverpool shared tokens
 @import '../../../../../../shared-styles/styles/liverpool-shared-tokens';
 
+// =========================================================================
+// MAIN CONTAINER
+// =========================================================================
+
 .sort-into-bins-studio-view {
   font-family: $liverpool-font-primary;
-  padding: $liverpool-space-5;
+  max-width: 100%;
 
-  .studio-header {
-    margin-bottom: $liverpool-space-6;
-    border-bottom: 2px solid $liverpool-border-default;
-    padding-bottom: $liverpool-space-4;
+  // =========================================================================
+  // BINS LIST
+  // =========================================================================
 
-    h2 {
-      color: $liverpool-blue;
-      font-weight: $liverpool-font-weight-semibold;
-      margin-bottom: $liverpool-space-2;
-    }
-  }
-
-  .wizard-navigation {
-    display: flex;
-    gap: $liverpool-space-3;
-    margin-bottom: $liverpool-space-6;
-    padding-bottom: $liverpool-space-4;
-    border-bottom: 2px solid $liverpool-border-default;
-
-    .wizard-nav-button {
-      flex: 1;
-      padding: $liverpool-space-4;
-      background: white;
-      border: 2px solid $liverpool-border-default;
+  .bins-list {
+    .empty-state {
+      background: $liverpool-feedback-info-bg;
+      border: 2px dashed $liverpool-blue;
       border-radius: $liverpool-radius-sm;
-      cursor: pointer;
-      transition: all $liverpool-duration-base $liverpool-easing-in-out;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: $liverpool-space-2;
+      padding: $liverpool-space-6;
+      text-align: center;
+      margin-bottom: $liverpool-space-4;
 
-      &:hover {
-        border-color: $liverpool-teal;
-        background: $liverpool-feedback-success-bg;
+      &.warning {
+        background: $liverpool-feedback-warning-bg;
+        border-color: $liverpool-yellow;
       }
 
-      &.active {
-        border-color: $liverpool-blue;
-        background: $liverpool-blue-100;
-        box-shadow: $liverpool-shadow-base;
-      }
-
-      .wizard-nav-icon {
-        font-size: 1.5rem;
-      }
-
-      .wizard-nav-label {
+      p {
+        margin: 0;
+        color: $liverpool-text-muted;
         font-weight: $liverpool-font-weight-medium;
       }
     }
-  }
 
-  .wizard-content {
-    margin-bottom: $liverpool-space-6;
-    min-height: 400px;
-  }
-
-  .step-header {
-    margin-bottom: $liverpool-space-5;
-
-    h3 {
-      color: $liverpool-blue;
-      font-weight: $liverpool-font-weight-semibold;
-      margin-bottom: $liverpool-space-2;
-    }
-  }
-
-  .empty-state {
-    background: $liverpool-feedback-info-bg;
-    border: 2px dashed $liverpool-blue;
-    border-radius: $liverpool-radius-sm;
-    padding: $liverpool-space-6;
-    text-align: center;
-    margin-bottom: $liverpool-space-5;
-  }
-
-  .bin-card,
-  .item-card {
-    background: white;
-    border-radius: $liverpool-radius-sm;
-    box-shadow: $liverpool-shadow-sm;
-    border: 1px solid $liverpool-border-default;
-    transition: all $liverpool-duration-base $liverpool-easing-in-out;
-
-    &:hover {
-      box-shadow: $liverpool-shadow-base;
-    }
-  }
-
-  .bin-display,
-  .item-display {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: $liverpool-space-4;
-
-    strong {
-      color: $liverpool-blue;
-      font-weight: $liverpool-font-weight-semibold;
-    }
-  }
-
-  .bin-actions,
-  .item-actions {
-    display: flex;
-    gap: $liverpool-space-2;
-  }
-
-  .bin-edit-form,
-  .item-edit-form {
-    .form-actions {
+    .bins-list-items {
       display: flex;
-      gap: $liverpool-space-2;
-      margin-top: $liverpool-space-3;
+      flex-direction: column;
+      gap: $liverpool-space-3;
+    }
+
+    .bin-item {
+      background: white;
+      border: 2px solid $liverpool-border-default;
+      border-radius: $liverpool-radius-sm;
+      padding: $liverpool-space-4;
+      transition: all $liverpool-duration-base $liverpool-easing-in-out;
+
+      &:hover {
+        border-color: $liverpool-teal;
+        box-shadow: $liverpool-shadow-sm;
+      }
+
+      &.editing {
+        border-color: $liverpool-blue;
+        box-shadow: $liverpool-shadow-base;
+      }
+
+      .bin-item-header {
+        display: flex;
+        align-items: flex-start;
+        gap: $liverpool-space-3;
+        margin-bottom: $liverpool-space-2;
+
+        .drag-handle {
+          color: $liverpool-text-muted;
+          cursor: grab;
+          margin-top: 2px;
+
+          &:active {
+            cursor: grabbing;
+          }
+        }
+
+        .bin-number {
+          font-weight: $liverpool-font-weight-semibold;
+          color: $liverpool-text-muted;
+          font-size: $liverpool-font-size-sm;
+        }
+
+        .bin-item-info {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: $liverpool-space-1;
+
+          .bin-label {
+            color: $liverpool-blue;
+            font-weight: $liverpool-font-weight-semibold;
+            font-size: $liverpool-font-size-base;
+          }
+
+          .bin-description {
+            color: $liverpool-text-secondary;
+            font-size: $liverpool-font-size-sm;
+            line-height: $liverpool-line-height-normal;
+          }
+
+          .bin-capacity {
+            color: $liverpool-text-muted;
+            font-size: $liverpool-font-size-xs;
+            font-weight: $liverpool-font-weight-medium;
+          }
+        }
+      }
+
+      .bin-item-form {
+        margin-top: $liverpool-space-3;
+        padding-top: $liverpool-space-3;
+        border-top: 1px solid $liverpool-border-default;
+      }
+
+      .bin-item-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: $liverpool-space-2;
+        margin-top: $liverpool-space-2;
+
+        .btn-link {
+          padding: $liverpool-space-1 $liverpool-space-2;
+          font-size: $liverpool-font-size-sm;
+          font-weight: $liverpool-font-weight-medium;
+        }
+      }
     }
   }
 
-  .item-type-badge {
-    display: inline-block;
-    background: $liverpool-blue;
-    color: white;
-    padding: $liverpool-space-1 $liverpool-space-2;
-    border-radius: 4px;
-    font-size: $liverpool-font-size-xs;
-    font-weight: $liverpool-font-weight-semibold;
-    text-transform: uppercase;
+  // =========================================================================
+  // ITEMS LIST
+  // =========================================================================
+
+  .items-list {
+    .empty-state {
+      background: $liverpool-feedback-info-bg;
+      border: 2px dashed $liverpool-blue;
+      border-radius: $liverpool-radius-sm;
+      padding: $liverpool-space-6;
+      text-align: center;
+      margin-bottom: $liverpool-space-4;
+
+      &.warning {
+        background: $liverpool-feedback-warning-bg;
+        border-color: $liverpool-yellow;
+      }
+
+      p {
+        margin: 0;
+        color: $liverpool-text-muted;
+        font-weight: $liverpool-font-weight-medium;
+      }
+    }
+
+    .items-list-items {
+      display: flex;
+      flex-direction: column;
+      gap: $liverpool-space-3;
+    }
+
+    .item-item {
+      background: white;
+      border: 2px solid $liverpool-border-default;
+      border-radius: $liverpool-radius-sm;
+      padding: $liverpool-space-4;
+      transition: all $liverpool-duration-base $liverpool-easing-in-out;
+
+      &:hover {
+        border-color: $liverpool-teal;
+        box-shadow: $liverpool-shadow-sm;
+      }
+
+      &.editing {
+        border-color: $liverpool-blue;
+        box-shadow: $liverpool-shadow-base;
+      }
+
+      .item-item-header {
+        display: flex;
+        align-items: flex-start;
+        gap: $liverpool-space-3;
+        margin-bottom: $liverpool-space-2;
+
+        .drag-handle {
+          color: $liverpool-text-muted;
+          cursor: grab;
+          margin-top: 2px;
+
+          &:active {
+            cursor: grabbing;
+          }
+        }
+
+        .item-number {
+          font-weight: $liverpool-font-weight-semibold;
+          color: $liverpool-text-muted;
+          font-size: $liverpool-font-size-sm;
+        }
+
+        .item-item-info {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: $liverpool-space-2;
+
+          .item-meta {
+            display: flex;
+            align-items: center;
+            gap: $liverpool-space-2;
+            flex-wrap: wrap;
+
+            .item-label {
+              color: $liverpool-blue;
+              font-weight: $liverpool-font-weight-semibold;
+              font-size: $liverpool-font-size-base;
+            }
+
+            .item-type-badge {
+              display: inline-block;
+              background: $liverpool-blue;
+              color: white;
+              padding: $liverpool-space-1 $liverpool-space-2;
+              border-radius: 4px;
+              font-size: $liverpool-font-size-xs;
+              font-weight: $liverpool-font-weight-semibold;
+              text-transform: uppercase;
+            }
+
+            .item-bin {
+              color: $liverpool-teal;
+              font-size: $liverpool-font-size-sm;
+              font-weight: $liverpool-font-weight-medium;
+            }
+          }
+
+          .item-content-preview {
+            color: $liverpool-text-secondary;
+            font-size: $liverpool-font-size-sm;
+            line-height: $liverpool-line-height-normal;
+
+            .item-content-text {
+              display: block;
+            }
+
+            .item-content-image {
+              display: flex;
+              flex-direction: column;
+              gap: $liverpool-space-1;
+
+              img {
+                border-radius: $liverpool-radius-xs;
+                border: 1px solid $liverpool-border-default;
+              }
+
+              small {
+                font-size: $liverpool-font-size-xs;
+                word-break: break-all;
+              }
+            }
+
+            .item-content-html {
+              code {
+                background: $liverpool-card-bg;
+                padding: $liverpool-space-1 $liverpool-space-2;
+                border-radius: $liverpool-radius-xs;
+                font-size: $liverpool-font-size-xs;
+                color: $liverpool-text-secondary;
+              }
+            }
+          }
+        }
+      }
+
+      .item-item-form {
+        margin-top: $liverpool-space-3;
+        padding-top: $liverpool-space-3;
+        border-top: 1px solid $liverpool-border-default;
+      }
+
+      .item-item-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: $liverpool-space-2;
+        margin-top: $liverpool-space-2;
+
+        .btn-link {
+          padding: $liverpool-space-1 $liverpool-space-2;
+          font-size: $liverpool-font-size-sm;
+          font-weight: $liverpool-font-weight-medium;
+        }
+      }
+    }
   }
 
-  .studio-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: $liverpool-space-3;
-    padding-top: $liverpool-space-5;
-    border-top: 2px solid $liverpool-border-default;
+  // =========================================================================
+  // STICKY ACTIONS (Save/Cancel buttons)
+  // =========================================================================
+
+  .sort-into-bins-sticky-actions {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    padding: $liverpool-space-4;
+    margin: $liverpool-space-5 (-$liverpool-space-5) 0;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+  }
+}
+
+// =========================================================================
+// HIDE STUDIO'S DEFAULT MODAL BUTTONS
+// =========================================================================
+
+// Hide Studio's modal action buttons (Save/Close)
+// We provide our own buttons with clearer labels
+.modal-type-sort_into_bins .modal-actions {
+  display: none !important;
+}
+
+// Hide the action-cancel close button
+.modal-type-sort_into_bins .action-cancel {
+  display: none !important;
+}
+
+// Hide any close buttons in header as well
+.modal-type-sort_into_bins .modal-header .close,
+.modal-type-sort_into_bins .modal-header .btn-close {
+  display: none !important;
+}
+
+// =========================================================================
+// RESPONSIVE DESIGN
+// =========================================================================
+
+@media (max-width: 768px) {
+  .sort-into-bins-studio-view {
+    .bin-item-header,
+    .item-item-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .bin-item-actions,
+    .item-item-actions {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .item-meta {
+      flex-direction: column;
+      align-items: flex-start !important;
+    }
   }
 }

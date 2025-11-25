@@ -181,5 +181,16 @@
 // Hide Studio's modal action buttons (Save/Close)
 // We provide our own buttons with clearer labels
 .modal-type-drag_drop_matching .modal-actions {
-  display: none;
+  display: none !important;
+}
+
+// Hide the action-cancel close button
+.modal-type-drag_drop_matching .action-cancel {
+  display: none !important;
+}
+
+// Hide any close buttons in header as well
+.modal-type-drag_drop_matching .modal-header .close,
+.modal-type-drag_drop_matching .modal-header .btn-close {
+  display: none !important;
 }

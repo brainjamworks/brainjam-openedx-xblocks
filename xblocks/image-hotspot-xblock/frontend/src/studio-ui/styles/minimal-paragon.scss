@@ -276,7 +276,19 @@
   }
 }
 
-// Hide Studio's modal action buttons
+// Hide Studio's modal action buttons (Save/Close)
+// We provide our own buttons with clearer labels
 .modal-type-image_hotspot .modal-actions {
-  display: none;
+  display: none !important;
+}
+
+// Hide the action-cancel close button
+.modal-type-image_hotspot .action-cancel {
+  display: none !important;
+}
+
+// Hide any close buttons in header as well
+.modal-type-image_hotspot .modal-header .close,
+.modal-type-image_hotspot .modal-header .btn-close {
+  display: none !important;
 }

@@ -7,7 +7,7 @@
  */
 
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { IntlProvider } from 'react-intl';
 import { StudioView } from './StudioView';
 import './styles/minimal-paragon.scss';
@@ -35,15 +35,20 @@ interface StudioData {
  * @param data - Data from Python's studio_view()
  */
 export const renderBlock = (runtime: any, element: Element | null, data: StudioData) => {
+  if (!element) {
+    console.error('No element provided to renderBlock');
+    return;
+  }
+
   // Set runtime.element for API calls
   runtime.element = element;
 
-  ReactDOM.render(
+  const root = createRoot(element);
+  root.render(
     <React.StrictMode>
       <IntlProvider locale="en">
         <StudioView runtime={runtime} fields={data.fields} />
       </IntlProvider>
-    </React.StrictMode>,
-    element
+    </React.StrictMode>
   );
 };

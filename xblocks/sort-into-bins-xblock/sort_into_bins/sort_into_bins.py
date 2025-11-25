@@ -360,7 +360,11 @@ class SortIntoBins(ScorableXBlockMixin, XBlock):
         bootstrap_js = self.resource_string("static/studio.js")
         frag.add_javascript(bootstrap_js)
 
-        # Add CSS bundle
+        # Load Paragon CSS from CDN (runtime, not bundled)
+        frag.add_css_url('https://cdn.jsdelivr.net/npm/@openedx/paragon@23.0.0/dist/core.min.css')
+        frag.add_css_url('https://cdn.jsdelivr.net/npm/@openedx/paragon@23.0.0/dist/light.min.css')
+
+        # Add XBlock custom styles (minimal)
         frag.add_css_url(self.runtime.local_resource_url(self, 'public/studio-ui.css'))
 
         # Initialize React component

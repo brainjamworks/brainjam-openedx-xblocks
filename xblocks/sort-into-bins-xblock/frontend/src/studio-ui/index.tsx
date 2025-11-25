@@ -1,9 +1,12 @@
 /**
  * Entry point for Sort Into Bins studio view
+ *
+ * PATTERN: Paragon components require IntlProvider
  */
 
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
+import { IntlProvider } from 'react-intl';
 import { StudioView } from './StudioView';
 import type { StudioViewFields } from '../common/types';
 import './styles/minimal-paragon.scss';
@@ -31,10 +34,12 @@ export const renderBlock = (runtime: any, element: Element | null, data: StudioD
   const root = createRoot(element);
   root.render(
     <React.StrictMode>
-      <StudioView
-        runtime={runtime}
-        fields={data.fields}
-      />
+      <IntlProvider locale="en">
+        <StudioView
+          runtime={runtime}
+          fields={data.fields}
+        />
+      </IntlProvider>
     </React.StrictMode>
   );
 };
