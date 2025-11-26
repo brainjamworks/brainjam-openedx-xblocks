@@ -46,6 +46,266 @@ Text Colors:
 
 ---
 
+## Content Relationship Analysis for Course Design
+
+**Think like a course designer, not just a converter.** Before choosing which component library patterns to use, analyze the content relationships and design creative solutions.
+
+### 1. Identify Relationships First
+
+Look for connections between pieces of content:
+
+- **Claim → Evidence** (CBCT recommendation → research showing effectiveness)
+- **Problem → Solution** (diagnostic challenge → CBCT solves it)
+- **Concept → Examples** (treatment approach → multiple case studies)
+- **Sequence/Progression** (stage 1 → stage 2 → stage 3)
+- **Comparison/Contrast** (Method A vs Method B)
+- **Category/Hierarchy** (main concept → subcategories)
+
+### 2. Design Creative Visual Solutions
+
+Once you identify a relationship, **think creatively about how to express it** using component library patterns:
+
+**Examples of Creative Solutions:**
+- **Claim-Evidence relationship**: Could nest evidence box inside callout, OR use two-column layout (claim left, evidence right), OR use sequential callouts with visual connectors
+- **Multiple related examples**: Could use grid layout, OR timeline pattern, OR separate callouts with consistent color coding
+- **Hierarchical concepts**: Could use nested structure, OR vertical decision tree, OR chevron flow showing progression
+
+### 3. Mix and Match Components
+
+The component library is your **toolkit** - combine patterns creatively:
+
+- Callout containing technique badges + inline reference
+- Evidence box followed by image grid
+- Timeline with nested callouts at each stage
+- Two-column layout with callout on left, figures on right
+- Info callout with nested white background evidence box (teal left border)
+
+**Example: CBCT Diagnostic Investigation**
+```html
+<!-- Main claim in callout -->
+<div style="display: flex; gap: 1rem; padding: 1.25rem; background: rgba(33, 43, 88, 0.08); border-left: 4px solid #212b58; border-radius: 8px;">
+  <div style="font-size: 1.5rem;">🏥</div>
+  <div style="flex: 1;">
+    <h5>CBCT may be required</h5>
+    <p>Some cases need specialized equipment...</p>
+
+    <!-- Nested evidence showing WHY -->
+    <div style="background: white; padding: 1rem; border-radius: 8px; border-left: 3px solid #00A689;">
+      <div style="color: #00A689; font-weight: 600;">📊 Research Evidence</div>
+      <p>CBCT detects 30% more lesions than plain film...</p>
+    </div>
+  </div>
+</div>
+
+<!-- Visual proof follows -->
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+  <figure><!-- CBCT image 1 --></figure>
+  <figure><!-- CBCT image 2 --></figure>
+</div>
+```
+
+This creates the flow: **Claim → Evidence → Visual Proof**
+
+### 4. Key Principle: Form Follows Function
+
+**Don't ask**: "Which component should I use?"
+**Ask**: "What relationship am I trying to show, and which combination of components best expresses that?"
+
+The "right" pattern is the one that makes the **content relationship immediately clear** to the learner.
+
+### 5. Think Like a Learner
+
+After designing your layout, validate with these questions:
+
+- ✅ "Does this visual structure help me understand how these pieces connect?"
+- ✅ "Would I naturally follow this flow?"
+- ✅ "Does the layout match how I'd explain this concept verbally?"
+- ✅ "If I saw this for the first time, would the relationship be obvious?"
+
+### Common Relationship Patterns
+
+| Content Relationship | Visual Solutions to Consider |
+|---------------------|------------------------------|
+| Claim needs immediate justification | Nest evidence inside callout |
+| Multiple steps in sequence | Timeline, Numbered procedure, or Chevron flow |
+| Comparing alternatives | Two-column grid, or side-by-side callouts |
+| Main concept + supporting cases | Main callout followed by case study grid |
+| Evidence with visual proof | Evidence box → Image grid showing the findings |
+| Hierarchical classification | Vertical decision tree or Chevron flow |
+
+**Remember:** These are **starting points for creative thinking**, not rigid rules. The best solution depends on the specific content and learning objectives.
+
+---
+
+## Component Selection Strategy: Advanced Principles
+
+### The Callout Overuse Problem
+
+**WARNING: Callouts are not a universal solution.** Just because content is "important" doesn't mean it needs a callout.
+
+**Common mistakes:**
+- ❌ Using callouts for simple definitions
+- ❌ Using callouts for statistical data that could be narrative
+- ❌ Creating 5+ callouts in a single section (information overload)
+- ❌ Defaulting to callouts when other patterns would be more appropriate
+
+**When callouts ARE appropriate:**
+- ✅ Actual warnings or cautions (orange warning callout)
+- ✅ Important tips or advice (info callout)
+- ✅ Success criteria or completion notes (success callout)
+- ✅ Quick reference information that needs visual separation
+
+**When callouts are NOT appropriate:**
+- ❌ Presenting structured requirements/standards → Use Case Study field-based pattern
+- ❌ Showing statistical data with visuals → Use Media Object
+- ❌ Explaining definitions or classifications → Use narrative paragraphs with bold terms
+- ❌ Listing sequential benefits → Use Timeline pattern
+
+**Key principle:** Restraint is a design skill. Over-emphasis dilutes emphasis.
+
+---
+
+### Data Type → Component Mapping
+
+**Think about WHAT the data IS, then choose the pattern that best represents that type of information.**
+
+| Data Type | Best Component Pattern | Why | Example Use Case |
+|-----------|----------------------|-----|------------------|
+| **Statistical facts with visuals** | Media Object (image + text) | Pairs visual data with numerical impact | "20% of litigation" + litigation graph |
+| **Definitions or classifications** | Narrative paragraph with bold terms | Don't over-emphasize basics | "Complexity is determined by three factors: **experience**, **time**, **risks**" |
+| **Structured requirements/standards** | Case Study field-based pattern | Reveals inherent structure, scannable | GDC learning outcomes (1.14.9, 1.14.10) |
+| **Academic evidence** | Evidence Summary | Appropriate for research citations | Essam 2022 study with key findings |
+| **Sequential outcomes/benefits** | Timeline with checkmarks | Shows progression clearly | "Improve outcomes → Improve access → Increase availability" |
+| **Warning or caution** | Orange warning callout | Visual emphasis for safety/risk | Litigation risks, complication warnings |
+| **Tips or important notes** | Info callout (blue) | Helpful contextual information | Usage tips, best practices |
+| **Multiple techniques/methods** | Technique Badges (flexible pills) | Shows related options at a glance | "Distraction, Salt, Hypnotherapy, Local Anaesthesia" |
+| **Clinical photos/images** | Image Grid with square aspect ratio | Consistent visual presentation | Complication images, case examples |
+| **Hierarchical classification** | Complexity Chevron Flow | Shows progression across levels | Class 1 → Class 2 → Class 3 complexity |
+| **Step-by-step procedure** | Timeline OR numbered circles | Clear sequential flow | Treatment stages, diagnostic steps |
+| **Comparison data** | Two-column grid or side-by-side | Enables direct comparison | Anterior vs. molar access comparison |
+
+**Decision framework:**
+1. **Identify the data type** - Is it a definition? A statistic? A standard? A warning?
+2. **Consider the learning goal** - What does the learner need to understand?
+3. **Choose the pattern that reveals the structure** - Match form to function
+4. **Avoid the default** - Don't just use callouts because they're familiar
+
+---
+
+### Information Architecture Principles
+
+**One massive section = information overload.** Break content into logical sections with clear progression.
+
+#### Section Break Guidelines
+
+**When to break into multiple sections:**
+- ✅ Content exceeds 800-1000 words in one block
+- ✅ Natural topic shifts occur (Problem → Framework → Solution)
+- ✅ You have 5+ components in a single section
+- ✅ Learner needs "cognitive breathing room"
+
+**Effective section progression patterns:**
+- **Problem → Evidence → Solution**
+- **Overview → Details → Application**
+- **What → Why → How**
+- **Definition → Standards → Benefits**
+
+**Example:** "Why Assess Complexity" was ONE section with 5 callouts (overwhelming). Breaking into THREE sections created:
+- Section 1: Why Assess Endodontic Complexity? (The Problem)
+- Section 2: Assessing Complexity: Framework and Standards (The Framework)
+- Section 3: The Benefits of Appropriate Case Management (The Solution)
+
+**Result:** Clear learning progression, reduced cognitive load, better retention.
+
+---
+
+### Component Variety for Engagement
+
+**Using the same pattern repeatedly = monotonous learning experience.**
+
+**Before rework:**
+- 5 info callouts in one section
+- Repetitive visual structure
+- Learner fatigue
+
+**After rework:**
+- 6 different patterns across 3 sections
+- Narrative + Image Grid + Media Object + Evidence Summary + Case Study field-based + Timeline
+- Varied, engaging learning experience
+
+**Guideline:** Aim for 3-5 different component types within a complete learning module. The component library is a **toolkit** - use the full range.
+
+**Mix patterns to:**
+- ✅ Maintain learner attention
+- ✅ Signal different types of information visually
+- ✅ Create rhythm and pacing in the content
+- ✅ Support different learning preferences
+
+---
+
+### Technical Precision Checklist
+
+Even with excellent design choices, implementation details can break the learning experience.
+
+**Figure Captions:**
+- ✅ Caption must be positioned **directly under the specific image**
+- ✅ Caption must be **inside the image container** (not after the entire component)
+- ✅ Caption needs **width constraint** to wrap properly (match image width)
+- ❌ Don't place caption after an entire media object or multi-column layout
+
+**Example - Media Object with caption:**
+```html
+<div style="display: flex; gap: 1.5rem; align-items: flex-start;">
+  <div style="width: 250px; flex-shrink: 0;">
+    <div style="overflow: hidden; border-radius: 16px; border: 1px solid #DBDBD3;">
+      <img src="..." style="width: 100%; display: block;">
+    </div>
+    <p style="margin: 0.5rem 0 0 0; color: #8d9695; font-size: 0.875rem; font-style: italic; text-align: center;">
+      Figure 2: Caption text here
+    </p>
+  </div>
+  <div style="flex: 1;">
+    <!-- Text content here -->
+  </div>
+</div>
+```
+
+**Links:**
+- ✅ ALL external links must open in new tabs: `target="_blank"`
+- ✅ Include on ALL `<a>` tags for external resources (GDC, DDU, research papers)
+
+**Width Constraints:**
+- ✅ Long captions need width constraints to wrap (match parent container width)
+- ✅ Portrait images need `max-width: 350-400px; margin: 0 auto;`
+- ✅ Media object image columns need explicit width (e.g., `width: 250px;`)
+
+---
+
+### The "Less is More" Principle
+
+**Reducing emphasis can increase effectiveness.**
+
+**Case study from rework:**
+- **Before:** 5 callouts in one section (everything emphasized)
+- **After:** 0 callouts in Section 1 (selective emphasis)
+- **Result:** Content became MORE effective, not less
+
+**Why this works:**
+- Over-emphasis dilutes emphasis
+- When everything is "important," nothing stands out
+- Learners tune out visual noise
+- Clean presentation increases comprehension
+
+**Application:**
+- Don't add callouts just because you can
+- Use narrative paragraphs with bold key terms as default
+- Reserve callouts for content that truly needs visual separation
+- Trust the typography hierarchy (H3 → H4 → H5 → body)
+
+**Question to ask:** "Would this content work as a simple paragraph with bold terms?" If yes, don't use a callout.
+
+---
+
 ## Component Library Patterns
 
 ### Evidence Summary (Literature Reviews, Citations)
@@ -131,6 +391,34 @@ Info (Blue): rgba(33, 43, 88, 0.08)   /* NOT #E3F2FD */
 Warning (Orange): rgba(255, 152, 0, 0.08)
 Success (Green): rgba(76, 175, 80, 0.08)
 ```
+
+---
+
+### Technique Badges (Flexible Pills)
+
+**Use for:** Displaying multiple related techniques, methods, or management options
+
+**Component Library Pattern:**
+```html
+<div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+  <div style="background: #00A689; color: white; padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.875rem; font-weight: 600;">Technique 1</div>
+  <div style="background: #00A689; color: white; padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.875rem; font-weight: 600;">Technique 2</div>
+  <div style="background: #00A689; color: white; padding: 0.5rem 0.75rem; border-radius: 6px; font-size: 0.875rem; font-weight: 600;">Technique 3</div>
+</div>
+```
+
+**Key Features:**
+- Standard color: Liverpool Teal (#00A689)
+- Can use other Liverpool colors for categorization (Blue, Pink, Yellow, Sky Blue)
+- Wraps responsively with `flex-wrap: wrap`
+- Typically placed inside info callout cards below descriptive text
+- Use for listing management techniques, treatment methods, or related options
+
+**Example Use Cases:**
+- Gag reflex management techniques: "Distraction Methods", "Salt", "Hypnotherapy", "Local Anaesthesia", "Acupuncture"
+- Treatment options for a condition
+- Diagnostic methods or imaging modalities
+- Medication categories or drug names
 
 ---
 
@@ -612,9 +900,12 @@ Physical & Psychological Limitations
 - User will ask: *"is that yellow from our component library"* - if answer is no, don't use it
 
 #### 6. Figure Numbering in ElevenLabs Script
-- When transcript mentions images: "as shown in Figure one", "Figures two A and two B"
+- **CRITICAL**: When transcript has image codes in parentheses (FO0571), (SP5043), (JM5177), you MUST add figure references at those exact points
+- Image code in transcript = insert figure reference: "(FO0571)" → "as shown in Figure one"
 - Spell out numbers: "Figure one", "Figure two A through two C"
 - NOT: "Figure 1", "Figures 2a-2b" (those are for visual captions only)
+- **NEVER skip figure references** - if there are image codes in the transcript, they MUST become figure references in the ElevenLabs script
+- User will correct: *"why have you not referred to figures in the transcript"* - avoid this by always converting image codes to figure references
 
 #### 7. Don't Remove Content When Refining
 - When asked to "refine" or "make consistent", that means fix styling/formatting only
@@ -646,10 +937,88 @@ Physical & Psychological Limitations
 - **Nested layouts**: Use for complex relationships like measurements + images, or case examples with multiple data points
 - Not every slide needs individual callout cards - simpler slides with one main concept can use cleaner narrative flow
 
+#### 12. Always Check the Images Folder First
+- **NEVER guess how many figures there are** - always check the actual images folder
+- User will provide path like `/Users/brainjam/Downloads/Images/8. Extra-coronal Restorations`
+- Use `ls -la` to see exactly how many images exist and their filenames
+- Some image codes have folders with multiple images (e.g., JO4711 folder with 5 images)
+- Count carefully: subfolders may contain multiple images for one figure set
+- User will correct: *"there are 5 figures for JO4711"* - avoid this by checking first
+
+#### 13. Image Sizing Must Be Responsive
+- **NEVER use fixed width/height attributes** on `<img>` tags (e.g., `width="1280" height="864"`)
+- **ALWAYS use**: `style="width: 100%; height: auto; display: block;"`
+- Small/square images: Add `max-width: 200-250px; margin: 0 auto;` to wrapper div
+- Portrait images in grids: Add `max-width: 350px; margin: 0 auto;` to wrapper div
+- This prevents images from breaking layout on different screen sizes
+
+#### 14. Progressive Revelation for Multiple Concepts
+- When user says "each bullet appear one at a time with its associated image"
+- **Interleave components with their associated images** - don't dump all components first, then all images
+- Be creative with component library patterns - use callouts, evidence boxes, timelines, case studies, etc.
+- Choose the component that best fits the content type (not just callouts by default)
+- Example pattern: Taurodontism callout → Figures 1a-1b → Microdontia callout → Figure 2
+- Could also be: Timeline item → Images → Next timeline item → Images
+- Or: Evidence summary → Images → Case study section → Images
+- User will specify: *"don't start with all 5"* - means interleave, don't batch
+- Think creatively about which component library pattern best represents each concept
+
+#### 15. ALWAYS Check for Flowcharts and Diagrams in Slides
+- **NEVER skip flowcharts, decision trees, or classification diagrams** shown in the slide images
+- User will immediately ask: *"what did you do with the flowchart"* if you ignore it
+- **Process**: When you see a diagram in the slide image, STOP and check component library for matching pattern
+- Common diagram types and their component library patterns:
+  - **Hierarchical flowcharts** (e.g., Root Resorption: Internal/External) → **Vertical Decision Tree**
+  - **Classification scales** (e.g., Class 1-2-3 complexity) → **Complexity Chevron Flow**
+  - **Sequential processes** (e.g., treatment steps) → **Timeline**
+- **Where to place diagram**: Usually at the START after intro paragraph, before detailed callouts/images
+- Diagrams provide essential educational structure - they are NOT optional decoration
+- If unsure which pattern matches, search component library HTML for "decision-tree", "chevron", "timeline"
+
+#### 16. Combining Multiple Slides into One Component
+- **When to combine**: When multiple slides tell ONE cohesive educational story
+- **Indicators for combining**:
+  - Slide 1 shows overview/classification, Slides 2-4 show detailed methods/examples
+  - Slides build on each other sequentially (e.g., Curvature overview → Methods → Specific method → Application)
+  - All slides relate to same H3 topic
+- **When to separate**: Each slide covers distinctly different topics with different H3 headings
+- **Flow pattern for combined slides**:
+  1. H3 heading (covers all slides)
+  2. Intro paragraph from Slide 1
+  3. Visual diagram (if present)
+  4. Progressive examples from Slide 1
+  5. Evidence box (if reference in Slide 2)
+  6. Comparison/methods section from Slide 2
+  7. Detailed explanation from Slides 3-4
+  8. Application notes
+  9. Risks & Challenges
+- **Narrative construction**: Build logical transitions between slide content - add phrases like "One of the simplest is...", "In cases where...", etc.
+- **Figure numbering**: Sequential across ALL combined slides (Figures 1-12, not restarting at each slide)
+
+#### 17. Always Use Placeholders for Missing Images
+- **CRITICAL**: If transcript or slide mentions an image code, create a figure placeholder even if image doesn't exist in folder
+- **NEVER substitute** with different images or skip figures
+- User says: *"lets not substitute we should put placeholders in for all images referred to in the transcript and on the slides"*
+- **Process**:
+  1. Check images folder with `ls -la` to see what exists
+  2. Note which images are missing
+  3. Create figure markup for ALL images (existing + missing)
+  4. Use standard placeholder format: `<img src="/asset-v1:University_of_Liverpool+ENDO101+Self-Paced+type@asset+block@IMAGE_CODE.png"`
+- **Benefits**:
+  - Complete figure numbering system
+  - User can upload correct images later without restructuring
+  - ElevenLabs script references all figures correctly
+  - No confusion about missing content
+- **Example**: Transcript mentions CA4621, AJ4228, NC0063 but only EM7484 exists → Create placeholders for all 4
+
 ### Step-by-Step Process
 
 #### Step 1: Analyze Slide Structure
 - How many main points are there?
+- **CRITICAL: Is there a flowchart, decision tree, or classification diagram in the slide?**
+  - If YES: Check component library for matching pattern (Vertical Decision Tree, Complexity Chevron, etc.)
+  - **NEVER skip or ignore diagrams** - they provide essential educational structure
+  - User will ask: *"what did you do with the flowchart"* if you miss it
 - Is there a clinical photo or diagram? Count them carefully
 - Are there measurements or classifications?
 - Is there a "Risks & Challenges" section?
@@ -657,18 +1026,24 @@ Physical & Psychological Limitations
 
 #### Step 2: Create ElevenLabs Script
 1. Copy raw transcript text
-2. Spell out all acronyms (A-S-A, C-B-T, T-M-D, C-B-C-T)
-3. Replace "LA" with "local anaesthetic"
-4. Write out numbers ("thirty-five millimetres")
-5. Add figure references: "as shown in Figure one", "Figures two A and two B"
-6. Add transitions ("Firstly,", "Now let's look at...")
-7. Add commas for natural pauses
-8. Verify all content is included - every sentence from transcript
+2. **FIRST: Identify all image codes in parentheses** - (FO0571), (SP5043), (JM5177), etc.
+3. **Convert EVERY image code to a figure reference** at that exact location in the text
+4. Spell out all acronyms (A-S-A, C-B-T, T-M-D, C-B-C-T)
+5. Replace "LA" with "local anaesthetic"
+6. Write out numbers ("thirty-five millimetres")
+7. Add transitions ("Firstly,", "Now let's look at...")
+8. Add commas for natural pauses
+9. Verify all content is included - every sentence from transcript
+10. **VERIFY: Every image code has been converted to "as shown in Figure X"**
 
 #### Step 3: Design Creative Layout
 1. Open component library for reference (`/Users/brainjam/brainjam-openedx-xblocks/shared-styles/component-library.html`)
-2. Choose appropriate callout card pattern - ONLY from component library
-3. Decide on emoji for each main point (🏥💊📏😰🔍🔬)
+2. **If slide has flowchart/diagram: Find matching component library pattern FIRST**
+   - Flowcharts/hierarchies → Vertical Decision Tree
+   - Classification scales → Complexity Chevron Flow
+   - Sequential processes → Timeline
+3. Choose appropriate callout card pattern - ONLY from component library
+4. Decide on emoji for each main point (🏥💊📏😰🔍🔬)
 4. Plan two-column layouts if applicable (measurements + images, conditions + photos)
 5. Count images and plan figure numbers (1, 2a, 2b, 2c, etc.)
 6. Always include orange warning callout if "Risks & Challenges" present
@@ -683,9 +1058,11 @@ Physical & Psychological Limitations
 7. Verify all inline styles match component library exactly
 
 #### Step 5: Verify Both Deliverables
+- [ ] **CRITICAL: Every image code in transcript has become a figure reference in ElevenLabs script**
+- [ ] **CRITICAL: Any flowchart/diagram in slide has been converted to component library pattern**
 - [ ] ElevenLabs script has all acronyms spelled out (A-S-A, C-B-C-T)
 - [ ] ElevenLabs script has numbers written out ("thirty-five millimetres")
-- [ ] ElevenLabs script has figure references ("Figure one", "Figures two A and two B")
+- [ ] ElevenLabs script has figure references at correct locations ("as shown in Figure one")
 - [ ] ElevenLabs script has no HTML markup
 - [ ] OpenEdX component uses creative callout cards (not plain bullets)
 - [ ] All narrative text is 1.125rem (18px)
@@ -746,6 +1123,7 @@ Wrap important terms in `<strong>` tags for educational content
 | Patient history, SOAP notes | Case Study (SOAP format) |
 | Treatment steps, timeline | Timeline |
 | Important note, tip, warning | Callout (Info/Warning/Success) |
+| Multiple techniques/methods/options | Technique Badges (Flexible Pills) |
 | Clinical photos, anatomy images | Image Grid (square) |
 | Classification system, levels | Complexity Chevron Flow |
 | Image with explanation | Media Object |

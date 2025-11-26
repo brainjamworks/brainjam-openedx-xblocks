@@ -330,6 +330,7 @@ For each content block, verify:
 | `.content-callout` | Flexbox with icon, rgba background |
 | `.content-media-object` | Flexbox with 250px fixed-width image |
 | `.content-timeline` | Absolute positioned circles with `top: 50%` centering |
+| Multiple techniques/methods | Technique Badges (Flexible Pills) - teal badges with flex-wrap |
 
 ---
 
