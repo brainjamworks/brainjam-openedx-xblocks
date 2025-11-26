@@ -153,6 +153,7 @@ export interface StudioViewFields {
   display_name: string;
   problem_title: string;
   instructions: string;
+  randomize_items: boolean;
   bins: BinDefinition[];
   items: SortableItem[];
   explanation: string;

@@ -27,6 +27,7 @@ export const StudioView: React.FC<StudioViewProps> = ({
   const [displayName, setDisplayName] = useState(fields.display_name);
   const [problemTitle, setProblemTitle] = useState(fields.problem_title);
   const [instructions, setInstructions] = useState(fields.instructions);
+  const [randomizeItems, setRandomizeItems] = useState(fields.randomize_items);
   const [explanation, setExplanation] = useState(fields.explanation);
   const [bins, setBins] = useState<BinDefinition[]>(fields.bins);
   const [items, setItems] = useState<SortableItem[]>(fields.items);
@@ -221,6 +222,7 @@ export const StudioView: React.FC<StudioViewProps> = ({
         display_name: displayName,
         problem_title: problemTitle,
         instructions,
+        randomize_items: randomizeItems,
         explanation,
         bins,
         items,
@@ -447,6 +449,19 @@ export const StudioView: React.FC<StudioViewProps> = ({
               </Form.Control>
               <Form.Text>
                 On Submit: Feedback after clicking Submit. Immediate: Instant feedback per item.
+              </Form.Text>
+            </Form.Group>
+
+            {/* Randomize Items */}
+            <Form.Group className="mb-3">
+              <Form.Switch
+                checked={randomizeItems}
+                onChange={(e) => setRandomizeItems(e.target.checked)}
+              >
+                Randomize Items
+              </Form.Switch>
+              <Form.Text>
+                Randomize the order of items on each page load. Students will see items in a different order.
               </Form.Text>
             </Form.Group>
           </Card.Section>

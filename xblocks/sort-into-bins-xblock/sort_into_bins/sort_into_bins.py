@@ -5,9 +5,10 @@ Supports configurable bin capacities and flexible grading modes.
 """
 
 import json
+import random
 import pkg_resources
 from xblock.core import XBlock
-from xblock.fields import String, Integer, Float, Scope
+from xblock.fields import String, Integer, Float, Boolean, Scope
 from xblock.fragment import Fragment
 from xblock.scorable import ScorableXBlockMixin, Score
 
@@ -95,6 +96,13 @@ class SortIntoBins(ScorableXBlockMixin, XBlock):
         scope=Scope.content,
         help="Instructions shown to students (supports HTML)",
         multiline_editor=True
+    )
+
+    randomize_items = Boolean(
+        display_name="Randomize Items",
+        default=True,
+        scope=Scope.content,
+        help="Randomize the order of items on each page load"
     )
 
     bins = String(
@@ -332,13 +340,18 @@ class SortIntoBins(ScorableXBlockMixin, XBlock):
             # (e.g., in workbench or unit tests)
             is_graded = False
 
+        # Parse items and optionally randomize
+        items_data = json.loads(self.items)
+        if self.randomize_items:
+            random.shuffle(items_data)
+
         # Initialize React component
         frag.initialize_js('SortIntoBinsStudentView', {
             'url': self.runtime.local_resource_url(self, 'public/student-ui.js'),
             'problemTitle': self.problem_title,
             'instructions': self.instructions,
             'bins': json.loads(self.bins),
-            'items': json.loads(self.items),
+            'items': items_data,
             'studentPlacements': json.loads(self.student_placements),
             'currentScore': self.current_score,
             'maxScore': self.weight,
@@ -374,6 +387,7 @@ class SortIntoBins(ScorableXBlockMixin, XBlock):
                 'display_name': self.display_name,
                 'problem_title': self.problem_title,
                 'instructions': self.instructions,
+                'randomize_items': self.randomize_items,
                 'bins': json.loads(self.bins),
                 'items': json.loads(self.items),
                 'explanation': self.explanation,
@@ -724,6 +738,7 @@ class SortIntoBins(ScorableXBlockMixin, XBlock):
         self.display_name = display_name
         self.problem_title = problem_title
         self.instructions = data.get('instructions', '').strip()
+        self.randomize_items = data.get('randomize_items', True)
         self.bins = json.dumps(bins)
         self.items = json.dumps(items)
         self.explanation = data.get('explanation', '').strip()
