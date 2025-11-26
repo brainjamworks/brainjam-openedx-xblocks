@@ -23558,12 +23558,16 @@ const kI = ({
       width: i.current.offsetWidth,
       height: i.current.offsetHeight
     });
-  }, c = (h, y, k) => a.width === 0 || a.height === 0 ? [0, 0, 0] : [
-    h / a.width * 100,
-    y / a.height * 100,
-    k / a.width * 100
-    // Radius as percentage of width
-  ], f = (h) => {
+  }, c = (h, y, k) => {
+    if (!i.current) return [0, 0, 0];
+    const S = i.current.getBoundingClientRect();
+    return S.width === 0 || S.height === 0 ? [0, 0, 0] : [
+      h / S.width * 100,
+      y / S.height * 100,
+      k / S.width * 100
+      // Radius as percentage of width
+    ];
+  }, f = (h) => {
     const [y, k, S] = h;
     return {
       x: y / 100 * a.width,
@@ -23571,8 +23575,8 @@ const kI = ({
       r: S / 100 * a.width
     };
   }, d = (h) => {
-    if (!r.current) return { x: 0, y: 0 };
-    const y = r.current.getBoundingClientRect();
+    if (!i.current) return { x: 0, y: 0 };
+    const y = i.current.getBoundingClientRect();
     return {
       x: h.clientX - y.left,
       y: h.clientY - y.top

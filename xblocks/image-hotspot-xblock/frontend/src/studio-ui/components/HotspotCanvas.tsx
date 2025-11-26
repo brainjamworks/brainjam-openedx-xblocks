@@ -46,11 +46,13 @@ export const HotspotCanvas: React.FC<HotspotCanvasProps> = ({
 
   // Convert pixel coordinates to percentages
   const pixelToPercent = (x: number, y: number, r: number) => {
-    if (imageDimensions.width === 0 || imageDimensions.height === 0) return [0, 0, 0];
+    if (!imageRef.current) return [0, 0, 0];
+    const rect = imageRef.current.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return [0, 0, 0];
     return [
-      (x / imageDimensions.width) * 100,
-      (y / imageDimensions.height) * 100,
-      (r / imageDimensions.width) * 100 // Radius as percentage of width
+      (x / rect.width) * 100,
+      (y / rect.height) * 100,
+      (r / rect.width) * 100 // Radius as percentage of width
     ];
   };
 
@@ -66,8 +68,8 @@ export const HotspotCanvas: React.FC<HotspotCanvasProps> = ({
 
   // Get mouse position relative to image
   const getMousePos = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!containerRef.current) return { x: 0, y: 0 };
-    const rect = containerRef.current.getBoundingClientRect();
+    if (!imageRef.current) return { x: 0, y: 0 };
+    const rect = imageRef.current.getBoundingClientRect();
     return {
       x: e.clientX - rect.left,
       y: e.clientY - rect.top

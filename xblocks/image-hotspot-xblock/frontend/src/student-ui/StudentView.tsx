@@ -278,26 +278,47 @@ export const StudentView: React.FC<StudentViewProps> = ({
               />
             ))}
 
-            {/* Show Answer: Display correct hotspots (fetched from backend) */}
-            {showAnswer && correctAnswers && correctAnswers.map((hotspot, index) => {
-              if (hotspot.shape === 'circle' && hotspot.coordinates.length >= 3) {
-                const [cx, cy, r] = hotspot.coordinates;
-                return (
-                  <div
-                    key={`answer-${index}`}
-                    className="answer-hotspot"
-                    style={{
-                      left: `${cx}%`,
-                      top: `${cy}%`,
-                      width: `${r * 2}%`,
-                      height: `${r * 2}%`
-                    }}
-                    title={hotspot.label}
-                  />
-                );
-              }
-              return null;
-            })}
+            {/* Show Answer: Display correct hotspots (SVG overlay for accurate circles) */}
+            {showAnswer && correctAnswers && imageRef.current && (
+              <svg
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  pointerEvents: 'none'
+                }}
+                viewBox={`0 0 ${imageRef.current.naturalWidth} ${imageRef.current.naturalHeight}`}
+                preserveAspectRatio="xMidYMid meet"
+              >
+                {correctAnswers.map((hotspot, index) => {
+                  if (hotspot.shape === 'circle' && hotspot.coordinates.length >= 3) {
+                    const [cx, cy, r] = hotspot.coordinates;
+                    // Convert percentages to natural pixel coordinates
+                    const pixelCx = (cx / 100) * imageRef.current!.naturalWidth;
+                    const pixelCy = (cy / 100) * imageRef.current!.naturalHeight;
+                    const pixelR = (r / 100) * imageRef.current!.naturalWidth;
+
+                    return (
+                      <circle
+                        key={`answer-${index}`}
+                        cx={pixelCx}
+                        cy={pixelCy}
+                        r={pixelR}
+                        fill="rgba(0, 166, 137, 0.12)"
+                        stroke="#00a689"
+                        strokeWidth={3}
+                        style={{ animation: 'pulse 2s ease-in-out infinite' }}
+                      >
+                        <title>{hotspot.label}</title>
+                      </circle>
+                    );
+                  }
+                  return null;
+                })}
+              </svg>
+            )}
 
             {submitting && <div className="processing-overlay">Processing...</div>}
           </div>
