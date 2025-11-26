@@ -99,27 +99,14 @@
     }
   }
 
-  // Answer Hotspot Overlay - Modernized
-  .answer-hotspot {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    border: 3px solid $liverpool-teal;
-    border-radius: $liverpool-radius-circle;
-    background: linear-gradient(135deg, rgba(0, 166, 137, 0.12), rgba(0, 166, 137, 0.06));
-    backdrop-filter: blur(2px);
-    pointer-events: none;
-    z-index: 5;
-    animation: pulse 2s ease-in-out infinite;
-    box-shadow: 0 0 0 2px rgba(0, 166, 137, 0.2), inset 0 0 20px rgba(0, 166, 137, 0.1);
-  }
-
+  // Pulse animation for SVG answer hotspots
   @keyframes pulse {
     0%, 100% {
-      transform: translate(-50%, -50%) scale(1);
+      transform: scale(1);
       opacity: 1;
     }
     50% {
-      transform: translate(-50%, -50%) scale(1.03);
+      transform: scale(1.03);
       opacity: 0.85;
     }
   }
