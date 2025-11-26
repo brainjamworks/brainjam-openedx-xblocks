@@ -1,0 +1,174 @@
+{
+  "title": "Assessing Curvature: Lutein\u2019s Method",
+  "totalDuration": 30.25,
+  "events": [
+    {
+      "time": 0.0,
+      "duration": 750,
+      "animation": "appear",
+      "element": "6dJrRlOiubo"
+    },
+    {
+      "time": 0.0,
+      "duration": 750,
+      "animation": "appear",
+      "element": "6eCMF8Ok8HV.6eCMF8Ok8HV_expandinglabel.content_scroll_6eCMF8Ok8HV"
+    },
+    {
+      "time": 0.0,
+      "duration": 750,
+      "animation": "appear",
+      "element": "6eCMF8Ok8HV.6eCMF8Ok8HV_expandinglabel.content_scroll_6eCMF8Ok8HV.5YAKPYuF4zw"
+    },
+    {
+      "time": 0.0,
+      "duration": 750,
+      "animation": "appear",
+      "element": "6eCMF8Ok8HV"
+    },
+    {
+      "time": 0.25,
+      "duration": 750,
+      "animation": "entrance",
+      "element": "6qTtEOlDdbS"
+    },
+    {
+      "time": 1.0,
+      "duration": 0,
+      "action": "audio_play",
+      "element": "6boVgbTn5bG"
+    },
+    {
+      "time": 7.25,
+      "duration": 750,
+      "animation": "entrance",
+      "element": "6CtHZ4o4awA"
+    },
+    {
+      "time": 7.5,
+      "duration": 750,
+      "animation": "entrance",
+      "element": "64hIjp90kGj"
+    },
+    {
+      "time": 7.75,
+      "duration": 750,
+      "animation": "entrance",
+      "element": "69joh4UA8CC"
+    },
+    {
+      "time": 7.75,
+      "duration": 750,
+      "animation": "entrance",
+      "element": "5rhKaHJyE45"
+    },
+    {
+      "time": 9.75,
+      "duration": 750,
+      "animation": "entrance",
+      "element": "6cpLddQEyqa"
+    },
+    {
+      "time": 10.0,
+      "duration": 750,
+      "animation": "entrance",
+      "element": "5giMiL6raMN"
+    },
+    {
+      "time": 10.25,
+      "duration": 750,
+      "animation": "entrance",
+      "element": "5uXg0BPrSAn"
+    },
+    {
+      "time": 10.312,
+      "duration": 750,
+      "animation": "entrance",
+      "element": "5fTc00QQ2Zd"
+    },
+    {
+      "time": 14.312,
+      "duration": 750,
+      "animation": "entrance",
+      "element": "69mfn9BNgf5"
+    },
+    {
+      "time": 14.5,
+      "duration": 750,
+      "animation": "entrance",
+      "element": "6Iq4Lrpky7f"
+    },
+    {
+      "time": 14.688,
+      "duration": 750,
+      "animation": "entrance",
+      "element": "6AZ1uXcWgfB"
+    },
+    {
+      "time": 14.688,
+      "duration": 750,
+      "animation": "entrance",
+      "element": "6NQ84wL364r"
+    },
+    {
+      "time": 14.75,
+      "duration": 750,
+      "animation": "entrance",
+      "element": "5WuBgcSmqDu"
+    },
+    {
+      "time": 15.0,
+      "duration": 750,
+      "animation": "entrance",
+      "element": "62bLMhAHInL"
+    },
+    {
+      "time": 15.188,
+      "duration": 750,
+      "animation": "entrance",
+      "element": "5X7ZKSPrfQ2"
+    },
+    {
+      "time": 15.5,
+      "duration": 750,
+      "animation": "entrance",
+      "element": "67zUmsypeMz"
+    },
+    {
+      "time": 16.75,
+      "duration": 750,
+      "animation": "entrance",
+      "element": "6kNaOGAFAYb"
+    },
+    {
+      "time": 18.5,
+      "duration": 750,
+      "animation": "entrance",
+      "element": "6ev50qaMGQa"
+    },
+    {
+      "time": 20.5,
+      "duration": 750,
+      "animation": "entrance",
+      "element": "5i7E14rt9pu"
+    },
+    {
+      "time": 21.0,
+      "duration": 750,
+      "animation": "entrance",
+      "element": "5XRr4QhSSZL"
+    },
+    {
+      "time": 21.25,
+      "duration": 750,
+      "animation": "entrance",
+      "element": "6J1OeJxuZ0F"
+    },
+    {
+      "time": 21.5,
+      "duration": 750,
+      "animation": "entrance",
+      "element": "6BlUL3OlXLG"
+    }
+  ]
+}

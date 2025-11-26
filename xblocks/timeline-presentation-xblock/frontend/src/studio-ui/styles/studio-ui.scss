@@ -1,0 +1,149 @@
+/**
+ * Timeline Presentation XBlock - Studio UI Styles
+ */
+
+.timeline-presentation-xblock-studio-view {
+  padding: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  // Asset Uploader
+  .asset-uploader {
+    .upload-dropzone {
+      transition: all 0.2s ease;
+
+      &.drag-over {
+        background-color: #f0f8ff !important;
+        border-color: #0075b4 !important;
+      }
+
+      &.uploading {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  // Timeline Events Editor
+  .timeline-event-editor {
+    .events-list {
+      &::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+
+        &:hover {
+          background: #555;
+        }
+      }
+    }
+  }
+
+  // Element Editor
+  .element-editor {
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    input[type="color"] {
+      cursor: pointer;
+    }
+  }
+
+  // Timeline Track
+  .timeline-track {
+    .timeline-ruler {
+      height: 1.5rem;
+      position: relative;
+    }
+
+    .timeline-bar {
+      position: relative;
+    }
+
+    .timeline-legend {
+      font-size: 0.875rem;
+    }
+  }
+
+  // Preview Panel
+  .preview-panel {
+    .preview-canvas {
+      position: relative;
+      background: #f8f9fa;
+    }
+
+    .progress {
+      border-radius: 4px;
+      overflow: hidden;
+    }
+  }
+
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+
+    .timeline-track {
+      .timeline-ruler {
+        font-size: 0.65rem;
+      }
+    }
+
+    .timeline-event-editor {
+      .events-list {
+        max-height: 300px;
+      }
+    }
+  }
+}
+
+// Modal overrides for better spacing
+.modal-dialog.modal-lg {
+  .element-editor {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 3px;
+
+      &:hover {
+        background: #555;
+      }
+    }
+  }
+}
+
+// Badge styling
+.badge-secondary {
+  background-color: #6c757d;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+}
+
+// Icon button alignment fixes
+.icon-button-wrapper {
+  .btn-icon {
+    padding: 0.375rem 0.5rem;
+  }
+}

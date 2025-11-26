@@ -1,0 +1,120 @@
+/**
+ * ARCHITECTURAL: XBlock structural styles only
+ *
+ * Paragon CSS is loaded from CDN at runtime (via Python fragment)
+ * This file contains ONLY XBlock-specific layout and structural styles
+ */
+
+// Import shared Liverpool design tokens
+@import '../../../../../../shared-styles/styles/liverpool-shared-tokens';
+
+// IMPLEMENTATION: Your custom studio view styles below
+.timeline-presentation-studio-view {
+  // Add your XBlock-specific editor styles here
+}
+
+// ============================================================================
+// WAVEFORM TIMELINE COMPONENT STYLES
+// ============================================================================
+
+.waveform-timeline {
+  width: 100%;
+
+  .waveform-timeline-header {
+    h6 {
+      font-family: $liverpool-font-primary;
+      font-weight: $liverpool-font-weight-semibold;
+      color: $liverpool-text-primary;
+      font-size: $liverpool-font-size-base;
+      margin: 0;
+    }
+
+    .text-muted {
+      color: $liverpool-text-muted !important;
+      font-size: $liverpool-font-size-sm;
+    }
+  }
+
+  .waveform-container {
+    border: 1px solid $liverpool-border-default !important;
+    border-radius: $liverpool-radius-sm !important;
+    background-color: $liverpool-bg-subtle !important;
+    transition: $liverpool-transition-base;
+
+    &:hover {
+      border-color: $liverpool-blue-300 !important;
+    }
+
+    // WaveSurfer cursor styling
+    wave {
+      cursor: crosshair !important;
+    }
+
+    // Region marker styling
+    [data-id^="wavesurfer"] {
+      cursor: move !important;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+
+  .waveform-legend {
+    padding: $liverpool-space-3 0;
+    font-family: $liverpool-font-primary;
+
+    .small {
+      font-size: $liverpool-font-size-sm;
+      color: $liverpool-text-secondary;
+    }
+  }
+
+  .text-center.small.text-muted {
+    font-size: $liverpool-font-size-xs;
+    color: $liverpool-text-muted !important;
+    padding: $liverpool-space-2 0;
+  }
+}
+
+// ============================================================================
+// WAVESURFER PLUGIN OVERRIDES
+// ============================================================================
+
+// Override WaveSurfer default styles with Liverpool theme
+[data-id^="wavesurfer"] {
+  // Region markers
+  region {
+    border-left: 3px solid rgba($liverpool-blue, 0.8) !important;
+    transition: all $liverpool-duration-fast $liverpool-easing-out;
+
+    &:hover {
+      border-left-width: 4px !important;
+      opacity: 0.9 !important;
+    }
+  }
+
+  // Region content (element type indicator)
+  region-content {
+    font-family: $liverpool-font-primary;
+    font-weight: $liverpool-font-weight-bold;
+    font-size: $liverpool-font-size-xs;
+    color: $liverpool-neutral-white;
+    background-color: rgba($liverpool-blue, 0.9);
+    padding: 2px 6px;
+    border-radius: 3px;
+    pointer-events: none;
+    user-select: none;
+  }
+}
+
+// Waveform cursor styling
+wavesurfer cursor {
+  border-right: 2px solid $liverpool-pink !important;
+  box-shadow: 0 0 8px rgba($liverpool-pink, 0.4);
+}
+
+// Progress color override (if needed)
+wavesurfer wave canvas {
+  // Additional canvas styling if needed
+}

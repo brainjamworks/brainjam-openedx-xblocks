@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeline Import Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #4A90E2;
+            padding-bottom: 10px;
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 4px;
+        }
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+        .event-list {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 10px;
+            background: white;
+        }
+        .event-item {
+            padding: 8px;
+            margin: 5px 0;
+            border-left: 3px solid #4A90E2;
+            background: #f8f9fa;
+        }
+        button {
+            background: #4A90E2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #357ABD;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Timeline Event Import/Export Test</h1>
+        <p>This page tests the import mapping logic for the Timeline XBlock.</p>
+
+        <div class="test-section">
+            <h2>Test: Import lutein-timeline.json</h2>
+            <button onclick="runImportTest()">Run Import Test</button>
+            <div id="importResults"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Test: Animation Mapping</h2>
+            <button onclick="runAnimationTest()">Run Animation Test</button>
+            <div id="animationResults"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Test: Position Generation</h2>
+            <button onclick="runPositionTest()">Run Position Test</button>
+            <div id="positionResults"></div>
+        </div>
+    </div>
+
+    <script>
+        // Mapping functions from TimelineEventEditor.tsx
+        const mapStorylineAnimation = (storylineAnim) => {
+            const mapping = {
+                'appear': 'fade',
+                'entrance': 'slide',
+                'fade': 'fade',
+                'scale': 'scale',
+                'wipe': 'wipe',
+                'slide': 'slide',
+            };
+            return mapping[storylineAnim.toLowerCase()] || 'fade';
+        };
+
+        const inferElementType = (animation) => {
+            if (animation.includes('fade') || animation.includes('appear')) {
+                return 'text';
+            }
+            return 'shape';
+        };
+
+        const convertStorylineEvent = (storylineEvent, index) => {
+            if (storylineEvent.action === 'audio_play') {
+                return null;
+            }
+
+            const elementType = inferElementType(storylineEvent.animation);
+            const column = index % 4;
+            const row = Math.floor(index / 4);
+            const x = 20 + (column * 20);
+            const y = 20 + (row * 15);
+
+            return {
+                id: `imported-${storylineEvent.element}-${index}`,
+                timestamp: storylineEvent.time,
+                animationDuration: storylineEvent.duration || 500,
+                animation: mapStorylineAnimation(storylineEvent.animation),
+                animationDirection: storylineEvent.animation === 'entrance' ? 'right' : undefined,
+                elementType,
+                position: { x, y },
+                content: `Element ${index + 1}`,
+                color: elementType === 'text' ? '#000000' : '#4A90E2',
+                fontSize: 16,
+            };
+        };
+
+        const formatTime = (seconds) => {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        };
+
+        // Test data (lutein-timeline.json structure)
+        const luteinTimeline = {
+            "title": "Assessing Curvature: Lutein's Method",
+            "totalDuration": 30.25,
+            "events": [
+                { "time": 0.0, "duration": 750, "animation": "appear", "element": "6dJrRlOiubo" },
+                { "time": 0.0, "duration": 750, "animation": "appear", "element": "6eCMF8Ok8HV" },
+                { "time": 0.25, "duration": 750, "animation": "entrance", "element": "6qTtEOlDdbS" },
+                { "time": 1.0, "duration": 0, "action": "audio_play", "element": "6boVgbTn5bG" },
+                { "time": 7.25, "duration": 750, "animation": "entrance", "element": "6CtHZ4o4awA" },
+                { "time": 7.5, "duration": 750, "animation": "entrance", "element": "64hIjp90kGj" },
+                { "time": 7.75, "duration": 750, "animation": "entrance", "element": "69joh4UA8CC" },
+                { "time": 9.75, "duration": 750, "animation": "entrance", "element": "6cpLddQEyqa" },
+            ]
+        };
+
+        function runImportTest() {
+            const resultsDiv = document.getElementById('importResults');
+            resultsDiv.innerHTML = '<p>Processing...</p>';
+
+            let validEventIndex = 0;
+            const convertedEvents = luteinTimeline.events
+                .map((storylineEvent, index) => {
+                    const converted = convertStorylineEvent(storylineEvent, validEventIndex);
+                    if (converted) validEventIndex++;
+                    return converted;
+                })
+                .filter(e => e !== null);
+
+            const audioEvents = luteinTimeline.events.filter(e => e.action === 'audio_play');
+
+            let html = `
+                <div class="result success">
+                    <strong>✓ Import Test Passed</strong>
+                    <p>Total Storyline events: ${luteinTimeline.events.length}</p>
+                    <p>Converted events: ${convertedEvents.length}</p>
+                    <p>Skipped audio events: ${audioEvents.length}</p>
+                </div>
+            `;
+
+            if (audioEvents.length > 0) {
+                html += `
+                    <div class="result warning">
+                        <strong>Warning:</strong> Skipped ${audioEvents.length} audio event(s)
+                    </div>
+                `;
+            }
+
+            html += '<div class="event-list"><h3>Converted Events:</h3>';
+            convertedEvents.slice(0, 5).forEach((event, idx) => {
+                html += `
+                    <div class="event-item">
+                        <strong>#${idx + 1}</strong> -
+                        <code>${formatTime(event.timestamp)}</code>
+                        ${event.elementType} (${event.animation})
+                        at (${event.position.x}%, ${event.position.y}%)
+                        <br>
+                        <small>ID: ${event.id}</small>
+                    </div>
+                `;
+            });
+
+            if (convertedEvents.length > 5) {
+                html += `<p><em>... and ${convertedEvents.length - 5} more events</em></p>`;
+            }
+
+            html += '</div>';
+            resultsDiv.innerHTML = html;
+        }
+
+        function runAnimationTest() {
+            const resultsDiv = document.getElementById('animationResults');
+
+            const testCases = [
+                { input: 'appear', expected: 'fade', expectedType: 'text' },
+                { input: 'entrance', expected: 'slide', expectedType: 'shape' },
+                { input: 'fade', expected: 'fade', expectedType: 'text' },
+                { input: 'scale', expected: 'scale', expectedType: 'shape' },
+                { input: 'wipe', expected: 'wipe', expectedType: 'shape' },
+            ];
+
+            let allPassed = true;
+            let html = '<h3>Animation Mapping Tests:</h3>';
+
+            testCases.forEach(test => {
+                const actualAnim = mapStorylineAnimation(test.input);
+                const actualType = inferElementType(test.input);
+                const animPassed = actualAnim === test.expected;
+                const typePassed = actualType === test.expectedType;
+                const passed = animPassed && typePassed;
+
+                if (!passed) allPassed = false;
+
+                html += `
+                    <div class="result ${passed ? 'success' : 'error'}">
+                        ${passed ? '✓' : '✗'}
+                        <code>${test.input}</code> →
+                        <code>${actualAnim}</code> (${actualType})
+                        ${!passed ? `<br>Expected: ${test.expected} (${test.expectedType})` : ''}
+                    </div>
+                `;
+            });
+
+            html = `<div class="result ${allPassed ? 'success' : 'error'}">
+                        <strong>${allPassed ? '✓ All Tests Passed' : '✗ Some Tests Failed'}</strong>
+                    </div>` + html;
+
+            resultsDiv.innerHTML = html;
+        }
+
+        function runPositionTest() {
+            const resultsDiv = document.getElementById('positionResults');
+
+            const testCases = [
+                { index: 0, expectedX: 20, expectedY: 20 },  // Row 0, Col 0
+                { index: 1, expectedX: 40, expectedY: 20 },  // Row 0, Col 1
+                { index: 2, expectedX: 60, expectedY: 20 },  // Row 0, Col 2
+                { index: 3, expectedX: 80, expectedY: 20 },  // Row 0, Col 3
+                { index: 4, expectedX: 20, expectedY: 35 },  // Row 1, Col 0
+                { index: 7, expectedX: 80, expectedY: 35 },  // Row 1, Col 3
+                { index: 8, expectedX: 20, expectedY: 50 },  // Row 2, Col 0
+            ];
+
+            let allPassed = true;
+            let html = '<h3>Position Generation Tests:</h3>';
+
+            testCases.forEach(test => {
+                const column = test.index % 4;
+                const row = Math.floor(test.index / 4);
+                const x = 20 + (column * 20);
+                const y = 20 + (row * 15);
+
+                const passed = x === test.expectedX && y === test.expectedY;
+                if (!passed) allPassed = false;
+
+                html += `
+                    <div class="result ${passed ? 'success' : 'error'}">
+                        ${passed ? '✓' : '✗'}
+                        Event ${test.index}: (${x}%, ${y}%)
+                        ${!passed ? `<br>Expected: (${test.expectedX}%, ${test.expectedY}%)` : ''}
+                    </div>
+                `;
+            });
+
+            html = `<div class="result ${allPassed ? 'success' : 'error'}">
+                        <strong>${allPassed ? '✓ All Tests Passed' : '✗ Some Tests Failed'}</strong>
+                    </div>` + html;
+
+            resultsDiv.innerHTML = html;
+        }
+
+        // Auto-run tests on load
+        window.addEventListener('load', () => {
+            console.log('Timeline Import Test Page Loaded');
+            console.log('Click buttons to run tests');
+        });
+    </script>
+</body>
+</html>

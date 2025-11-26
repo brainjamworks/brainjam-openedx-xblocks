@@ -1,0 +1,627 @@
+/**
+ * ARCHITECTURAL: XBlock structural styles only
+ *
+ * Paragon CSS is loaded from CDN at runtime (via Python fragment)
+ * This file contains ONLY XBlock-specific layout and structural styles
+ * Uses shared Liverpool design tokens for consistency
+ */
+
+// Import shared Liverpool design tokens
+@import '../../../../../../shared-styles/styles/liverpool-shared-tokens';
+
+// ============================================================================
+// STUDENT VIEW - MAIN CONTAINER
+// ============================================================================
+.timeline-presentation-student-view {
+  font-family: $liverpool-font-primary;
+  color: $liverpool-text-primary;
+  max-width: 100%;
+  padding: $liverpool-space-0;
+}
+
+// Title
+.timeline-presentation-title {
+  font-size: $liverpool-font-size-2xl;
+  font-weight: $liverpool-font-weight-semibold;
+  color: $liverpool-blue;
+  margin-bottom: $liverpool-space-4;
+  line-height: $liverpool-line-height-snug;
+}
+
+// Description
+.timeline-presentation-description {
+  font-size: $liverpool-font-size-base;
+  color: $liverpool-text-secondary;
+  margin-bottom: $liverpool-space-6;
+  line-height: $liverpool-line-height-relaxed;
+
+  p {
+    margin-bottom: $liverpool-space-3;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Player container
+.timeline-presentation-player-container {
+  background: $liverpool-bg-surface;
+  border-radius: $liverpool-radius-base;
+  padding: $liverpool-space-6;
+  box-shadow: $liverpool-shadow-base;
+}
+
+// ============================================================================
+// EMPTY STATE
+// ============================================================================
+.timeline-presentation-empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  background: $liverpool-bg-subtle;
+  border-radius: $liverpool-radius-base;
+  border: 2px dashed $liverpool-border-default;
+  padding: $liverpool-space-8;
+}
+
+.timeline-presentation-empty-state-content {
+  text-align: center;
+  max-width: 500px;
+}
+
+.timeline-presentation-empty-state-title {
+  font-size: $liverpool-font-size-xl;
+  font-weight: $liverpool-font-weight-semibold;
+  color: $liverpool-text-secondary;
+  margin-bottom: $liverpool-space-3;
+}
+
+.timeline-presentation-empty-state-message {
+  font-size: $liverpool-font-size-base;
+  color: $liverpool-text-muted;
+  line-height: $liverpool-line-height-relaxed;
+}
+
+// ============================================================================
+// TIMELINE PLAYER
+// ============================================================================
+.timeline-player {
+  display: flex;
+  flex-direction: column;
+  gap: $liverpool-space-5;
+}
+
+// ============================================================================
+// DIAGRAM CANVAS
+// ============================================================================
+.timeline-diagram-canvas {
+  position: relative;
+  width: 100%;
+  background: $liverpool-neutral-white;
+  border-radius: $liverpool-radius-sm;
+  overflow: hidden;
+}
+
+.timeline-diagram-image-container {
+  position: relative;
+  width: 100%;
+  opacity: 0;
+  transition: opacity $liverpool-duration-base $liverpool-easing-out;
+
+  &.timeline-diagram-image-loaded {
+    opacity: 1;
+  }
+}
+
+.timeline-diagram-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 600px;
+  object-fit: contain;
+}
+
+// Overlay for animated elements
+.timeline-diagram-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; // Allow click-through to image
+}
+
+// Loading state
+.timeline-diagram-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: $liverpool-space-3;
+}
+
+.timeline-diagram-loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid $liverpool-neutral-200;
+  border-top-color: $liverpool-blue;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.timeline-diagram-loading-text {
+  font-size: $liverpool-font-size-base;
+  color: $liverpool-text-muted;
+}
+
+// Error state
+.timeline-diagram-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  background: $liverpool-feedback-error-bg;
+  border: $liverpool-feedback-error-border;
+  border-radius: $liverpool-radius-sm;
+  padding: $liverpool-space-6;
+}
+
+.timeline-diagram-error-text {
+  font-size: $liverpool-font-size-lg;
+  font-weight: $liverpool-font-weight-medium;
+  color: $liverpool-feedback-error-color;
+  margin-bottom: $liverpool-space-2;
+}
+
+.timeline-diagram-error-subtext {
+  font-size: $liverpool-font-size-sm;
+  color: $liverpool-feedback-error-color;
+  opacity: 0.8;
+}
+
+// Debug info (development only)
+.timeline-diagram-debug {
+  position: absolute;
+  bottom: $liverpool-space-2;
+  right: $liverpool-space-2;
+  font-size: $liverpool-font-size-xs;
+  color: $liverpool-text-muted;
+  background: rgba(255, 255, 255, 0.9);
+  padding: $liverpool-space-2;
+  border-radius: $liverpool-radius-xs;
+}
+
+// ============================================================================
+// TIMELINE PLAYER CONTROLS
+// ============================================================================
+.timeline-player-controls {
+  background: $liverpool-bg-subtle;
+  border-radius: $liverpool-radius-sm;
+  padding: $liverpool-space-5;
+}
+
+// Error state
+.timeline-player-error {
+  background: $liverpool-feedback-error-bg;
+  border: $liverpool-feedback-error-border;
+  border-radius: $liverpool-radius-sm;
+  padding: $liverpool-space-4;
+}
+
+.timeline-player-error-text {
+  font-size: $liverpool-font-size-base;
+  color: $liverpool-feedback-error-color;
+  margin: 0;
+}
+
+// Loading state
+.timeline-player-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $liverpool-space-3;
+  padding: $liverpool-space-4;
+}
+
+.timeline-player-loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid $liverpool-neutral-200;
+  border-top-color: $liverpool-blue;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+// Progress bar section
+.timeline-player-progress {
+  margin-bottom: $liverpool-space-4;
+}
+
+.timeline-player-progress-bar {
+  margin-bottom: $liverpool-space-2;
+
+  .progress-bar {
+    background: $liverpool-gradient-primary;
+  }
+}
+
+.timeline-player-time {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $liverpool-space-2;
+  font-size: $liverpool-font-size-sm;
+  color: $liverpool-text-secondary;
+  font-weight: $liverpool-font-weight-medium;
+}
+
+.timeline-player-time-separator {
+  color: $liverpool-text-muted;
+}
+
+// Control buttons
+.timeline-player-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $liverpool-space-3;
+  flex-wrap: wrap;
+}
+
+.timeline-player-button {
+  font-family: $liverpool-font-primary;
+  font-weight: $liverpool-font-weight-medium;
+  border-radius: $liverpool-btn-border-radius;
+  padding: $liverpool-space-3 $liverpool-space-6;
+  transition: $liverpool-transition-base;
+
+  &.timeline-player-button-play-pause {
+    background: $liverpool-btn-primary-bg;
+    border-color: $liverpool-btn-primary-bg;
+    box-shadow: $liverpool-btn-primary-shadow;
+
+    &:hover:not(:disabled) {
+      background: $liverpool-btn-primary-bg-hover;
+      border-color: $liverpool-btn-primary-bg-hover;
+      box-shadow: $liverpool-btn-primary-shadow-hover;
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      box-shadow: $liverpool-btn-primary-shadow-active;
+      transform: translateY(0);
+    }
+  }
+
+  &.timeline-player-button-replay {
+    &:hover:not(:disabled) {
+      background: $liverpool-btn-outline-hover-bg;
+      color: $liverpool-btn-outline-hover-color;
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+  }
+}
+
+// Debug panel (development only)
+.timeline-player-debug {
+  margin-top: $liverpool-space-4;
+  padding: $liverpool-space-3;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: $liverpool-radius-xs;
+  font-size: $liverpool-font-size-xs;
+  font-family: $liverpool-font-mono;
+
+  summary {
+    cursor: pointer;
+    font-weight: $liverpool-font-weight-medium;
+    margin-bottom: $liverpool-space-2;
+  }
+
+  p {
+    margin: $liverpool-space-1 0;
+  }
+}
+
+// ============================================================================
+// TIMELINE ELEMENTS & ANIMATIONS
+// ============================================================================
+
+// Base timeline element
+.timeline-element {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+// Visible state (after animation completes)
+.timeline-element--visible {
+  opacity: 1;
+}
+
+// Text elements
+.timeline-element-text {
+  font-family: $liverpool-font-primary;
+  font-weight: $liverpool-font-weight-medium;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+// Shape elements
+.timeline-element-shape {
+  box-shadow: $liverpool-shadow-sm;
+}
+
+// Line elements
+.timeline-element-line {
+  box-shadow: $liverpool-shadow-xs;
+}
+
+// Arrow elements
+.timeline-element-arrow {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+// ============================================================================
+// ANIMATION TYPES
+// ============================================================================
+
+// Fade animation
+.timeline-animation-fade {
+  animation: timeline-fade-in var(--animation-duration, 500ms) $liverpool-easing-in-out forwards;
+}
+
+@keyframes timeline-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Scale animation
+.timeline-animation-scale {
+  animation: timeline-scale-in var(--animation-duration, 500ms) $liverpool-easing-out forwards;
+}
+
+@keyframes timeline-scale-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+// Show animation (instant)
+.timeline-animation-show {
+  animation: timeline-show var(--animation-duration, 100ms) linear forwards;
+}
+
+@keyframes timeline-show {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Slide animations
+.timeline-animation-slide-up {
+  animation: timeline-slide-up var(--animation-duration, 500ms) $liverpool-easing-out forwards;
+}
+
+@keyframes timeline-slide-up {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.timeline-animation-slide-down {
+  animation: timeline-slide-down var(--animation-duration, 500ms) $liverpool-easing-out forwards;
+}
+
+@keyframes timeline-slide-down {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -100%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.timeline-animation-slide-left {
+  animation: timeline-slide-left var(--animation-duration, 500ms) $liverpool-easing-out forwards;
+}
+
+@keyframes timeline-slide-left {
+  from {
+    opacity: 0;
+    transform: translate(20px, -50%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.timeline-animation-slide-right {
+  animation: timeline-slide-right var(--animation-duration, 500ms) $liverpool-easing-out forwards;
+}
+
+@keyframes timeline-slide-right {
+  from {
+    opacity: 0;
+    transform: translate(-100%, -50%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+// Wipe animations (reveal effect)
+.timeline-animation-wipe-up,
+.timeline-animation-wipe-down,
+.timeline-animation-wipe-left,
+.timeline-animation-wipe-right {
+  opacity: 1;
+  overflow: hidden;
+}
+
+.timeline-animation-wipe-up {
+  animation: timeline-wipe-up var(--animation-duration, 500ms) $liverpool-easing-in-out forwards;
+}
+
+@keyframes timeline-wipe-up {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.timeline-animation-wipe-down {
+  animation: timeline-wipe-down var(--animation-duration, 500ms) $liverpool-easing-in-out forwards;
+}
+
+@keyframes timeline-wipe-down {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.timeline-animation-wipe-left {
+  animation: timeline-wipe-left var(--animation-duration, 500ms) $liverpool-easing-in-out forwards;
+}
+
+@keyframes timeline-wipe-left {
+  from {
+    clip-path: inset(0 0 0 100%);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.timeline-animation-wipe-right {
+  animation: timeline-wipe-right var(--animation-duration, 500ms) $liverpool-easing-in-out forwards;
+}
+
+@keyframes timeline-wipe-right {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+// ============================================================================
+// UTILITY ANIMATIONS
+// ============================================================================
+
+// Spinner animation
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// ============================================================================
+// ACCESSIBILITY
+// ============================================================================
+
+// Screen reader only content
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+// ============================================================================
+// RESPONSIVE DESIGN
+// ============================================================================
+
+// Tablets and below
+@media (max-width: 768px) {
+  .timeline-presentation-title {
+    font-size: $liverpool-font-size-xl;
+  }
+
+  .timeline-presentation-player-container {
+    padding: $liverpool-space-4;
+  }
+
+  .timeline-player-buttons {
+    flex-direction: column;
+    width: 100%;
+
+    .timeline-player-button {
+      width: 100%;
+    }
+  }
+
+  .timeline-diagram-image {
+    max-height: 400px;
+  }
+
+  // Scale down text elements on mobile
+  .timeline-element-text {
+    font-size: 0.875em;
+  }
+}
+
+// Mobile devices
+@media (max-width: 480px) {
+  .timeline-presentation-title {
+    font-size: $liverpool-font-size-lg;
+  }
+
+  .timeline-presentation-description {
+    font-size: $liverpool-font-size-sm;
+  }
+
+  .timeline-presentation-player-container {
+    padding: $liverpool-space-3;
+  }
+
+  .timeline-diagram-image {
+    max-height: 300px;
+  }
+
+  // Further scale down on very small screens
+  .timeline-element-text {
+    font-size: 0.75em;
+  }
+}
