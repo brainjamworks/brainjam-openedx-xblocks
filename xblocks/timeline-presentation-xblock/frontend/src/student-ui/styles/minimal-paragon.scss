@@ -108,12 +108,16 @@
 .timeline-diagram-stage-container {
   position: relative;
   width: 100%;
+  max-height: 85vh; // Limit viewport height for consistent display
+  overflow: hidden; // Prevent scrollbars
 
   // Ensure Konva stage canvas is responsive
   canvas {
     display: block;
     width: 100% !important;
     height: auto !important;
+    max-height: 85vh; // Enforce max height on canvas
+    object-fit: contain; // Maintain aspect ratio
   }
 }
 
@@ -379,11 +383,6 @@
       width: 100%;
     }
   }
-
-  // Scale Konva canvas on smaller screens
-  .timeline-diagram-stage-container canvas {
-    max-height: 400px;
-  }
 }
 
 // Mobile devices
@@ -398,10 +397,5 @@
 
   .timeline-presentation-player-container {
     padding: $liverpool-space-3;
-  }
-
-  // Further scale Konva canvas on very small screens
-  .timeline-diagram-stage-container canvas {
-    max-height: 300px;
   }
 }

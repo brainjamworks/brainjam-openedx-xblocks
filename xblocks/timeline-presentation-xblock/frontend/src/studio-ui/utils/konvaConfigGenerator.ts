@@ -23,15 +23,17 @@ import type {
  *
  * @param event - Timeline event with editor properties
  * @param canvasDimensions - Canvas dimensions for percentage → pixel conversion
+ * @param scaleFactor - Scale factor for proportional sizing (default: 1 for editor)
  * @returns Complete Konva animation configuration
  */
 export function generateKonvaConfig(
   event: TimelineEvent,
-  canvasDimensions: CanvasDimensions
+  canvasDimensions: CanvasDimensions,
+  scaleFactor: number = 1
 ): KonvaAnimationConfig {
   return {
-    konvaProps: generateKonvaProps(event, canvasDimensions),
-    animation: generateAnimationStates(event, canvasDimensions),
+    konvaProps: generateKonvaProps(event, canvasDimensions, scaleFactor),
+    animation: generateAnimationStates(event, canvasDimensions, scaleFactor),
   };
 }
 
@@ -40,7 +42,8 @@ export function generateKonvaConfig(
  */
 function generateKonvaProps(
   event: TimelineEvent,
-  dimensions: CanvasDimensions
+  dimensions: CanvasDimensions,
+  scaleFactor: number
 ): KonvaAnimationConfig['konvaProps'] {
   // Convert percentage position to pixels
   const x = (event.position.x / 100) * dimensions.width;
@@ -51,15 +54,17 @@ function generateKonvaProps(
 
   // Add element-specific properties
   switch (event.elementType) {
-    case 'text':
+    case 'text': {
+      const fontSize = (event.fontSize || event.dimensions?.height || 16) * scaleFactor;
       return {
         ...baseProps,
         text: event.content || '',
-        fontSize: event.fontSize || event.dimensions?.height || 16,
+        fontSize,
         fontFamily: 'Poppins, sans-serif',
         fill: event.color || '#333F48',
-        offsetY: (event.fontSize || event.dimensions?.height || 16) / 2,
+        offsetY: fontSize / 2,
       };
+    }
 
     case 'shape':
       if (event.shapeType === 'circle') {
@@ -104,14 +109,14 @@ function generateKonvaProps(
         y: 0,
         points: [x1, y1, x2, y2],
         stroke: event.color || '#212b58',
-        strokeWidth: event.thickness || 2,
+        strokeWidth: (event.thickness || 2) * scaleFactor,
       };
 
       // Add arrow-specific properties
       if (event.elementType === 'arrow') {
         props.fill = event.color || '#212b58';
-        props.pointerLength = 10;
-        props.pointerWidth = 10;
+        props.pointerLength = 10 * scaleFactor;
+        props.pointerWidth = 10 * scaleFactor;
         props.pointerAtEnding = true; // Ensure dash works on arrows
       }
 
@@ -134,7 +139,8 @@ function generateKonvaProps(
  */
 function generateAnimationStates(
   event: TimelineEvent,
-  dimensions: CanvasDimensions
+  dimensions: CanvasDimensions,
+  scaleFactor: number
 ): KonvaAnimationConfig['animation'] {
   const animationType = event.animation || 'fade';
   // Show animation should be instant (50ms), all others use user setting or default

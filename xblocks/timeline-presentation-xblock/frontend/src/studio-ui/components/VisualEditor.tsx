@@ -99,6 +99,15 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
     height: 600,
   });
 
+  /** Original image dimensions (before zoom) */
+  const [originalImageDimensions, setOriginalImageDimensions] = useState<StageDimensions | null>(null);
+
+  /** Zoom level (0.25 to 2.0, where 1.0 = 100%) */
+  const [zoomLevel, setZoomLevel] = useState<number>(1);
+
+  /** Auto-calculated zoom to fit editor */
+  const [autoFitZoom, setAutoFitZoom] = useState<number>(1);
+
   /** Drawing state from useDrawing hook */
   const {
     isDrawing,
@@ -135,35 +144,36 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
     img.onload = () => {
       setBackgroundImage(img);
 
-      // Set stage dimensions based on image, maintaining aspect ratio
-      // Limit maximum size for performance
-      const maxWidth = 1200;
-      const maxHeight = 900;
-
-      let width = img.width;
-      let height = img.height;
-
-      if (width > maxWidth) {
-        height = (height * maxWidth) / width;
-        width = maxWidth;
-      }
-
-      if (height > maxHeight) {
-        width = (width * maxHeight) / height;
-        height = maxHeight;
-      }
-
-      const roundedWidth = Math.round(width);
-      const roundedHeight = Math.round(height);
-
-      setStageDimensions({
-        width: roundedWidth,
-        height: roundedHeight,
+      // Store original image dimensions
+      setOriginalImageDimensions({
+        width: img.width,
+        height: img.height,
       });
 
-      // Notify parent component of canvas dimensions (for saving to backend)
+      // Calculate auto-fit zoom to fit editor space
+      const maxEditorWidth = 1200;
+      const maxEditorHeight = 900;
+
+      const zoomToFitWidth = maxEditorWidth / img.width;
+      const zoomToFitHeight = maxEditorHeight / img.height;
+      const calculatedZoom = Math.min(zoomToFitWidth, zoomToFitHeight, 1); // Cap at 100%
+
+      setAutoFitZoom(calculatedZoom);
+      setZoomLevel(calculatedZoom); // Start at auto-fit
+
+      // Set stage dimensions based on zoom
+      const displayWidth = Math.round(img.width * calculatedZoom);
+      const displayHeight = Math.round(img.height * calculatedZoom);
+
+      setStageDimensions({
+        width: displayWidth,
+        height: displayHeight,
+      });
+
+      // IMPORTANT: Save ORIGINAL image dimensions (not zoomed) to backend
+      // This ensures percentage calculations work correctly
       if (onCanvasDimensionsChange) {
-        onCanvasDimensionsChange(roundedWidth, roundedHeight);
+        onCanvasDimensionsChange(img.width, img.height);
       }
     };
 
@@ -174,6 +184,19 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
 
     img.src = backgroundImageUrl;
   }, [backgroundImageUrl]);
+
+  /**
+   * Handle zoom level changes - update stage dimensions
+   */
+  const handleZoomChange = (newZoom: number) => {
+    if (!originalImageDimensions) return;
+
+    setZoomLevel(newZoom);
+    setStageDimensions({
+      width: Math.round(originalImageDimensions.width * newZoom),
+      height: Math.round(originalImageDimensions.height * newZoom),
+    });
+  };
 
   /**
    * Update transformer when selection changes
@@ -936,8 +959,41 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
   const cursorClass = `visual-editor-container mode-${drawingMode}`;
 
   return (
-    <div className={cursorClass}>
-      <Stage
+    <>
+      {/* Zoom Controls */}
+      {originalImageDimensions && (
+        <div className="zoom-controls">
+          <label className="zoom-controls-label">
+            Zoom: {Math.round(zoomLevel * 100)}%
+          </label>
+          <input
+            type="range"
+            min="0.25"
+            max="2"
+            step="0.25"
+            value={zoomLevel}
+            onChange={(e) => handleZoomChange(parseFloat(e.target.value))}
+            className="zoom-controls-slider"
+          />
+          <button
+            onClick={() => handleZoomChange(autoFitZoom)}
+            className="zoom-controls-button"
+            title="Fit to screen"
+          >
+            Fit
+          </button>
+          <button
+            onClick={() => handleZoomChange(1)}
+            className="zoom-controls-button"
+            title="100% size"
+          >
+            100%
+          </button>
+        </div>
+      )}
+
+      <div className={cursorClass}>
+        <Stage
         ref={stageRef}
         width={stageDimensions.width}
         height={stageDimensions.height}
@@ -970,6 +1026,7 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
         </Layer>
       </Stage>
     </div>
+    </>
   );
 };
 

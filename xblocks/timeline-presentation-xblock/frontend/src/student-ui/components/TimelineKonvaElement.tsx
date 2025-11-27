@@ -10,10 +10,11 @@
  * - Student: Just applies the config to Konva
  */
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useMemo } from 'react';
 import { Text, Circle, Rect, Line, Arrow } from 'react-konva';
 import type Konva from 'konva';
 import { TimelineEvent } from '../../common/types';
+import { generateKonvaConfig } from '../../studio-ui/utils/konvaConfigGenerator';
 
 /**
  * Props for TimelineKonvaElement
@@ -21,6 +22,10 @@ import { TimelineEvent } from '../../common/types';
 interface TimelineKonvaElementProps {
   /** Timeline event with pre-calculated Konva config */
   event: TimelineEvent;
+  /** Canvas dimensions from editor (for percentage calculations) */
+  stageDimensions?: { width: number; height: number };
+  /** Scale factor for proportional sizing (fonts, thickness, arrows) */
+  sizingScaleFactor?: number;
 }
 
 /**
@@ -32,9 +37,20 @@ interface TimelineKonvaElementProps {
  */
 export const TimelineKonvaElement: React.FC<TimelineKonvaElementProps> = ({
   event,
+  stageDimensions,
+  sizingScaleFactor = 1,
 }) => {
   const nodeRef = useRef<Konva.Shape | Konva.Text>(null);
   const tweenRef = useRef<Konva.Tween | null>(null);
+
+  // Generate Konva config at runtime with scale factor
+  const konvaConfig = useMemo(() => {
+    if (!stageDimensions) {
+      console.warn(`Event ${event.id} missing stageDimensions`);
+      return null;
+    }
+    return generateKonvaConfig(event, stageDimensions, sizingScaleFactor);
+  }, [event, stageDimensions, sizingScaleFactor]);
 
   /**
    * Animate on mount (Option C: Conditional Rendering)
@@ -45,9 +61,9 @@ export const TimelineKonvaElement: React.FC<TimelineKonvaElementProps> = ({
    */
   useEffect(() => {
     const node = nodeRef.current;
-    if (!node || !event.konvaConfig) return;
+    if (!node || !konvaConfig) return;
 
-    const { animation } = event.konvaConfig;
+    const { animation } = konvaConfig;
 
     // Start from initial state
     node.setAttrs(animation.initialState);
@@ -61,9 +77,13 @@ export const TimelineKonvaElement: React.FC<TimelineKonvaElementProps> = ({
       onFinish: () => {
         // Pop arrowhead at end for wipe animations
         if (event.elementType === 'arrow' && event.animation === 'wipe') {
+          // Use scaled pointer values from konvaProps
+          const targetPointerLength = konvaProps.pointerLength || 10;
+          const targetPointerWidth = konvaProps.pointerWidth || 10;
+
           node.to({
-            pointerLength: 10,
-            pointerWidth: 10,  // Grow width with length
+            pointerLength: targetPointerLength,
+            pointerWidth: targetPointerWidth,
             duration: 0.15, // Quick 150ms pop
             easing: Konva.Easings.BackEaseOut,
           });
@@ -81,15 +101,14 @@ export const TimelineKonvaElement: React.FC<TimelineKonvaElementProps> = ({
         tweenRef.current = null;
       }
     };
-  }, []); // Only run on mount - no visibility dependency
+  }, [konvaConfig]); // Re-run if config changes (scale factor updates)
 
   // Validate config exists
-  if (!event.konvaConfig) {
-    console.warn(`Event ${event.id} missing konvaConfig - cannot render`);
-    return null;
+  if (!konvaConfig) {
+    return null; // Warning already logged in useMemo
   }
 
-  const { konvaProps, animation } = event.konvaConfig;
+  const { konvaProps, animation } = konvaConfig;
 
   /**
    * Render element based on type

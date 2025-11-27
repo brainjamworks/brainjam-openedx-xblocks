@@ -280,6 +280,52 @@ wavesurfer wave canvas {
 }
 
 // ============================================================================
+// ZOOM CONTROLS STYLES
+// ============================================================================
+
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: $liverpool-space-4;
+  padding: $liverpool-space-4;
+  background: $liverpool-bg-subtle;
+  border-radius: $liverpool-radius-sm;
+  margin-bottom: $liverpool-space-4;
+
+  .zoom-controls-label {
+    font-weight: $liverpool-font-weight-semibold;
+    min-width: 80px;
+    font-size: $liverpool-font-size-sm;
+    color: $liverpool-text-secondary;
+  }
+
+  .zoom-controls-slider {
+    flex: 1;
+    max-width: 300px;
+  }
+
+  .zoom-controls-button {
+    padding: $liverpool-space-2 $liverpool-space-4;
+    border-radius: $liverpool-radius-xs;
+    border: 1px solid $liverpool-border-default;
+    background: $liverpool-neutral-white;
+    cursor: pointer;
+    font-size: $liverpool-font-size-sm;
+    font-weight: $liverpool-font-weight-medium;
+    transition: $liverpool-transition-fast;
+
+    &:hover {
+      background: $liverpool-bg-subtle;
+      border-color: $liverpool-blue;
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+}
+
+// ============================================================================
 // VISUAL EDITOR COMPONENT STYLES
 // ============================================================================
 
