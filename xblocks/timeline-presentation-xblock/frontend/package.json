@@ -12,9 +12,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
     "@openedx/paragon": "^23.0.0",
+    "gsap": "^3.13.0",
+    "konva": "^9.3.16",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-intl": "^7.1.14",
+    "react-konva": "^18.2.10",
     "wavesurfer.js": "^7.11.1"
   },
   "devDependencies": {

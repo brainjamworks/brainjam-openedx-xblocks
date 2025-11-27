@@ -10,14 +10,19 @@ import Form from '@openedx/paragon/dist/Form';
 import Alert from '@openedx/paragon/dist/Alert';
 import Card from '@openedx/paragon/dist/Card';
 import Tabs from '@openedx/paragon/dist/Tabs';
+// Row and Col use Bootstrap classes directly (not separate Paragon exports)
 import { xblockPost, XBlockRuntime } from '../common/api';
-import type { StudioViewFields, TimelineEvent, AssetUploadResponse } from '../common/types';
+import type { StudioViewFields, TimelineEvent, AssetUploadResponse, DrawingMode } from '../common/types';
 import { AssetUploader } from './components/AssetUploader';
 import { TimelineEventEditor } from './components/TimelineEventEditor';
 import { WaveformTimeline } from './components/WaveformTimeline';
 import { PreviewPanel } from './components/PreviewPanel';
 import { EventPropertiesPanel } from './components/EventPropertiesPanel';
 import { EventListView } from './components/EventListView';
+import { VisualEditor } from './components/VisualEditor';
+import { DrawingToolbar } from './components/DrawingToolbar';
+import { generateKonvaConfig } from './utils/konvaConfigGenerator';
+import { useTimelineEvents } from './hooks/useTimelineEvents';
 
 interface StudioViewProps {
   runtime: XBlockRuntime;
@@ -49,8 +54,20 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
   const [description, setDescription] = useState(fields.description || '');
   const [imageUrl, setImageUrl] = useState(fields.image_url || '');
   const [audioUrl, setAudioUrl] = useState(fields.audio_url || '');
-  const [timelineEvents, setTimelineEvents] = useState<TimelineEvent[]>(fields.timeline_events || []);
+
+  // Timeline events managed by service (single source of truth)
+  const timelineEventsService = useTimelineEvents();
+  const timelineEvents = timelineEventsService.events;
+
+  const [editorCanvasDimensions, setEditorCanvasDimensions] = useState(
+    fields.editor_canvas_dimensions || { width: 800, height: 600 }
+  );
   const [audioDuration, setAudioDuration] = useState(0);
+
+  // Initialize service with data from backend
+  useEffect(() => {
+    timelineEventsService.initialize(fields.timeline_events || []);
+  }, []);  // Only run once on mount
 
   // =======================================================================
   // STATE - UI
@@ -64,10 +81,30 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [activeTab, setActiveTab] = useState('basic');
   const [selectedEvent, setSelectedEvent] = useState<TimelineEvent | null>(null);
-  const [editingEvent, setEditingEvent] = useState<TimelineEvent | null>(null);
+
+  // Editing state: just store ID, derive event from service
+  const [editingEventId, setEditingEventId] = useState<string | null>(null);
+  const editingEvent = editingEventId ? timelineEventsService.getById(editingEventId) : null;
+
   const [isNewEvent, setIsNewEvent] = useState(false);
 
+  // Visual editor state
+  const [editorMode, setEditorMode] = useState<'form' | 'visual'>('form');
+  const [drawingMode, setDrawingMode] = useState<DrawingMode>('select');
+  const [drawingColor, setDrawingColor] = useState('#212b58'); // Liverpool blue
+  const [drawingThickness, setDrawingThickness] = useState(2);
+
   const audioRef = useRef<HTMLAudioElement>(null);
+
+  // =======================================================================
+  // HELPER FUNCTIONS
+  // =======================================================================
+
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   // =======================================================================
   // EFFECTS - Load audio duration when audioUrl exists
@@ -321,6 +358,7 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
         image_url: imageUrl,
         audio_url: audioUrl,
         timeline_events: timelineEvents,
+        editor_canvas_dimensions: editorCanvasDimensions,
       });
 
       if (result.success) {
@@ -365,29 +403,31 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
   };
 
   const handleWaveformEventUpdate = (eventId: string, newTimestamp: number) => {
-    setTimelineEvents(prevEvents =>
-      prevEvents.map(event =>
-        event.id === eventId
-          ? { ...event, timestamp: newTimestamp }
-          : event
-      )
-    );
+    // Update timestamp in service
+    timelineEventsService.update(eventId, { timestamp: newTimestamp });
     console.log(`[Timeline] Event ${eventId} moved to ${newTimestamp.toFixed(2)}s`);
   };
 
   const handleWaveformAddEvent = (timestamp: number) => {
-    // Create new event at clicked position
+    // Generate auto-incrementing event name
+    const eventNumber = timelineEventsService.count() + 1;
+    const eventName = `Event ${eventNumber}`;
+
+    // Create minimal event - user will set type/animation in Design tab
     const newEvent: TimelineEvent = {
       id: `event_${Date.now()}`,
+      name: eventName,
       timestamp: timestamp,
-      elementType: 'text',
-      animation: 'fade',
-      animationDuration: 500,
       position: { x: 50, y: 50 },
-      content: 'New text element',
+      // No elementType, animation, or other presets
+      // User must configure in Design tab
     };
 
-    setEditingEvent(newEvent);
+    console.log('[StudioView] Creating new event from waveform:', newEvent);
+    // Add to service immediately
+    timelineEventsService.create(newEvent);
+    // Set as editing
+    setEditingEventId(newEvent.id);
     setIsNewEvent(true);
   };
 
@@ -396,69 +436,173 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
   // =======================================================================
 
   const handleAddEvent = () => {
+    // Generate auto-incrementing event name
+    const eventNumber = timelineEventsService.count() + 1;
+    const eventName = `Event ${eventNumber}`;
+
+    // Create minimal event - user will set type/animation in Design tab
     const newEvent: TimelineEvent = {
       id: `event-${Date.now()}`,
+      name: eventName,
       timestamp: 0,
-      elementType: 'text',
-      animation: 'fade',
-      animationDuration: 500,
       position: { x: 50, y: 50 },
-      content: 'New Element',
-      color: '#000000',
+      // No elementType, animation, or other presets
+      // User must configure in Design tab
     };
-    setEditingEvent(newEvent);
+
+    console.log('[StudioView] Creating new event from Add button:', newEvent);
+    // Add to service immediately
+    timelineEventsService.create(newEvent);
+    // Set as editing
+    setEditingEventId(newEvent.id);
     setIsNewEvent(true);
   };
 
   const handleEditEvent = (event: TimelineEvent) => {
-    setEditingEvent({ ...event });
+    // Store ID and sync visual selection so VisualEditor knows about form selection
+    setEditingEventId(event.id);
+    setSelectedEvent(event);
     setIsNewEvent(false);
   };
 
   const handleDeleteEvent = (eventId: string) => {
-    setTimelineEvents(events => events.filter(e => e.id !== eventId));
-    if (editingEvent?.id === eventId) {
-      setEditingEvent(null);
+    timelineEventsService.delete(eventId);
+    if (editingEventId === eventId) {
+      setEditingEventId(null);
       setIsNewEvent(false);
     }
   };
 
   const handleDuplicateEvent = (event: TimelineEvent) => {
-    const duplicated = {
+    // Generate name for duplicated event
+    const originalName = event.name || 'Event';
+    const duplicatedName = `${originalName} (Copy)`;
+
+    const duplicated: TimelineEvent = {
       ...event,
       id: `event-${Date.now()}`,
-      timestamp: Math.min((event.timestamp + 1), audioDuration || 999),
+      name: duplicatedName,
+      timestamp: Math.min(((event.timestamp ?? 0) + 1), audioDuration || 999),
     };
-    setTimelineEvents(events => [...events, duplicated]);
+
+    // Generate Konva config for duplicated event
+    const konvaConfig = generateKonvaConfig(duplicated, editorCanvasDimensions);
+    const duplicatedWithConfig = {
+      ...duplicated,
+      konvaConfig,
+    };
+
+    timelineEventsService.create(duplicatedWithConfig);
   };
 
   const handleEventPropertyChange = (updates: Partial<TimelineEvent>) => {
-    if (editingEvent) {
-      setEditingEvent({ ...editingEvent, ...updates });
+    console.log('[StudioView] handleEventPropertyChange called:', { editingEventId, updates });
+    if (editingEventId) {
+      // Update immediately in service (no "Save" button needed)
+      // But regenerate Konva config
+      const currentEvent = timelineEventsService.getById(editingEventId);
+      console.log('[StudioView] Current event from service:', currentEvent);
+      if (currentEvent) {
+        const updatedEvent = { ...currentEvent, ...updates };
+        const konvaConfig = generateKonvaConfig(updatedEvent, editorCanvasDimensions);
+        console.log('[StudioView] Calling service.update with:', { editingEventId, updates, konvaConfig });
+        timelineEventsService.update(editingEventId, {
+          ...updates,
+          konvaConfig,
+        });
+        console.log('[StudioView] service.update completed');
+      }
     }
   };
 
   const handleSaveEvent = () => {
+    // With immediate updates, this just clears editing state
+    // But we keep it for backward compatibility with UI
     if (!editingEvent) return;
 
-    if (isNewEvent) {
-      setTimelineEvents(events => [...events, editingEvent]);
-      setMessage({ type: 'success', text: `Event added at ${editingEvent.timestamp.toFixed(1)}s` });
-    } else {
-      setTimelineEvents(events =>
-        events.map(e => e.id === editingEvent.id ? editingEvent : e)
-      );
-      setMessage({ type: 'success', text: 'Event updated' });
-    }
+    setMessage({ type: 'success', text: isNewEvent
+      ? `Event added at ${(editingEvent.timestamp ?? 0).toFixed(1)}s`
+      : 'Event updated'
+    });
 
     setTimeout(() => setMessage(null), 2000);
-    setEditingEvent(null);
+    setEditingEventId(null);
     setIsNewEvent(false);
   };
 
   const handleCancelEdit = () => {
-    setEditingEvent(null);
+    if (isNewEvent && editingEventId) {
+      // If it was a new event, delete it on cancel
+      timelineEventsService.delete(editingEventId);
+    }
+    setEditingEventId(null);
     setIsNewEvent(false);
+  };
+
+  // =======================================================================
+  // HANDLERS - Visual Editor
+  // =======================================================================
+
+  const handleCanvasDimensionsChange = (width: number, height: number) => {
+    // Update canvas dimensions when background image loads
+    setEditorCanvasDimensions({ width, height });
+  };
+
+  const handleEventCreate = (newEvent: Partial<TimelineEvent>) => {
+    // Create complete event with required fields
+    // Spread incoming data first, then set defaults only for missing fields
+    const completeEvent: TimelineEvent = {
+      // Spread incoming event data first
+      ...newEvent,
+      // Only set defaults if values are null/undefined (use ?? instead of ||)
+      // This preserves timestamp: 0 as a valid value
+      id: newEvent.id ?? `event-${Date.now()}`,
+      timestamp: newEvent.timestamp ?? 0,
+      elementType: newEvent.elementType ?? 'text',
+      animation: newEvent.animation ?? 'fade',
+      animationDuration: newEvent.animationDuration ?? 500,
+      position: newEvent.position ?? { x: 50, y: 50 },
+    };
+
+    // Generate Konva config for the new event
+    const konvaConfig = generateKonvaConfig(completeEvent, editorCanvasDimensions);
+    const eventWithConfig = { ...completeEvent, konvaConfig };
+
+    // Add to service
+    timelineEventsService.create(eventWithConfig);
+    // Set as selected and editing
+    setSelectedEvent(eventWithConfig);
+    setEditingEventId(eventWithConfig.id);
+    setIsNewEvent(false); // Already added to service
+  };
+
+  const handleEventUpdateFromVisual = (eventId: string, updates: Partial<TimelineEvent>) => {
+    // Update in service and regenerate Konva config
+    const currentEvent = timelineEventsService.getById(eventId);
+    if (currentEvent) {
+      const updatedEvent = { ...currentEvent, ...updates };
+      const konvaConfig = generateKonvaConfig(updatedEvent, editorCanvasDimensions);
+      timelineEventsService.update(eventId, {
+        ...updates,
+        konvaConfig,
+      });
+    }
+  };
+
+  const handleEventSelectFromVisual = (eventId: string | null) => {
+    const event = eventId ? timelineEventsService.getById(eventId) : null;
+    setSelectedEvent(event || null);
+    setEditingEventId(eventId);
+    setIsNewEvent(false);
+  };
+
+  const handleEventDeleteFromVisual = (eventId: string) => {
+    timelineEventsService.delete(eventId);
+    if (selectedEvent?.id === eventId) {
+      setSelectedEvent(null);
+      setEditingEventId(null);
+      setIsNewEvent(false);
+    }
   };
 
   // =======================================================================
@@ -561,8 +705,8 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
           </Card>
         </Tabs.Tab>
 
-        {/* Timeline Events Tab */}
-        <Tabs.Tab eventKey="timeline" title="Timeline Events">
+        {/* Timeline Tab - Event Creation & Timing */}
+        <Tabs.Tab eventKey="timeline" title="Timeline">
           {!audioUrl || audioDuration === 0 ? (
             <Alert variant="warning">
               {!audioUrl
@@ -572,8 +716,14 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
             </Alert>
           ) : (
             <div className="row">
-              {/* Left Column: Timeline & Event List (70%) */}
-              <div className="col-lg-8">
+              {/* Left Column: Timeline & Event List */}
+              <div className="col-lg-12">
+                <Alert variant="info" className="mb-3">
+                  <strong>Timeline Tab:</strong> Create events and set when they appear.
+                  Click on the waveform or use the "Add Event" button below.
+                  Then switch to the Design tab to add visual properties.
+                </Alert>
+
                 {/* Waveform Timeline */}
                 <Card className="mb-3">
                   <Card.Body>
@@ -597,18 +747,119 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
                   onDuplicateEvent={handleDuplicateEvent}
                 />
               </div>
-
-              {/* Right Column: Properties Panel (30%) */}
-              <div className="col-lg-4">
-                <EventPropertiesPanel
-                  event={editingEvent}
-                  audioDuration={audioDuration}
-                  onChange={handleEventPropertyChange}
-                  onSave={handleSaveEvent}
-                  onCancel={handleCancelEdit}
-                />
-              </div>
             </div>
+          )}
+        </Tabs.Tab>
+
+        {/* Design Tab - Visual Editing Only */}
+        <Tabs.Tab eventKey="design" title="Design">
+          {!imageUrl ? (
+            <Alert variant="warning">
+              Please upload a diagram image in the Assets tab first.
+            </Alert>
+          ) : timelineEvents.length === 0 ? (
+            <Alert variant="info">
+              No events created yet. Go to the Timeline tab to create events first,
+              then return here to add visual properties.
+            </Alert>
+          ) : (
+            <>
+              <Alert variant="info" className="mb-3">
+                <strong>Design Tab:</strong> Edit visual properties of existing events.
+                Select an event from the dropdown below to modify its appearance, position, and styling.
+                (Timestamps are set in the Timeline tab only)
+              </Alert>
+
+              {/* Event Selector */}
+              <Card className="mb-3">
+                <Card.Body>
+                  <Form.Group className="mb-0">
+                    <Form.Label>
+                      <strong>Select Event to Edit</strong>
+                    </Form.Label>
+                    <Form.Control
+                      as="select"
+                      value={editingEventId || ''}
+                      onChange={(e) => {
+                        const selectedId = e.target.value;
+                        setEditingEventId(selectedId || null);
+                        setIsNewEvent(false);
+                      }}
+                    >
+                      <option value="">-- Select an event --</option>
+                      {timelineEvents.map((event) => (
+                        <option key={event.id} value={event.id}>
+                          {event.name || 'Unnamed Event'} (t={formatTime(event.timestamp ?? 0)})
+                        </option>
+                      ))}
+                    </Form.Control>
+                    <Form.Text className="text-muted">
+                      Choose an event to edit its visual properties and animation settings
+                    </Form.Text>
+                  </Form.Group>
+                </Card.Body>
+              </Card>
+
+              <div className="row">
+                <div className="col-lg-9">
+                  {/* Drawing Toolbar */}
+                  <Card className="mb-3">
+                    <Card.Body>
+                      <DrawingToolbar
+                        currentMode={drawingMode}
+                        onModeChange={setDrawingMode}
+                        color={drawingColor}
+                        onColorChange={setDrawingColor}
+                        thickness={drawingThickness}
+                        onThicknessChange={setDrawingThickness}
+                      />
+                    </Card.Body>
+                  </Card>
+
+                  {/* Mode Indicator */}
+                  <Alert variant="info" className="mb-3">
+                    <strong>Current Mode:</strong> {drawingMode.charAt(0).toUpperCase() + drawingMode.slice(1)}
+                    {drawingMode === 'select' && ' - Select and position existing elements'}
+                    {drawingMode === 'text' && ' - Add text to selected event'}
+                    {drawingMode === 'line' && ' - Add line to selected event'}
+                    {drawingMode === 'arrow' && ' - Add arrow to selected event'}
+                    {drawingMode === 'circle' && ' - Add circle to selected event'}
+                    {drawingMode === 'rectangle' && ' - Add rectangle to selected event'}
+                  </Alert>
+
+                  {/* Visual Canvas */}
+                  <Card>
+                    <Card.Body>
+                      <VisualEditor
+                        backgroundImageUrl={imageUrl}
+                        events={timelineEvents}
+                        selectedEventId={selectedEvent?.id || null}
+                        editingEventId={editingEventId}
+                        drawingMode={drawingMode}
+                        currentColor={drawingColor}
+                        currentThickness={drawingThickness}
+                        onEventCreate={handleEventCreate}
+                        onEventUpdate={handleEventUpdateFromVisual}
+                        onEventSelect={handleEventSelectFromVisual}
+                        onEventDelete={handleEventDeleteFromVisual}
+                        onCanvasDimensionsChange={handleCanvasDimensionsChange}
+                      />
+                    </Card.Body>
+                  </Card>
+                </div>
+
+                <div className="col-lg-3">
+                  {/* Event Properties Panel */}
+                  <EventPropertiesPanel
+                    event={editingEvent}
+                    audioDuration={audioDuration}
+                    onChange={handleEventPropertyChange}
+                    onSave={handleSaveEvent}
+                    onCancel={handleCancelEdit}
+                  />
+                </div>
+              </div>
+            </>
           )}
         </Tabs.Tab>
 

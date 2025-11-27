@@ -118,3 +118,198 @@ wavesurfer cursor {
 wavesurfer wave canvas {
   // Additional canvas styling if needed
 }
+
+// ============================================================================
+// DRAWING TOOLBAR COMPONENT STYLES
+// ============================================================================
+
+.drawing-toolbar {
+  padding: $liverpool-space-4;
+  background-color: $liverpool-neutral-white;
+  border: 1px solid $liverpool-border-default;
+  border-radius: $liverpool-radius-sm;
+  margin-bottom: $liverpool-space-4;
+
+  .drawing-toolbar-modes {
+    .btn-group {
+      display: flex;
+      gap: 2px;
+
+      .drawing-toolbar-mode-btn {
+        font-family: $liverpool-font-primary;
+        font-weight: $liverpool-font-weight-medium;
+        font-size: $liverpool-font-size-sm;
+        border-radius: $liverpool-radius-xs !important;
+        padding: $liverpool-space-2 $liverpool-space-3;
+        transition: $liverpool-transition-fast;
+
+        // Active state (selected mode)
+        &.btn-primary {
+          background: $liverpool-btn-primary-bg;
+          border-color: $liverpool-btn-primary-bg;
+          color: $liverpool-btn-primary-color;
+          box-shadow: $liverpool-shadow-sm;
+
+          &:hover {
+            background: $liverpool-btn-primary-bg-hover;
+            border-color: $liverpool-btn-primary-bg-hover;
+            box-shadow: $liverpool-shadow-md;
+          }
+        }
+
+        // Inactive state
+        &.btn-outline-primary {
+          background: transparent;
+          border-color: $liverpool-blue-300;
+          color: $liverpool-blue;
+
+          &:hover {
+            background: $liverpool-blue-100;
+            border-color: $liverpool-blue;
+          }
+        }
+
+        // Icon spacing
+        svg {
+          margin-right: $liverpool-space-1;
+        }
+      }
+    }
+  }
+
+  .drawing-toolbar-divider {
+    width: 1px;
+    height: 38px;
+    background-color: $liverpool-border-default;
+    margin: 0 $liverpool-space-3;
+  }
+
+  .drawing-toolbar-color,
+  .drawing-toolbar-thickness {
+    .form-label {
+      font-family: $liverpool-font-primary;
+      font-weight: $liverpool-font-weight-semibold;
+      color: $liverpool-text-secondary;
+      font-size: $liverpool-font-size-xs;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: $liverpool-space-1;
+    }
+
+    .form-control {
+      font-family: $liverpool-font-primary;
+      font-size: $liverpool-font-size-sm;
+      border: $liverpool-input-border;
+      border-radius: $liverpool-input-border-radius;
+      transition: $liverpool-transition-fast;
+
+      &:focus {
+        border-color: $liverpool-border-focus;
+        box-shadow: $liverpool-input-shadow-focus;
+      }
+
+      // Color input specific
+      &[type="color"] {
+        padding: 2px;
+        border-radius: $liverpool-radius-xs;
+
+        &::-webkit-color-swatch-wrapper {
+          padding: 2px;
+        }
+
+        &::-webkit-color-swatch {
+          border: none;
+          border-radius: 2px;
+        }
+      }
+
+      // Range slider specific
+      &[type="range"] {
+        padding: 0;
+
+        &::-webkit-slider-thumb {
+          background: $liverpool-blue;
+          border: none;
+          cursor: pointer;
+
+          &:hover {
+            background: $liverpool-blue-dark;
+          }
+        }
+
+        &::-moz-range-thumb {
+          background: $liverpool-blue;
+          border: none;
+          cursor: pointer;
+
+          &:hover {
+            background: $liverpool-blue-dark;
+          }
+        }
+      }
+    }
+  }
+
+  // Mobile responsiveness
+  @media (max-width: 768px) {
+    padding: $liverpool-space-3;
+
+    .d-flex {
+      flex-wrap: wrap;
+      gap: $liverpool-space-3 !important;
+    }
+
+    .drawing-toolbar-modes {
+      width: 100%;
+
+      .btn-group {
+        width: 100%;
+        flex-wrap: wrap;
+      }
+    }
+
+    .drawing-toolbar-divider {
+      display: none;
+    }
+
+    .drawing-toolbar-color,
+    .drawing-toolbar-thickness {
+      width: 100%;
+    }
+  }
+}
+
+// ============================================================================
+// VISUAL EDITOR COMPONENT STYLES
+// ============================================================================
+
+.visual-editor-container {
+  position: relative;
+  border: 1px solid $liverpool-border-default;
+  border-radius: $liverpool-radius-sm;
+  overflow: auto; // Allow scrolling for large images
+  max-height: 800px; // Constrain height to enable scrolling
+  background-color: $liverpool-neutral-white;
+
+  // Cursor styles based on drawing mode
+  &.mode-select {
+    cursor: default;
+  }
+
+  &.mode-text {
+    cursor: text;
+  }
+
+  &.mode-line,
+  &.mode-arrow,
+  &.mode-circle,
+  &.mode-rectangle {
+    cursor: crosshair;
+  }
+
+  // Konva canvas styling
+  canvas {
+    display: block;
+    pointer-events: auto; // Ensure canvas receives mouse events
+  }
+}

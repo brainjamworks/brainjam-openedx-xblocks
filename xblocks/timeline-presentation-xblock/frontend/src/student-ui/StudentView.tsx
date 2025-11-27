@@ -30,6 +30,7 @@ export const StudentView: React.FC<StudentViewProps> = ({
   imageUrl,
   audioUrl,
   timelineEvents,
+  editorCanvasDimensions,
   runtime,
 }) => {
   // Validate required data
@@ -59,6 +60,7 @@ export const StudentView: React.FC<StudentViewProps> = ({
             audioUrl={audioUrl}
             imageUrl={imageUrl}
             timelineEvents={timelineEvents}
+            editorCanvasDimensions={editorCanvasDimensions}
           />
         </div>
       ) : (

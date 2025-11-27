@@ -1,0 +1,433 @@
+/**
+ * VisualEditor - Visual Canvas Editor Component
+ *
+ * Provides an interactive canvas for creating and editing timeline events
+ * using react-konva. Supports drawing text, shapes, lines, and arrows.
+ *
+ * Architecture:
+ * - Uses react-konva for rendering and interactions
+ * - Maintains background image and stage dimensions
+ * - Provides transformer for resizing/rotating selected elements
+ * - Emits events for parent component to update state
+ */
+
+import React, { useState, useEffect, useRef } from 'react';
+import { Stage, Layer, Image as KonvaImage, Text, Circle, Rect, Line, Arrow, Transformer } from 'react-konva';
+import type Konva from 'konva';
+import type { TimelineEvent, DrawingMode } from '../../common/types';
+import { pixelsToPercent, percentToPixels } from '../utils/coordinates';
+
+/**
+ * Props for VisualEditor component
+ */
+export interface VisualEditorProps {
+  /** URL of the background image to display */
+  backgroundImageUrl: string;
+
+  /** Array of timeline events to render on canvas */
+  events: TimelineEvent[];
+
+  /** ID of currently selected event (if any) */
+  selectedEventId: string | null;
+
+  /** Current drawing mode from toolbar */
+  drawingMode: DrawingMode;
+
+  /** Callback when an event is created */
+  onEventCreate: (event: Partial<TimelineEvent>) => void;
+
+  /** Callback when an event is updated */
+  onEventUpdate: (eventId: string, updates: Partial<TimelineEvent>) => void;
+
+  /** Callback when an event is selected */
+  onEventSelect: (eventId: string | null) => void;
+
+  /** Callback when an event is deleted */
+  onEventDelete: (eventId: string) => void;
+}
+
+/**
+ * Stage dimensions state
+ */
+interface StageDimensions {
+  width: number;
+  height: number;
+}
+
+/**
+ * VisualEditor Component
+ *
+ * Renders an interactive canvas for visual timeline event editing.
+ * This is the skeleton structure - Agent 4 will add full rendering logic.
+ */
+export const VisualEditor: React.FC<VisualEditorProps> = ({
+  backgroundImageUrl,
+  events,
+  selectedEventId,
+  drawingMode,
+  onEventCreate,
+  onEventUpdate,
+  onEventSelect,
+  onEventDelete,
+}) => {
+  // ============================================================================
+  // STATE
+  // ============================================================================
+
+  /** Background image object */
+  const [backgroundImage, setBackgroundImage] = useState<HTMLImageElement | null>(null);
+
+  /** Stage dimensions (set based on background image or container) */
+  const [stageDimensions, setStageDimensions] = useState<StageDimensions>({
+    width: 800,
+    height: 600,
+  });
+
+  /** Reference to the Konva stage */
+  const stageRef = useRef<any>(null);
+
+  /** Reference to the transformer for selected elements */
+  const transformerRef = useRef<any>(null);
+
+  // ============================================================================
+  // EFFECTS
+  // ============================================================================
+
+  /**
+   * Load background image when URL changes
+   * Sets stage dimensions based on image aspect ratio
+   */
+  useEffect(() => {
+    if (!backgroundImageUrl) {
+      setBackgroundImage(null);
+      return;
+    }
+
+    const img = new window.Image();
+    img.crossOrigin = 'anonymous'; // Handle CORS for course assets
+
+    img.onload = () => {
+      setBackgroundImage(img);
+
+      // Set stage dimensions based on image, maintaining aspect ratio
+      // TODO: Agent 4 - Add responsive container sizing logic here
+      setStageDimensions({
+        width: img.width,
+        height: img.height,
+      });
+    };
+
+    img.onerror = () => {
+      console.error('Failed to load background image:', backgroundImageUrl);
+      setBackgroundImage(null);
+    };
+
+    img.src = backgroundImageUrl;
+  }, [backgroundImageUrl]);
+
+  /**
+   * Update transformer when selection changes
+   * Attaches transformer to the selected element
+   */
+  useEffect(() => {
+    if (!transformerRef.current || !stageRef.current) return;
+
+    const transformer = transformerRef.current;
+    const stage = stageRef.current;
+
+    if (!selectedEventId) {
+      // No selection - detach transformer
+      transformer.nodes([]);
+      transformer.getLayer()?.batchDraw();
+      return;
+    }
+
+    // Find the selected node by ID
+    const selectedNode = stage.findOne(`#${selectedEventId}`);
+
+    if (selectedNode) {
+      // Attach transformer to the selected node
+      transformer.nodes([selectedNode]);
+      transformer.getLayer()?.batchDraw();
+    } else {
+      // Node not found - detach transformer
+      transformer.nodes([]);
+      transformer.getLayer()?.batchDraw();
+    }
+  }, [selectedEventId]);
+
+  // ============================================================================
+  // EVENT HANDLERS
+  // ============================================================================
+
+  /**
+   * Handle element drag end - update position
+   */
+  const handleElementDragEnd = (eventId: string, e: any) => {
+    const node = e.target;
+    const { x, y } = node.position();
+
+    // Convert pixel position to percentage
+    const percentPosition = pixelsToPercent(
+      x,
+      y,
+      stageDimensions.width,
+      stageDimensions.height
+    );
+
+    // Update event position
+    onEventUpdate(eventId, {
+      position: percentPosition,
+    });
+  };
+
+  /**
+   * Handle element transform end - update dimensions and position
+   */
+  const handleElementTransformEnd = (eventId: string, e: any) => {
+    const node = e.target;
+    const { x, y } = node.position();
+    const scaleX = node.scaleX();
+    const scaleY = node.scaleY();
+
+    // Get base dimensions
+    const width = node.width ? node.width() * scaleX : undefined;
+    const height = node.height ? node.height() * scaleY : undefined;
+    const radius = node.radius ? node.radius() * scaleX : undefined;
+
+    // Convert position to percentage
+    const percentPosition = pixelsToPercent(
+      x,
+      y,
+      stageDimensions.width,
+      stageDimensions.height
+    );
+
+    // Build update object
+    const updates: Partial<TimelineEvent> = {
+      position: percentPosition,
+    };
+
+    // Add dimensions if element has them
+    if (width !== undefined && height !== undefined) {
+      // Convert dimensions to percentage of stage
+      updates.dimensions = {
+        width: (width / stageDimensions.width) * 100,
+        height: (height / stageDimensions.height) * 100,
+      };
+    }
+
+    // For circles, update radius via dimensions
+    if (radius !== undefined) {
+      updates.dimensions = {
+        width: (radius * 2 / stageDimensions.width) * 100,
+        height: (radius * 2 / stageDimensions.height) * 100,
+      };
+    }
+
+    // Reset scale to 1 after applying transform
+    node.scaleX(1);
+    node.scaleY(1);
+
+    // Update event
+    onEventUpdate(eventId, updates);
+  };
+
+  /**
+   * Handle stage click - deselect or create new element
+   */
+  const handleStageClick = (e: any) => {
+    // Check if clicked on empty stage (not an element)
+    const clickedOnStage = e.target === e.target.getStage();
+
+    if (clickedOnStage) {
+      // Deselect current element
+      onEventSelect(null);
+
+      // TODO: Future enhancement - create new element based on drawingMode
+      // For now, only handle deselection
+    }
+  };
+
+  /**
+   * Handle stage mouse down - start drawing operation
+   * TODO: Agent 4 - Implement for line/arrow drawing
+   */
+  const handleStageMouseDown = (e: any) => {
+    // Agent 4 will implement:
+    // - For line/arrow mode: start drawing from mouse position
+    // - Store starting coordinates
+  };
+
+  /**
+   * Handle stage mouse move - update drawing in progress
+   * TODO: Agent 4 - Implement for line/arrow preview
+   */
+  const handleStageMouseMove = (e: any) => {
+    // Agent 4 will implement:
+    // - For line/arrow mode: update line endpoint to cursor
+    // - Show preview of line being drawn
+  };
+
+  /**
+   * Handle stage mouse up - complete drawing operation
+   * TODO: Agent 4 - Implement for line/arrow completion
+   */
+  const handleStageMouseUp = (e: any) => {
+    // Agent 4 will implement:
+    // - For line/arrow mode: finalize line and create event
+    // - Call onEventCreate with new event data
+  };
+
+  // ============================================================================
+  // RENDER HELPERS
+  // ============================================================================
+
+  /**
+   * Render background image layer
+   * TODO: Agent 4 - Optimize image rendering
+   */
+  const renderBackgroundLayer = () => {
+    if (!backgroundImage) return null;
+
+    return (
+      <KonvaImage
+        image={backgroundImage}
+        width={stageDimensions.width}
+        height={stageDimensions.height}
+      />
+    );
+  };
+
+  /**
+   * Render text elements
+   */
+  const renderTextElements = () => {
+    return events
+      .filter(event => event.elementType === 'text')
+      .map(event => {
+        // Convert percentage position to pixels
+        const pixelPosition = percentToPixels(
+          event.position.x,
+          event.position.y,
+          stageDimensions.width,
+          stageDimensions.height
+        );
+
+        return (
+          <Text
+            key={event.id}
+            id={event.id}
+            x={pixelPosition.x}
+            y={pixelPosition.y}
+            text={event.content || 'New Text'}
+            fontSize={event.fontSize || 16}
+            fill={event.color || '#000000'}
+            draggable
+            onClick={() => onEventSelect(event.id)}
+            onTap={() => onEventSelect(event.id)}
+            onDragEnd={(e) => handleElementDragEnd(event.id, e)}
+            onTransformEnd={(e) => handleElementTransformEnd(event.id, e)}
+          />
+        );
+      });
+  };
+
+  /**
+   * Render shape elements (circle, rectangle, triangle)
+   * TODO: Agent 4 - Implement Shape rendering
+   */
+  const renderShapeElements = () => {
+    // Agent 4 will implement:
+    // - Filter events for elementType === 'shape'
+    // - Render appropriate Konva shape based on shapeType
+    // - Handle click to select
+    // - Apply animations
+    return null;
+  };
+
+  /**
+   * Render line elements
+   * TODO: Agent 4 - Implement Line rendering
+   */
+  const renderLineElements = () => {
+    // Agent 4 will implement:
+    // - Filter events for elementType === 'line'
+    // - Render Konva.Line for each
+    // - Handle click to select
+    // - Apply animations
+    return null;
+  };
+
+  /**
+   * Render arrow elements
+   * TODO: Agent 4 - Implement Arrow rendering
+   */
+  const renderArrowElements = () => {
+    // Agent 4 will implement:
+    // - Filter events for elementType === 'arrow'
+    // - Render Konva.Arrow for each
+    // - Handle click to select
+    // - Apply animations
+    return null;
+  };
+
+  /**
+   * Render transformer for selected element
+   * TODO: Agent 4 - Implement Transformer
+   */
+  const renderTransformer = () => {
+    // Agent 4 will implement:
+    // - Render Konva.Transformer
+    // - Attach to selected node
+    // - Handle transform events (resize, rotate)
+    // - Update event data via onEventUpdate
+    return null;
+  };
+
+  // ============================================================================
+  // MAIN RENDER
+  // ============================================================================
+
+  return (
+    <div className="visual-editor-container">
+      <Stage
+        ref={stageRef}
+        width={stageDimensions.width}
+        height={stageDimensions.height}
+        onClick={handleStageClick}
+        onMouseDown={handleStageMouseDown}
+        onMouseMove={handleStageMouseMove}
+        onMouseUp={handleStageMouseUp}
+      >
+        {/* Background Layer */}
+        <Layer>
+          {renderBackgroundLayer()}
+        </Layer>
+
+        {/* Elements Layer */}
+        <Layer>
+          {renderTextElements()}
+          {renderShapeElements()}
+          {renderLineElements()}
+          {renderArrowElements()}
+        </Layer>
+
+        {/* Transformer Layer */}
+        <Layer>
+          {renderTransformer()}
+        </Layer>
+      </Stage>
+
+      {/* TODO: Agent 4 - Add controls/overlays if needed */}
+      {/* Examples:
+        - Zoom controls
+        - Grid toggle
+        - Snap to grid toggle
+        - Drawing preview overlay
+      */}
+    </div>
+  );
+};
+
+export default VisualEditor;

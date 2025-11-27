@@ -99,6 +99,7 @@ export const EventListView: React.FC<EventListViewProps> = ({
                 <thead style={{ position: 'sticky', top: 0, background: 'white', zIndex: 1 }}>
                   <tr>
                     <th style={{ width: '50px' }}>#</th>
+                    <th style={{ width: '150px' }}>Name</th>
                     <th
                       style={{ cursor: 'pointer', width: '100px' }}
                       onClick={() => handleSort('timestamp')}
@@ -133,14 +134,19 @@ export const EventListView: React.FC<EventListViewProps> = ({
                         <span className="badge badge-secondary">{index + 1}</span>
                       </td>
                       <td>
+                        <strong>{event.name || 'Unnamed Event'}</strong>
+                      </td>
+                      <td>
                         <strong>{formatTime(event.timestamp)}</strong>
                       </td>
                       <td>
-                        <span className="text-capitalize">{event.elementType}</span>
+                        <span className="text-capitalize">
+                          {event.elementType || <span className="text-muted">Not set</span>}
+                        </span>
                       </td>
                       <td>
                         <span className="text-capitalize">
-                          {event.animation}
+                          {event.animation || <span className="text-muted">Not set</span>}
                           {event.animationDirection && (
                             <span className="text-muted small ml-1">
                               ({event.animationDirection})

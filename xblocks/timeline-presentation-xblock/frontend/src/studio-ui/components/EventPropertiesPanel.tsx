@@ -27,6 +27,32 @@ interface EventPropertiesPanelProps {
   onCancel: () => void;
 }
 
+/**
+ * Get valid animation types for an element type
+ * Based on Animation Design System research
+ */
+function getValidAnimations(elementType?: ElementType): AnimationType[] {
+  if (!elementType) {
+    // If no element type set, show all (defensive)
+    return ['fade', 'scale', 'slide', 'wipe', 'show'];
+  }
+
+  switch (elementType) {
+    case 'text':
+    case 'shape':
+      // Text and shapes: Essential Three + scale
+      return ['fade', 'scale', 'slide', 'show'];
+
+    case 'line':
+    case 'arrow':
+      // Lines and arrows: Essential Three + wipe
+      return ['fade', 'wipe', 'show'];
+
+    default:
+      return ['fade', 'show'];
+  }
+}
+
 export const EventPropertiesPanel: React.FC<EventPropertiesPanelProps> = ({
   event,
   audioDuration,
@@ -95,32 +121,23 @@ export const EventPropertiesPanel: React.FC<EventPropertiesPanelProps> = ({
           />
         </Card.Header>
         <Card.Body style={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }}>
-          {/* Timestamp */}
+          {/* Timestamp removed - set in Timeline tab only */}
+
+          {/* Event Name */}
           <Form.Group className="mb-3">
             <Form.Label>
-              <strong>Timestamp (seconds)</strong>
+              <strong>Event Name</strong>
             </Form.Label>
             <Form.Control
-              type="number"
-              value={event.timestamp}
-              onChange={(e) =>
-                onChange({
-                  timestamp: Math.max(
-                    0,
-                    Math.min(parseFloat(e.target.value) || 0, audioDuration)
-                  ),
-                })
-              }
-              min="0"
-              max={audioDuration}
-              step="0.1"
+              type="text"
+              value={event.name || ''}
+              onChange={(e) => onChange({ name: e.target.value })}
+              placeholder="e.g., 'Introduction', 'Step 1'"
             />
             <Form.Text className="text-muted">
-              When should this element appear? (0 - {audioDuration.toFixed(1)}s)
+              Give this event a descriptive name for easy identification
             </Form.Text>
           </Form.Group>
-
-          <hr />
 
           {/* Element Type */}
           <Form.Group className="mb-3">
@@ -354,16 +371,25 @@ export const EventPropertiesPanel: React.FC<EventPropertiesPanelProps> = ({
               value={event.animation}
               onChange={(e) => onChange({ animation: e.target.value as AnimationType })}
             >
-              <option value="fade">Fade In</option>
-              <option value="scale">Scale</option>
-              <option value="slide">Slide</option>
-              <option value="wipe">Wipe</option>
-              <option value="show">Show (instant)</option>
+              {getValidAnimations(event.elementType).map((animType) => (
+                <option key={animType} value={animType}>
+                  {animType === 'fade' && 'Fade In'}
+                  {animType === 'scale' && 'Scale'}
+                  {animType === 'slide' && 'Slide'}
+                  {animType === 'wipe' && 'Wipe'}
+                  {animType === 'show' && 'Show (instant)'}
+                </option>
+              ))}
             </Form.Control>
+            <Form.Text className="text-muted">
+              {event.elementType === 'text' || event.elementType === 'shape'
+                ? 'Text and shapes support fade, scale, slide, and show animations'
+                : 'Lines and arrows support fade, wipe, and show animations'}
+            </Form.Text>
           </Form.Group>
 
-          {/* Animation Direction (for slide and wipe) */}
-          {(event.animation === 'slide' || event.animation === 'wipe') && (
+          {/* Animation Direction (for slide only - wipe always follows drawn direction) */}
+          {event.animation === 'slide' && (
             <Form.Group className="mb-3">
               <Form.Label>Animation Direction</Form.Label>
               <Form.Control
@@ -378,6 +404,9 @@ export const EventPropertiesPanel: React.FC<EventPropertiesPanelProps> = ({
                 <option value="left">Left</option>
                 <option value="right">Right</option>
               </Form.Control>
+              <Form.Text className="text-muted">
+                Direction the element slides in from
+              </Form.Text>
             </Form.Group>
           )}
 

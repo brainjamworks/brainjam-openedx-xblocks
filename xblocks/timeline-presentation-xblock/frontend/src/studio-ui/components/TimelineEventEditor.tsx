@@ -11,13 +11,15 @@ import Card from '@openedx/paragon/dist/Card';
 import { StandardModal, Form, Alert } from '@openedx/paragon';
 import IconButton from '@openedx/paragon/dist/IconButton';
 import { Add, Edit, Delete, ContentCopy, FileUpload, FileDownload } from '@openedx/paragon/icons';
-import type { TimelineEvent, AnimationType } from '../../common/types';
+import type { TimelineEvent, AnimationType, CanvasDimensions } from '../../common/types';
 import { ElementEditor } from './ElementEditor';
+import { generateKonvaConfig } from '../utils/konvaConfigGenerator';
 
 interface TimelineEventEditorProps {
   events: TimelineEvent[];
   onChange: (events: TimelineEvent[]) => void;
   audioDuration?: number;
+  canvasDimensions: CanvasDimensions;
 }
 
 /**
@@ -139,6 +141,7 @@ export const TimelineEventEditor: React.FC<TimelineEventEditorProps> = ({
   events,
   onChange,
   audioDuration,
+  canvasDimensions,
 }) => {
   const [editingEvent, setEditingEvent] = useState<TimelineEvent | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -190,16 +193,31 @@ export const TimelineEventEditor: React.FC<TimelineEventEditorProps> = ({
       id: `event-${Date.now()}`,
       timestamp: Math.min((event.timestamp + 1), audioDuration || 999),
     };
-    onChange([...events, duplicated]);
+
+    // Generate Konva config for duplicated event
+    const konvaConfig = generateKonvaConfig(duplicated, canvasDimensions);
+    const duplicatedWithConfig = {
+      ...duplicated,
+      konvaConfig,
+    };
+
+    onChange([...events, duplicatedWithConfig]);
   };
 
   const handleSaveEvent = () => {
     if (!editingEvent) return;
 
+    // Generate Konva config before saving
+    const konvaConfig = generateKonvaConfig(editingEvent, canvasDimensions);
+    const eventWithConfig = {
+      ...editingEvent,
+      konvaConfig,
+    };
+
     if (isNewEvent) {
-      onChange([...events, editingEvent]);
+      onChange([...events, eventWithConfig]);
     } else {
-      onChange(events.map(e => e.id === editingEvent.id ? editingEvent : e));
+      onChange(events.map(e => e.id === editingEvent.id ? eventWithConfig : e));
     }
 
     setIsModalOpen(false);

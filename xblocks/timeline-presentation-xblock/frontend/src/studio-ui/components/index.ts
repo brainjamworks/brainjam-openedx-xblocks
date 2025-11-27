@@ -11,3 +11,6 @@ export { TimelineTrack } from './TimelineTrack';
 export { PreviewPanel } from './PreviewPanel';
 export { EventPropertiesPanel } from './EventPropertiesPanel';
 export { EventListView } from './EventListView';
+export { DrawingToolbar } from './DrawingToolbar';
+export { VisualEditor } from './VisualEditor';
+export { WaveformTimeline } from './WaveformTimeline';

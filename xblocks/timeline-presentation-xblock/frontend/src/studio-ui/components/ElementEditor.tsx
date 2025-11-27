@@ -277,8 +277,8 @@ export const ElementEditor: React.FC<ElementEditorProps> = ({ event, onChange })
         </Form.Control>
       </Form.Group>
 
-      {/* Animation Direction (for slide and wipe) */}
-      {(event.animation === 'slide' || event.animation === 'wipe') && (
+      {/* Animation Direction (for slide only - wipe follows arrow drawn direction) */}
+      {event.animation === 'slide' && (
         <Form.Group className="mt-3">
           <Form.Label>Animation Direction</Form.Label>
           <Form.Control

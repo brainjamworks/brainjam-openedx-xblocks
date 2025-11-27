@@ -22,7 +22,12 @@ interface WaveformTimelineProps {
 /**
  * Get color for event type using Liverpool design tokens
  */
-const getEventColor = (elementType: string): string => {
+const getEventColor = (elementType?: string): string => {
+  // No element type = not yet configured in Design tab, use neutral color
+  if (!elementType) {
+    return '#8d9695';  // liverpool-neutral-500 (lighter gray for "not set" state)
+  }
+
   switch (elementType) {
     case 'text':
       return '#212b58';  // liverpool-blue
@@ -64,6 +69,9 @@ export const WaveformTimeline: React.FC<WaveformTimelineProps> = ({
   // Map to track region ID to event ID mapping
   const regionEventMapRef = useRef<Map<string, string>>(new Map());
 
+  // Track if component is mounted to prevent error logging after unmount
+  const isMountedRef = useRef<boolean>(true);
+
   // =======================================================================
   // INITIALIZATION - Create WaveSurfer instance
   // =======================================================================
@@ -72,6 +80,9 @@ export const WaveformTimeline: React.FC<WaveformTimelineProps> = ({
     if (!waveformRef.current || !audioUrl) {
       return;
     }
+
+    // Reset mounted flag when effect runs
+    isMountedRef.current = true;
 
     setIsLoading(true);
     setError(null);
@@ -105,9 +116,12 @@ export const WaveformTimeline: React.FC<WaveformTimelineProps> = ({
       });
 
       wavesurfer.on('error', (err) => {
-        console.error('[WaveformTimeline] Error loading audio:', err);
-        setError('Failed to load audio waveform');
-        setIsLoading(false);
+        // Only log errors if component is still mounted (prevents AbortError spam on unmount)
+        if (isMountedRef.current) {
+          console.error('[WaveformTimeline] Error loading audio:', err);
+          setError('Failed to load audio waveform');
+          setIsLoading(false);
+        }
       });
 
       // Click on waveform to add event
@@ -124,7 +138,15 @@ export const WaveformTimeline: React.FC<WaveformTimelineProps> = ({
 
       // Cleanup
       return () => {
-        wavesurfer.destroy();
+        // Mark as unmounted BEFORE destroying to prevent error handler from logging
+        isMountedRef.current = false;
+
+        try {
+          wavesurfer?.destroy();
+        } catch (err) {
+          // Ignore cleanup errors (e.g., AbortError if component unmounts during load)
+          console.debug('[WaveformTimeline] Cleanup error (safe to ignore):', err);
+        }
         wavesurferRef.current = null;
         regionsPluginRef.current = null;
         regionEventMapRef.current.clear();
@@ -162,7 +184,7 @@ export const WaveformTimeline: React.FC<WaveformTimelineProps> = ({
         color: color + '40',         // 25% opacity for region fill
         drag: true,
         resize: false,
-        content: event.elementType.charAt(0).toUpperCase(),
+        content: event.name || `#${event.id.slice(-4)}`,
       });
 
       // Store mapping

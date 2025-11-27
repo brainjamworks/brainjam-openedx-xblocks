@@ -10,7 +10,7 @@ import Button from '@openedx/paragon/dist/Button';
 import ProgressBar from '@openedx/paragon/dist/ProgressBar';
 import { PlayCircle, PauseCircle, Refresh } from '@openedx/paragon/icons';
 import { TimelinePlayerProps } from '../common/types';
-import { useTimelineSync } from './AnimationEngine';
+import { useGSAPTimeline } from './hooks/useGSAPTimeline';
 import { DiagramCanvas } from './DiagramCanvas';
 
 /**
@@ -27,6 +27,7 @@ export const TimelinePlayer: React.FC<TimelinePlayerProps> = ({
   audioUrl,
   imageUrl,
   timelineEvents,
+  editorCanvasDimensions,
 }) => {
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -37,17 +38,13 @@ export const TimelinePlayer: React.FC<TimelinePlayerProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [audioError, setAudioError] = useState(false);
 
-  // Use animation engine to sync timeline events
-  const activeElements = useTimelineSync(
-    audioRef,
-    timelineEvents,
-    (event) => {
-      // Optional: Log event triggers for debugging
-      if (process.env.NODE_ENV === 'development') {
-        console.log('Timeline event triggered:', event.id, 'at', event.timestamp);
-      }
-    }
-  );
+  // Use GSAP timeline to sync timeline events with 60fps precision
+  const { visibleEventIds } = useGSAPTimeline({
+    events: timelineEvents,
+    audioCurrentTime: currentTime,
+    audioDuration: duration,
+    isPlaying,
+  });
 
   /**
    * Handle play/pause toggle
@@ -65,13 +62,30 @@ export const TimelinePlayer: React.FC<TimelinePlayerProps> = ({
 
   /**
    * Handle replay - restart from beginning
+   *
+   * Sequencing is critical to avoid race conditions:
+   * 1. Pause audio to stop timeupdate events
+   * 2. Reset audio time
+   * 3. Use setTimeout to let React process state updates
+   * 4. Give animations 100ms to reset before replaying
    */
   const handleReplay = () => {
     const audio = audioRef.current;
     if (!audio) return;
 
+    // Pause first to stop timeupdate events
+    audio.pause();
+
+    // Reset time
     audio.currentTime = 0;
-    audio.play();
+
+    // Use setTimeout to ensure state updates process before starting playback
+    setTimeout(() => {
+      setCurrentTime(0);
+      setTimeout(() => {
+        audio.play();
+      }, 100); // Give 100ms for animations to reset
+    }, 0);
   };
 
   /**
@@ -157,7 +171,9 @@ export const TimelinePlayer: React.FC<TimelinePlayerProps> = ({
       {/* Diagram canvas with animated elements */}
       <DiagramCanvas
         imageUrl={imageUrl}
-        activeElements={activeElements}
+        timelineEvents={timelineEvents}
+        visibleEventIds={visibleEventIds}
+        editorCanvasDimensions={editorCanvasDimensions}
       />
 
       {/* Audio controls */}
@@ -238,7 +254,7 @@ export const TimelinePlayer: React.FC<TimelinePlayerProps> = ({
               <p>Playing: {isPlaying ? 'Yes' : 'No'}</p>
               <p>Current Time: {currentTime.toFixed(2)}s</p>
               <p>Duration: {duration.toFixed(2)}s</p>
-              <p>Active Elements: {activeElements.length}</p>
+              <p>Visible Elements: {visibleEventIds.size}</p>
               <p>Total Events: {timelineEvents.length}</p>
             </div>
           </details>

@@ -9,7 +9,7 @@ import json
 import logging
 import pkg_resources
 from xblock.core import XBlock
-from xblock.fields import String, List, Boolean, Scope
+from xblock.fields import String, List, Boolean, Dict, Scope
 from xblock.fragment import Fragment
 
 # Contentstore imports for asset management
@@ -93,29 +93,60 @@ class TimelinePresentation(XBlock):
         scope=Scope.content,
         help="JSON array of timeline events (elements and animations synchronized with audio)"
     )
-    # Timeline event structure: {
+    # Timeline event structure - SUPPORTS TWO FORMATS:
+    #
+    # V2 FORMAT (New - GSAP timeline with entry/exit animations):
+    # {
     #   "id": "event-1",
-    #   "time": 7.25,  # seconds from audio start
-    #   "duration": 750,  # animation duration in ms
-    #   "elementType": "text" | "shape" | "line" | "image",
-    #   "animation": "fade" | "scale" | "wipe" | "slide" | "show",
-    #   "direction": "top" | "bottom" | "left" | "right",  # for wipe/slide
-    #   "element": {
-    #     "id": "element-1",
-    #     "type": "text" | "circle" | "rectangle" | "line" | "image",
-    #     "position": {"x": 50, "y": 50},  # percentage-based (0-100)
-    #     "content": "Text content or label",
-    #     "style": {
-    #       "width": 100,  # for shapes/images
-    #       "height": 100,
-    #       "fontSize": 18,  # for text
-    #       "color": "#FFFFFF",
-    #       "backgroundColor": "#212b58",
-    #       # ... other CSS-like styles
-    #     },
-    #     "coordinates": [x1, y1, x2, y2]  # for lines
-    #   }
+    #   "elementType": "text" | "shape" | "line" | "arrow",
+    #   "timing": {
+    #     "startTime": 7.25,      # seconds from audio start
+    #     "endTime": 12.5         # OPTIONAL - when element exits (omit to stay visible)
+    #   },
+    #   "entryAnimation": {
+    #     "type": "fade" | "scale" | "wipe" | "slide" | "show",
+    #     "duration": 750,        # milliseconds
+    #     "direction": "left" | "right" | "up" | "down",  # optional
+    #     "easing": "power2.out"  # GSAP easing, optional
+    #   },
+    #   "exitAnimation": {        # OPTIONAL - omit to keep element visible
+    #     "type": "fade",
+    #     "duration": 500,
+    #     "easing": "power2.in"
+    #   },
+    #   "position": {"x": 50, "y": 50},  # percentage (0-100)
+    #   "content": "Text content",       # for text elements
+    #   "shapeType": "circle" | "rectangle" | "triangle",  # for shape elements
+    #   "color": "#FFFFFF",
+    #   "fontSize": 18,                  # for text
+    #   "thickness": 2,                  # for line/arrow
+    #   "lineCoordinates": {"x1": 10, "y1": 10, "x2": 90, "y2": 90}  # for line/arrow
     # }
+    #
+    # V1 FORMAT (Legacy - flat structure - STILL SUPPORTED):
+    # {
+    #   "id": "event-1",
+    #   "timestamp": 7.25,              # seconds (converted to timing.startTime)
+    #   "animation": "fade",            # converted to entryAnimation.type
+    #   "animationDuration": 750,       # ms (converted to entryAnimation.duration)
+    #   "animationDirection": "left",   # converted to entryAnimation.direction
+    #   "elementType": "text",
+    #   "position": {"x": 50, "y": 50},
+    #   ... (other fields same as v2)
+    # }
+    #
+    # BACKWARD COMPATIBILITY:
+    # - Old v1 events auto-convert to v2 format in TypeScript (normalizeTimelineEvent)
+    # - v1 events stay visible forever (no endTime, no exitAnimation)
+    # - Python just stores the data - validation happens in TypeScript
+    # - ZERO breaking changes for existing content
+
+    editor_canvas_dimensions = Dict(
+        display_name="Editor Canvas Dimensions",
+        default={'width': 800, 'height': 600},
+        scope=Scope.content,
+        help="Canvas dimensions from the studio editor (for proper scaling in student view)"
+    )
 
     show_timeline_controls = Boolean(
         display_name="Show Timeline Controls",
@@ -173,6 +204,7 @@ class TimelinePresentation(XBlock):
             'imageUrl': self.image_url,
             'audioUrl': self.audio_url,
             'timelineEvents': self.timeline_events,
+            'editorCanvasDimensions': self.editor_canvas_dimensions,
             'showTimelineControls': self.show_timeline_controls,
             'autoplay': self.autoplay,
         })
@@ -208,6 +240,7 @@ class TimelinePresentation(XBlock):
                 'image_url': self.image_url,
                 'audio_url': self.audio_url,
                 'timeline_events': self.timeline_events,
+                'editor_canvas_dimensions': self.editor_canvas_dimensions,
                 'show_timeline_controls': self.show_timeline_controls,
                 'autoplay': self.autoplay,
                 'course_id': str(self.location.course_key) if hasattr(self, 'location') else None,
@@ -251,6 +284,7 @@ class TimelinePresentation(XBlock):
         self.image_url = data.get('image_url', '').strip()
         self.audio_url = data.get('audio_url', '').strip()
         self.timeline_events = data.get('timeline_events', [])
+        self.editor_canvas_dimensions = data.get('editor_canvas_dimensions', {'width': 800, 'height': 600})
         self.show_timeline_controls = data.get('show_timeline_controls', True)
         self.autoplay = data.get('autoplay', False)
 
@@ -262,6 +296,7 @@ class TimelinePresentation(XBlock):
             'image_url': self.image_url,
             'audio_url': self.audio_url,
             'timeline_events': self.timeline_events,
+            'editor_canvas_dimensions': self.editor_canvas_dimensions,
             'show_timeline_controls': self.show_timeline_controls,
             'autoplay': self.autoplay,
         }

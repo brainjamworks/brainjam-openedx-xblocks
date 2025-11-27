@@ -94,7 +94,7 @@
 }
 
 // ============================================================================
-// DIAGRAM CANVAS
+// DIAGRAM CANVAS - WAVE 2: KONVA RENDERING
 // ============================================================================
 .timeline-diagram-canvas {
   position: relative;
@@ -104,33 +104,22 @@
   overflow: hidden;
 }
 
-.timeline-diagram-image-container {
+// Konva Stage container
+.timeline-diagram-stage-container {
   position: relative;
   width: 100%;
-  opacity: 0;
-  transition: opacity $liverpool-duration-base $liverpool-easing-out;
 
-  &.timeline-diagram-image-loaded {
-    opacity: 1;
+  // Ensure Konva stage canvas is responsive
+  canvas {
+    display: block;
+    width: 100% !important;
+    height: auto !important;
   }
 }
 
-.timeline-diagram-image {
+.timeline-diagram-stage {
   display: block;
   width: 100%;
-  height: auto;
-  max-height: 600px;
-  object-fit: contain;
-}
-
-// Overlay for animated elements
-.timeline-diagram-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none; // Allow click-through to image
 }
 
 // Loading state
@@ -331,212 +320,11 @@
 }
 
 // ============================================================================
-// TIMELINE ELEMENTS & ANIMATIONS
+// WAVE 2: CSS ANIMATIONS REMOVED
 // ============================================================================
-
-// Base timeline element
-.timeline-element {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-// Visible state (after animation completes)
-.timeline-element--visible {
-  opacity: 1;
-}
-
-// Text elements
-.timeline-element-text {
-  font-family: $liverpool-font-primary;
-  font-weight: $liverpool-font-weight-medium;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-// Shape elements
-.timeline-element-shape {
-  box-shadow: $liverpool-shadow-sm;
-}
-
-// Line elements
-.timeline-element-line {
-  box-shadow: $liverpool-shadow-xs;
-}
-
-// Arrow elements
-.timeline-element-arrow {
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
-}
-
-// ============================================================================
-// ANIMATION TYPES
-// ============================================================================
-
-// Fade animation
-.timeline-animation-fade {
-  animation: timeline-fade-in var(--animation-duration, 500ms) $liverpool-easing-in-out forwards;
-}
-
-@keyframes timeline-fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-// Scale animation
-.timeline-animation-scale {
-  animation: timeline-scale-in var(--animation-duration, 500ms) $liverpool-easing-out forwards;
-}
-
-@keyframes timeline-scale-in {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-
-// Show animation (instant)
-.timeline-animation-show {
-  animation: timeline-show var(--animation-duration, 100ms) linear forwards;
-}
-
-@keyframes timeline-show {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-// Slide animations
-.timeline-animation-slide-up {
-  animation: timeline-slide-up var(--animation-duration, 500ms) $liverpool-easing-out forwards;
-}
-
-@keyframes timeline-slide-up {
-  from {
-    opacity: 0;
-    transform: translate(-50%, 20px);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-  }
-}
-
-.timeline-animation-slide-down {
-  animation: timeline-slide-down var(--animation-duration, 500ms) $liverpool-easing-out forwards;
-}
-
-@keyframes timeline-slide-down {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -100%);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-  }
-}
-
-.timeline-animation-slide-left {
-  animation: timeline-slide-left var(--animation-duration, 500ms) $liverpool-easing-out forwards;
-}
-
-@keyframes timeline-slide-left {
-  from {
-    opacity: 0;
-    transform: translate(20px, -50%);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-  }
-}
-
-.timeline-animation-slide-right {
-  animation: timeline-slide-right var(--animation-duration, 500ms) $liverpool-easing-out forwards;
-}
-
-@keyframes timeline-slide-right {
-  from {
-    opacity: 0;
-    transform: translate(-100%, -50%);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-  }
-}
-
-// Wipe animations (reveal effect)
-.timeline-animation-wipe-up,
-.timeline-animation-wipe-down,
-.timeline-animation-wipe-left,
-.timeline-animation-wipe-right {
-  opacity: 1;
-  overflow: hidden;
-}
-
-.timeline-animation-wipe-up {
-  animation: timeline-wipe-up var(--animation-duration, 500ms) $liverpool-easing-in-out forwards;
-}
-
-@keyframes timeline-wipe-up {
-  from {
-    clip-path: inset(100% 0 0 0);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-  }
-}
-
-.timeline-animation-wipe-down {
-  animation: timeline-wipe-down var(--animation-duration, 500ms) $liverpool-easing-in-out forwards;
-}
-
-@keyframes timeline-wipe-down {
-  from {
-    clip-path: inset(0 0 100% 0);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-  }
-}
-
-.timeline-animation-wipe-left {
-  animation: timeline-wipe-left var(--animation-duration, 500ms) $liverpool-easing-in-out forwards;
-}
-
-@keyframes timeline-wipe-left {
-  from {
-    clip-path: inset(0 0 0 100%);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-  }
-}
-
-.timeline-animation-wipe-right {
-  animation: timeline-wipe-right var(--animation-duration, 500ms) $liverpool-easing-in-out forwards;
-}
-
-@keyframes timeline-wipe-right {
-  from {
-    clip-path: inset(0 100% 0 0);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-  }
-}
+// All timeline element animations now handled by Konva + @react-spring
+// CSS-based animations and .timeline-element-* classes removed
+// See TimelineKonvaElement.tsx for animation implementation
 
 // ============================================================================
 // UTILITY ANIMATIONS
@@ -592,13 +380,9 @@
     }
   }
 
-  .timeline-diagram-image {
+  // Scale Konva canvas on smaller screens
+  .timeline-diagram-stage-container canvas {
     max-height: 400px;
-  }
-
-  // Scale down text elements on mobile
-  .timeline-element-text {
-    font-size: 0.875em;
   }
 }
 
@@ -616,12 +400,8 @@
     padding: $liverpool-space-3;
   }
 
-  .timeline-diagram-image {
+  // Further scale Konva canvas on very small screens
+  .timeline-diagram-stage-container canvas {
     max-height: 300px;
-  }
-
-  // Further scale down on very small screens
-  .timeline-element-text {
-    font-size: 0.75em;
   }
 }
