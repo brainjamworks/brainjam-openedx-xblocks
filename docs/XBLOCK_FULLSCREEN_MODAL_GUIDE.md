@@ -303,6 +303,232 @@ function StudioView() {
 
 ---
 
+## Hiding Modal Chrome (Header & Buttons)
+
+### Overview
+
+By default, OpenEdX modals include:
+- **Modal Header**: Title + close button (X)
+- **Modal Actions**: Save and Cancel buttons at bottom
+
+For custom React-based editors, you may want to hide these and provide your own UI controls.
+
+### Recommended Approach: CSS Targeting
+
+OpenEdX automatically adds a CSS class to modals based on your XBlock's `category` attribute:
+
+```python
+# In your XBlock class
+class MyXBlock(XBlock):
+    category = "timeline_presentation"  # Creates .modal-type-timeline-presentation
+```
+
+Use this class to hide modal elements with CSS:
+
+```scss
+// Hide modal header (title + close button)
+.modal-type-timeline-presentation .modal-header {
+  display: none !important;
+}
+
+// Hide modal action buttons (Save/Cancel)
+.modal-type-timeline-presentation .modal-actions {
+  display: none !important;
+}
+```
+
+### Where to Add This CSS
+
+**Option 1: In your XBlock's SCSS file**
+
+```scss
+// frontend/src/studio-ui/styles/studio.scss
+
+.modal-type-{your-category} {
+  // Hide OpenEdX modal chrome
+  .modal-header {
+    display: none !important;
+  }
+
+  .modal-actions {
+    display: none !important;
+  }
+
+  // Optional: Make content fill available space
+  .modal-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+}
+```
+
+**Option 2: In `studio_view()` Python method**
+
+```python
+def studio_view(self, context=None):
+    frag = Fragment()
+
+    # ... add your HTML/JS ...
+
+    # Add CSS to hide modal chrome
+    frag.add_css("""
+        .modal-type-timeline-presentation .modal-header,
+        .modal-type-timeline-presentation .modal-actions {
+            display: none !important;
+        }
+    """)
+
+    return frag
+```
+
+### Granular Control
+
+Hide specific elements instead of entire sections:
+
+```scss
+.modal-type-{your-category} {
+  // Hide only the close button, keep title
+  .modal-header .close,
+  .modal-header .btn-close {
+    display: none !important;
+  }
+
+  // Hide only Cancel button, keep Save
+  .action-cancel {
+    display: none !important;
+  }
+
+  // Hide only Save button, keep Cancel
+  .action-save {
+    display: none !important;
+  }
+}
+```
+
+### Real Example: Accordion XBlock
+
+**File**: `xblocks/accordion/frontend/src/studio-ui/styles/minimal-paragon.scss`
+
+```scss
+// Hide Studio's modal action buttons (Save/Close) for accordion
+// We provide our own buttons with clearer labels
+.modal-type-accordion .modal-actions {
+  display: none !important;
+}
+
+// Hide the action-cancel close button
+.modal-type-accordion .action-cancel {
+  display: none !important;
+}
+
+// Hide any close buttons in header as well
+.modal-type-accordion .modal-header .close,
+.modal-type-accordion .modal-header .btn-close {
+  display: none !important;
+}
+
+// Make the xblock wrappers fill modal height
+.modal-type-accordion .modal-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 502px;
+}
+```
+
+### Providing Your Own Controls
+
+When you hide the default buttons, provide your own:
+
+```jsx
+function StudioView() {
+  const handleSave = async () => {
+    // Save logic
+    await runtime.notify('save', { state: 'start' });
+    // ... your save code ...
+    await runtime.notify('save', { state: 'end' });
+  };
+
+  const handleCancel = () => {
+    runtime.notify('cancel', {});
+  };
+
+  return (
+    <div className="custom-editor">
+      {/* Your editor UI */}
+
+      {/* Custom action buttons */}
+      <div className="custom-actions">
+        <Button variant="tertiary" onClick={handleCancel}>
+          Cancel
+        </Button>
+        <Button variant="primary" onClick={handleSave}>
+          Save Changes
+        </Button>
+      </div>
+    </div>
+  );
+}
+```
+
+### Available Selectors
+
+All modal elements you can target:
+
+| Selector | Description |
+|----------|-------------|
+| `.modal-header` | Entire header section (title + close) |
+| `.modal-window-title` | Just the title text |
+| `.modal-header .close` | Close button (older OpenEdX) |
+| `.modal-header .btn-close` | Close button (newer OpenEdX) |
+| `.modal-actions` | Entire action bar at bottom |
+| `.action-save` | Save button only |
+| `.action-cancel` | Cancel button only |
+| `.modal-content` | Content area (your editor) |
+
+### Important Notes
+
+1. **!important is required** - OpenEdX modal CSS has high specificity
+2. **Category name must match** - Ensure your XBlock's `category` attribute is correct
+3. **Provide your own save/cancel** - If you hide default buttons, implement your own
+4. **Runtime notifications** - Call `runtime.notify('save', ...)` and `runtime.notify('cancel', ...)` to properly close the modal
+
+### Quick Reference: Common XBlock Categories
+
+```scss
+// Timeline Presentation
+.modal-type-timeline-presentation .modal-header,
+.modal-type-timeline-presentation .modal-actions {
+  display: none !important;
+}
+
+// Image Annotation
+.modal-type-image-annotation .modal-header,
+.modal-type-image-annotation .modal-actions {
+  display: none !important;
+}
+
+// Image Hotspot
+.modal-type-image-hotspot .modal-header,
+.modal-type-image-hotspot .modal-actions {
+  display: none !important;
+}
+
+// Accordion
+.modal-type-accordion .modal-header,
+.modal-type-accordion .modal-actions {
+  display: none !important;
+}
+
+// Tabs
+.modal-type-tabs .modal-header,
+.modal-type-tabs .modal-actions {
+  display: none !important;
+}
+```
+
+---
+
 ## Scrolling Behavior
 
 ### How Modal Scrolling Works
@@ -616,6 +842,221 @@ For implementation details, see:
 - **Investigation Doc**: `docs/investigations/xblock-modal-sizing/00-SUMMARY.md`
 - **MFE Investigation**: `docs/investigations/liverpool-authoring-mfe-iframe-modal-investigation.md`
 - **Theme Source**: `/Users/brainjam/tutor-liverpool-dental-legacy/tutorliverpooldentallegacy/templates/liverpool-dental-legacy/cms/static/sass/course-unit-mfe-iframe-bundle.scss`
+
+---
+
+## Customizing Modal Size Per-XBlock
+
+### Overview
+
+By default, the Liverpool theme sets all XBlock modals to **98vw × 98vh** (near-fullscreen). However, **individual XBlocks can override this** to use custom dimensions.
+
+### Why Customize Modal Size?
+
+Different XBlocks have different space requirements:
+- **Timeline/Canvas editors**: Need maximum space (98vh)
+- **Simple forms**: Work fine with standard size (60-70vh)
+- **Preview-heavy editors**: Want large but not fullscreen (85-90vh)
+
+### How It Works: CSS Specificity
+
+The Liverpool theme uses this selector (specificity `0-4-0`):
+```scss
+[class*="view-"] .wrapper .modal-window.modal-editor {
+  width: 98vw !important;
+  height: 98vh !important;
+}
+```
+
+To override it, your XBlock needs **higher specificity** by including `.modal-type-{category}`:
+
+```scss
+// Specificity: 0-5-0 (wins!)
+[class*="view-"] .wrapper .modal-type-timeline-presentation.modal-window.modal-editor {
+  width: 90vw !important;
+  height: 90vh !important;
+  margin: 5vh auto !important;
+}
+```
+
+### Implementation Steps
+
+**Step 1: Add CSS to your XBlock**
+
+In your XBlock's SCSS file (e.g., `frontend/src/studio-ui/styles/studio.scss`):
+
+```scss
+// Custom modal size for this XBlock
+[class*="view-"] .wrapper .modal-type-{your-category}.modal-window.modal-editor {
+  width: 85vw !important;
+  height: 85vh !important;
+  margin: 7.5vh auto !important;
+
+  // Optional: max-width constraint
+  max-width: 1400px !important;
+}
+```
+
+**Step 2: Rebuild your XBlock**
+
+```bash
+cd xblocks/your-xblock/frontend
+npm run build
+```
+
+**Step 3: Restart OpenEdX**
+
+```bash
+tutor dev restart cms
+```
+
+### Size Presets
+
+#### Extra Large (98vh) - Maximum Space
+```scss
+[class*="view-"] .wrapper .modal-type-{category}.modal-window.modal-editor {
+  width: 98vw !important;
+  height: 98vh !important;
+  margin: 1vh auto !important;
+}
+```
+**Use for**: Canvas editors, timeline builders, complex visual tools
+
+#### Large (90vh) - Spacious with Breathing Room
+```scss
+[class*="view-"] .wrapper .modal-type-{category}.modal-window.modal-editor {
+  width: 90vw !important;
+  height: 90vh !important;
+  margin: 5vh auto !important;
+}
+```
+**Use for**: Rich content editors, multi-section forms
+
+#### Medium (80vh) - Balanced
+```scss
+[class*="view-"] .wrapper .modal-type-{category}.modal-window.modal-editor {
+  width: 80vw !important;
+  height: 80vh !important;
+  margin: 10vh auto !important;
+  max-width: 1200px !important;
+}
+```
+**Use for**: Standard forms with preview, moderate complexity
+
+#### Standard (OpenEdX Default) - Don't Override
+If you don't add any CSS, the Liverpool theme's default (98vh) applies. To use OpenEdX's original smaller modal, the theme would need to be reverted.
+
+### Important: CSS Specificity Requirements
+
+❌ **This WON'T work** (too low specificity: 0-3-0):
+```scss
+.modal-type-{category}.modal-window.modal-editor {
+  width: 90vw !important;  // LOSES to theme's 0-4-0
+}
+```
+
+✅ **This WILL work** (higher specificity: 0-5-0):
+```scss
+[class*="view-"] .wrapper .modal-type-{category}.modal-window.modal-editor {
+  width: 90vw !important;  // WINS with 0-5-0
+}
+```
+
+### Load Order
+
+1. **Theme CSS loads** → Global 98vh for all modals
+2. **XBlock CSS loads** → Overrides for specific category
+3. **Result** → XBlock wins if specificity is higher
+
+### Examples by XBlock Type
+
+#### Timeline Presentation (Keep Fullscreen)
+```scss
+// No override needed - uses theme's 98vh default
+// Or explicitly set:
+[class*="view-"] .wrapper .modal-type-timeline-presentation.modal-window.modal-editor {
+  width: 98vw !important;
+  height: 98vh !important;
+  margin: 1vh auto !important;
+}
+```
+
+#### Image Annotation (Slightly Smaller)
+```scss
+[class*="view-"] .wrapper .modal-type-image-annotation.modal-window.modal-editor {
+  width: 90vw !important;
+  height: 90vh !important;
+  margin: 5vh auto !important;
+  max-width: 1600px !important;
+}
+```
+
+#### Simple Poll XBlock (Standard Size)
+```scss
+[class*="view-"] .wrapper .modal-type-poll.modal-window.modal-editor {
+  width: 70vw !important;
+  height: 70vh !important;
+  margin: 15vh auto !important;
+  max-width: 900px !important;
+}
+```
+
+### Responsive Considerations
+
+Add media queries for smaller screens:
+
+```scss
+[class*="view-"] .wrapper .modal-type-{category}.modal-window.modal-editor {
+  width: 90vw !important;
+  height: 90vh !important;
+  margin: 5vh auto !important;
+
+  // Tablet
+  @media (max-width: 1024px) {
+    width: 95vw !important;
+    height: 95vh !important;
+    margin: 2.5vh auto !important;
+  }
+
+  // Mobile
+  @media (max-width: 768px) {
+    width: 100vw !important;
+    height: 100vh !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+  }
+}
+```
+
+### Testing Your Custom Size
+
+1. Open your XBlock in Studio editor
+2. Use browser DevTools to inspect:
+   ```javascript
+   const modal = document.querySelector('.modal-window.modal-editor');
+   const computed = window.getComputedStyle(modal);
+   console.log({
+     width: computed.width,
+     height: computed.height,
+     margin: computed.margin
+   });
+   ```
+3. Verify your custom dimensions are applied
+
+### Troubleshooting
+
+**Problem**: My CSS isn't working
+
+**Solutions**:
+1. Check specificity - must be `0-5-0` or higher
+2. Verify category name matches XBlock's `category` attribute
+3. Ensure `!important` is present
+4. Check CSS file is loaded (view source, search for your CSS)
+5. Clear browser cache and rebuild XBlock
+
+**Problem**: Modal flashes before resizing
+
+**Solution**: This is normal - CSS loads after modal renders. Not noticeable in practice.
 
 ---
 

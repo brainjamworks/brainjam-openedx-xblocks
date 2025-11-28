@@ -12,6 +12,15 @@ import { IntlProvider } from 'react-intl';
 import { StudioView } from './StudioView';
 import type { StudioViewFields } from '../common/types';
 import './styles/minimal-paragon.scss';
+import './styles/liverpool-tokens.scss';
+import './styles/studio-layout.scss';
+import './styles/studio-fullscreen.scss';
+import './styles/event-sidebar.scss';
+import './styles/event-card.scss';
+import './styles/compact-waveform.scss';
+import './styles/canvas-toolbar.scss';
+import './styles/properties-accordion.scss';
+import './styles/editor-actions.scss';
 import './styles/studio-ui.scss';
 
 /**

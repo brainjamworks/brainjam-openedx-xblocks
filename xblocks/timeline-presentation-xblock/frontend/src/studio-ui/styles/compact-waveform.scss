@@ -1,0 +1,175 @@
+/**
+ * CompactWaveform Styles
+ *
+ * Compact audio waveform timeline for center column.
+ * No headers or instructions - just waveform + controls.
+ */
+
+@import './liverpool-tokens.scss';
+
+// =============================================================================
+// CONTAINER
+// =============================================================================
+
+.compact-waveform {
+  display: flex;
+  flex-direction: column;
+  background: $liverpool-white;
+  border-radius: $liverpool-radius-card;
+  box-shadow: $liverpool-shadow-base;
+  overflow: hidden;
+  position: relative;
+  min-height: $xblock-waveform-min-height;
+  max-height: $xblock-waveform-max-height;
+}
+
+// =============================================================================
+// WAVEFORM CONTAINER
+// =============================================================================
+
+.compact-waveform-container {
+  flex: 1;
+  min-height: 80px;
+  border-bottom: 1px solid $liverpool-neutral-200;
+  position: relative;
+
+  // WaveSurfer canvas styling
+  canvas {
+    cursor: crosshair !important;
+  }
+}
+
+// =============================================================================
+// LOADING STATE
+// =============================================================================
+
+.compact-waveform-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: $liverpool-space-2;
+  z-index: 10;
+
+  span {
+    font-family: 'Poppins', sans-serif;
+    font-size: $liverpool-font-size-sm;
+    color: $liverpool-neutral-500;
+  }
+}
+
+.compact-waveform-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid $liverpool-neutral-200;
+  border-top-color: $liverpool-blue;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// =============================================================================
+// ERROR STATE
+// =============================================================================
+
+.compact-waveform-error {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba($liverpool-pink, 0.05);
+  border: 1px solid rgba($liverpool-pink, 0.2);
+  font-family: 'Poppins', sans-serif;
+  font-size: $liverpool-font-size-sm;
+  font-weight: $liverpool-font-weight-medium;
+  color: $liverpool-pink;
+  z-index: 10;
+}
+
+// =============================================================================
+// PLAYBACK CONTROLS
+// =============================================================================
+
+.compact-waveform-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $liverpool-space-3 $liverpool-space-4;
+  background: $liverpool-white;
+  border-top: 1px solid $liverpool-neutral-200;
+}
+
+.compact-waveform-buttons {
+  display: flex;
+  gap: $liverpool-space-2;
+}
+
+.compact-waveform-btn {
+  border-radius: $liverpool-size-rounded-pill !important;
+  padding: $liverpool-space-2 $liverpool-space-4 !important;
+  font-family: 'Poppins', sans-serif !important;
+  font-weight: $liverpool-font-weight-semibold !important;
+  font-size: $liverpool-font-size-sm !important;
+  transition: all $liverpool-transition-duration $liverpool-transition-easing !important;
+
+  &.compact-waveform-btn-play {
+    background: $liverpool-blue !important;
+    border-color: $liverpool-blue !important;
+    box-shadow: $liverpool-shadow-sm !important;
+
+    &:hover:not(:disabled) {
+      background: darken($liverpool-blue, 8%) !important;
+      border-color: darken($liverpool-blue, 8%) !important;
+      box-shadow: $liverpool-shadow-base !important;
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      box-shadow: none !important;
+      transform: translateY(0);
+    }
+  }
+
+  svg {
+    margin-right: $liverpool-space-1;
+  }
+}
+
+// =============================================================================
+// TIME DISPLAY
+// =============================================================================
+
+.compact-waveform-time {
+  display: flex;
+  align-items: center;
+  gap: $liverpool-space-1;
+  font-family: 'Poppins', monospace;
+  font-size: $liverpool-font-size-sm;
+  font-weight: $liverpool-font-weight-semibold;
+  color: $liverpool-charcoal;
+}
+
+.compact-waveform-time-current {
+  color: $liverpool-blue;
+}
+
+.compact-waveform-time-separator {
+  color: $liverpool-neutral-400;
+}
+
+.compact-waveform-time-duration {
+  color: $liverpool-neutral-600;
+}

@@ -1,0 +1,229 @@
+/**
+ * Timeline Presentation XBlock Studio Editor Layout
+ *
+ * Beautiful three-column grid layout for fullscreen modal (98vh × 98vw)
+ * Hides OpenEdX modal chrome to maximize usable space
+ */
+
+@import './liverpool-tokens.scss';
+
+// =============================================================================
+// HIDE OPENEDX MODAL CHROME (COMMENTED OUT FOR DEBUGGING)
+// =============================================================================
+
+// TODO: Re-enable fullscreen modal once we debug the rendering issues
+// These changes were causing the content to not display properly
+
+/*
+// Hide default modal header and action buttons for timeline_presentation category
+// NOTE: Using underscore to match Python category = "timeline_presentation"
+// Using high-specificity selector to override OpenEdX defaults
+.modal-window.modal-type-timeline_presentation .edit-xblock-modal .modal-header,
+.modal-window.modal-type-timeline_presentation .edit-xblock-modal .modal-actions {
+  display: none !important;
+}
+
+// Make modal content fill available space
+.modal-type-timeline_presentation .modal-content {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  padding: 0 !important;
+}
+
+// Ensure our editor fills the modal
+.modal-type-timeline_presentation .xblock-studio_view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+// Remove padding from wrapper
+.modal-type-timeline_presentation .wrapper-xblock {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+// Maximize tab content height and remove default constraints
+.modal-type-timeline_presentation .timeline-presentation-xblock-studio-view {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0 !important;        // Remove default padding
+  max-width: none !important;   // Remove width constraint
+  margin: 0 !important;          // Remove auto-centering
+}
+
+// Make Paragon Tabs take full height
+.modal-type-timeline_presentation .pgn__tabs {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .nav-tabs {
+    flex-shrink: 0;
+    margin-bottom: 0 !important;
+  }
+
+  .tab-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    .tab-pane {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+
+      &.active {
+        display: flex !important;
+      }
+    }
+  }
+}
+*/
+
+// =============================================================================
+// THREE-COLUMN GRID LAYOUT
+// =============================================================================
+
+.timeline-editor-root {
+  display: grid;
+  grid-template-columns: $xblock-event-sidebar-width 1fr $xblock-properties-panel-width;
+  grid-template-rows: 1fr auto; // main content + actions footer
+  gap: $liverpool-space-4;
+  height: 100%;
+  width: 100%;
+  padding: $liverpool-space-4;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  position: relative;
+}
+
+// =============================================================================
+// COLUMN AREAS
+// =============================================================================
+
+.editor-left-column {
+  grid-column: 1;
+  grid-row: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; // Important for flexbox overflow
+  border-radius: 20px;
+  box-shadow: 0 4px 8px #0000001f;
+}
+
+.editor-center-column {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  gap: $liverpool-space-4;
+  min-height: 0; // Important for flexbox overflow
+  min-width: 0;  // Prevents flex items from expanding beyond grid bounds
+  // Invisible container - just for layout positioning
+  // Individual cards have their own shadows
+}
+
+.editor-right-column {
+  grid-column: 3;
+  grid-row: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; // Important for flexbox overflow
+  border-radius: 20px;
+  box-shadow: 0 4px 8px #0000001f;
+}
+
+.editor-actions-row {
+  grid-column: 1 / -1; // Span all columns
+  grid-row: 2;
+  flex-shrink: 0;
+}
+
+// =============================================================================
+// MINIMAL CLOSE BUTTON (replaces modal header X)
+// =============================================================================
+
+.modal-close-button {
+  position: absolute !important;
+  top: $xblock-modal-close-offset;
+  right: $xblock-modal-close-offset;
+  z-index: 100;
+  width: $xblock-modal-close-size !important;
+  height: $xblock-modal-close-size !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid $liverpool-neutral-200 !important;
+  box-shadow: $liverpool-shadow-sm !important;
+  transition: all 150ms ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer;
+
+  &:hover {
+    border-color: $liverpool-blue !important;
+    transform: scale(1.1);
+    box-shadow: $liverpool-shadow-base !important;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+    color: $liverpool-neutral-600;
+  }
+
+  &:hover svg {
+    color: $liverpool-blue;
+  }
+}
+
+// =============================================================================
+// RESPONSIVE ADJUSTMENTS
+// =============================================================================
+
+// Slightly narrower columns on smaller screens
+@media (max-width: 1600px) {
+  .timeline-editor-root {
+    grid-template-columns: 260px 1fr 300px;
+  }
+}
+
+// Minimum viable layout
+@media (max-width: 1200px) {
+  .timeline-editor-root {
+    grid-template-columns: 240px 1fr 280px;
+    gap: $liverpool-space-3;
+    padding: $liverpool-space-3;
+  }
+}
+
+// =============================================================================
+// SMOOTH PAGE TRANSITIONS
+// =============================================================================
+
+.timeline-editor-root {
+  animation: fadeIn 300ms $liverpool-transition-easing;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

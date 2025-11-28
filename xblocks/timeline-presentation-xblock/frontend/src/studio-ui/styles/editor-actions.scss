@@ -1,0 +1,100 @@
+/**
+ * EditorActions Styles
+ *
+ * Bottom action bar that spans all three columns.
+ * Provides Save/Cancel buttons with Liverpool styling.
+ */
+
+@import './liverpool-tokens.scss';
+
+// =============================================================================
+// CONTAINER
+// =============================================================================
+
+.editor-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background: $liverpool-white;
+  border-radius: $liverpool-radius-card;
+  box-shadow: $liverpool-shadow-base;
+  padding: $liverpool-space-3 $liverpool-space-4;
+}
+
+.editor-actions-content {
+  display: flex;
+  align-items: center;
+  gap: $liverpool-space-4;
+}
+
+// =============================================================================
+// UNSAVED CHANGES INDICATOR
+// =============================================================================
+
+.editor-actions-indicator {
+  font-family: 'Poppins', sans-serif;
+  font-size: $liverpool-font-size-sm;
+  font-weight: $liverpool-font-weight-medium;
+  color: $liverpool-neutral-500;
+  padding: $liverpool-space-2 $liverpool-space-3;
+  background: rgba($liverpool-blue, 0.05);
+  border-radius: $liverpool-radius-badge;
+  border-left: 3px solid $liverpool-blue;
+}
+
+// =============================================================================
+// BUTTONS
+// =============================================================================
+
+.editor-actions-buttons {
+  display: flex;
+  gap: $liverpool-space-2;
+}
+
+.editor-actions-btn {
+  border-radius: $liverpool-size-rounded-pill !important;
+  padding: $liverpool-space-3 $liverpool-space-6 !important;
+  font-family: 'Poppins', sans-serif !important;
+  font-weight: $liverpool-font-weight-semibold !important;
+  font-size: $liverpool-font-size-base !important;
+  transition: all $liverpool-transition-duration $liverpool-transition-easing !important;
+  white-space: nowrap;
+
+  svg {
+    margin-right: $liverpool-space-1;
+  }
+
+  &.editor-actions-btn-save {
+    background: $liverpool-blue !important;
+    border-color: $liverpool-blue !important;
+    color: $liverpool-white !important;
+    box-shadow: $liverpool-shadow-sm !important;
+
+    &:hover:not(:disabled) {
+      background: darken($liverpool-blue, 8%) !important;
+      border-color: darken($liverpool-blue, 8%) !important;
+      box-shadow: $liverpool-shadow-base !important;
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      box-shadow: none !important;
+      transform: translateY(0);
+    }
+  }
+
+  &.editor-actions-btn-cancel {
+    border: 1px solid $liverpool-neutral-300 !important;
+    background: $liverpool-white !important;
+    color: $liverpool-charcoal !important;
+
+    &:hover:not(:disabled) {
+      border-color: $liverpool-neutral-400 !important;
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+  }
+}

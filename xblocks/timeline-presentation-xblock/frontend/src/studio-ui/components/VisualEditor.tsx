@@ -108,6 +108,18 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
   /** Auto-calculated zoom to fit editor */
   const [autoFitZoom, setAutoFitZoom] = useState<number>(1);
 
+  /** Stage position for panning (offset from origin) */
+  const [stagePosition, setStagePosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+
+  /** Whether user is actively panning (space + drag) */
+  const [isPanning, setIsPanning] = useState<boolean>(false);
+
+  /** Pan drag start position */
+  const [panStartPos, setPanStartPos] = useState<{ x: number; y: number } | null>(null);
+
+  /** Whether space bar is currently pressed (enables pan mode) */
+  const [isSpacePressed, setIsSpacePressed] = useState<boolean>(false);
+
   /** Drawing state from useDrawing hook */
   const {
     isDrawing,
@@ -123,6 +135,9 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
 
   /** Reference to the transformer for selected elements */
   const transformerRef = useRef<any>(null);
+
+  /** Reference to the container div for measuring dimensions */
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // ============================================================================
   // EFFECTS
@@ -150,6 +165,13 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
         height: img.height,
       });
 
+      // Set FIXED stage dimensions to original image size
+      // Zoom will be applied via scale props, not by resizing stage
+      setStageDimensions({
+        width: img.width,
+        height: img.height,
+      });
+
       // Calculate auto-fit zoom to fit editor space
       const maxEditorWidth = 1200;
       const maxEditorHeight = 900;
@@ -160,15 +182,7 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
 
       setAutoFitZoom(calculatedZoom);
       setZoomLevel(calculatedZoom); // Start at auto-fit
-
-      // Set stage dimensions based on zoom
-      const displayWidth = Math.round(img.width * calculatedZoom);
-      const displayHeight = Math.round(img.height * calculatedZoom);
-
-      setStageDimensions({
-        width: displayWidth,
-        height: displayHeight,
-      });
+      setStagePosition({ x: 0, y: 0 }); // Reset pan position
 
       // IMPORTANT: Save ORIGINAL image dimensions (not zoomed) to backend
       // This ensures percentage calculations work correctly
@@ -186,16 +200,13 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
   }, [backgroundImageUrl]);
 
   /**
-   * Handle zoom level changes - update stage dimensions
+   * Handle zoom level changes - only update zoom state, NOT stage dimensions
+   * Stage dimensions stay fixed, zoom is applied via scaleX/scaleY props
    */
   const handleZoomChange = (newZoom: number) => {
     if (!originalImageDimensions) return;
-
     setZoomLevel(newZoom);
-    setStageDimensions({
-      width: Math.round(originalImageDimensions.width * newZoom),
-      height: Math.round(originalImageDimensions.height * newZoom),
-    });
+    // ✅ Stage dimensions stay fixed - zoom handled by scale props
   };
 
   /**
@@ -237,6 +248,13 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
    */
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Space bar: Enable pan mode (temporary)
+      if (e.code === 'Space' && !isSpacePressed) {
+        // Prevent space from scrolling page
+        e.preventDefault();
+        setIsSpacePressed(true);
+      }
+
       // Escape: Cancel drawing / deselect
       if (e.key === 'Escape') {
         if (isDrawing) {
@@ -256,9 +274,22 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
       }
     };
 
+    const handleKeyUp = (e: KeyboardEvent) => {
+      // Space bar released: Disable pan mode
+      if (e.code === 'Space') {
+        setIsSpacePressed(false);
+        setIsPanning(false);
+        setPanStartPos(null);
+      }
+    };
+
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isDrawing, selectedEventId, onEventDelete, onEventSelect, clearPath]);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [isDrawing, selectedEventId, isSpacePressed, onEventDelete, onEventSelect, clearPath]);
 
   /**
    * Force layer redraw when drawing state changes
@@ -458,7 +489,20 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
       isStage: e.target === e.target.getStage()
     });
 
-    // Allow drawing on background image or stage, but not on draggable elements
+    // PRIORITY 1: Check if pan mode is active (space pressed)
+    if (isSpacePressed) {
+      const stage = stageRef.current;
+      if (!stage) return;
+
+      const pointerPos = stage.getPointerPosition();
+      if (pointerPos) {
+        setPanStartPos({ x: pointerPos.x, y: pointerPos.y });
+        setIsPanning(true);
+      }
+      return; // Exit early - don't process drawing
+    }
+
+    // PRIORITY 2: Allow drawing on background image or stage, but not on draggable elements
     const clickedElement = e.target;
     const isBackgroundClick =
       clickedElement === clickedElement.getStage() ||
@@ -534,6 +578,28 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
    * Handle stage mouse move - update drawing in progress
    */
   const handleStageMouseMove = (e: any) => {
+    // PRIORITY 1: Handle panning
+    if (isPanning && panStartPos) {
+      const stage = stageRef.current;
+      if (!stage) return;
+
+      const pointerPos = stage.getPointerPosition();
+      if (!pointerPos) return;
+
+      const dx = pointerPos.x - panStartPos.x;
+      const dy = pointerPos.y - panStartPos.y;
+
+      setStagePosition({
+        x: stagePosition.x + dx,
+        y: stagePosition.y + dy,
+      });
+
+      // Update pan start for next delta calculation
+      setPanStartPos({ x: pointerPos.x, y: pointerPos.y });
+      return;
+    }
+
+    // PRIORITY 2: Existing drawing preview logic
     if (!isDrawing) return;
 
     const pos = getMousePos(e);
@@ -546,6 +612,14 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
    * Handle stage mouse up - complete drawing operation
    */
   const handleStageMouseUp = (e: any) => {
+    // PRIORITY 1: End panning
+    if (isPanning) {
+      setIsPanning(false);
+      setPanStartPos(null);
+      return;
+    }
+
+    // PRIORITY 2: Existing drawing completion logic
     if (!isDrawing) return;
 
     const pos = getMousePos(e);
@@ -1027,7 +1101,9 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
   // MAIN RENDER
   // ============================================================================
 
-  const cursorClass = `visual-editor-container mode-${drawingMode}`;
+  const cursorClass = isSpacePressed
+    ? `visual-editor-container mode-pan ${isPanning ? 'is-panning' : ''}`
+    : `visual-editor-container mode-${drawingMode}`;
 
   return (
     <>
@@ -1047,7 +1123,10 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
             className="zoom-controls-slider"
           />
           <button
-            onClick={() => handleZoomChange(autoFitZoom)}
+            onClick={() => {
+              handleZoomChange(autoFitZoom);
+              setStagePosition({ x: 0, y: 0 }); // Reset pan position
+            }}
             className="zoom-controls-button"
             title="Fit to screen"
           >
@@ -1063,11 +1142,15 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
         </div>
       )}
 
-      <div className={cursorClass}>
+      <div ref={containerRef} className={cursorClass}>
         <Stage
         ref={stageRef}
         width={stageDimensions.width}
         height={stageDimensions.height}
+        scaleX={zoomLevel}
+        scaleY={zoomLevel}
+        x={stagePosition.x}
+        y={stagePosition.y}
         onClick={handleStageClick}
         onMouseDown={handleStageMouseDown}
         onMouseMove={handleStageMouseMove}

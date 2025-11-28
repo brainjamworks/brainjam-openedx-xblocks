@@ -288,7 +288,6 @@ wavesurfer wave canvas {
   align-items: center;
   gap: $liverpool-space-4;
   padding: $liverpool-space-4;
-  background: $liverpool-bg-subtle;
   border-radius: $liverpool-radius-sm;
   margin-bottom: $liverpool-space-4;
 
@@ -333,8 +332,8 @@ wavesurfer wave canvas {
   position: relative;
   border: 1px solid $liverpool-border-default;
   border-radius: $liverpool-radius-sm;
-  overflow: auto; // Allow scrolling for large images
-  max-height: 800px; // Constrain height to enable scrolling
+  overflow: hidden; // No scrolling - fill container
+  height: 100%; // Fill available space
   background-color: $liverpool-neutral-white;
 
   // Cursor styles based on drawing mode
@@ -352,6 +351,16 @@ wavesurfer wave canvas {
   &.mode-ring,
   &.mode-rectangle {
     cursor: crosshair;
+  }
+
+  // Pan mode cursor (space bar pressed)
+  &.mode-pan {
+    cursor: grab;
+
+    // While actively panning
+    &.is-panning {
+      cursor: grabbing;
+    }
   }
 
   // Konva canvas styling

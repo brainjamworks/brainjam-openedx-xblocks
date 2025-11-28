@@ -323,7 +323,6 @@ export const WaveformTimeline: React.FC<WaveformTimelineProps> = ({
           border: '1px solid #DBDBD3',
           borderRadius: '8px',
           overflow: 'hidden',
-          backgroundColor: '#F8F9FA',
         }}
       />
 

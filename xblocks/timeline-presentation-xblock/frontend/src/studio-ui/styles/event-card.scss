@@ -1,0 +1,162 @@
+/**
+ * EventCard Styles
+ *
+ * Beautiful card styling using Liverpool design tokens exclusively.
+ * Features hover lift, selected state, and smooth transitions.
+ */
+
+@import './liverpool-tokens.scss';
+
+.event-card {
+  background: $liverpool-white;
+  border: 1px solid $liverpool-neutral-200;
+  border-left: $xblock-event-card-accent-width solid transparent;
+  border-radius: $liverpool-radius-card;
+  padding: $liverpool-space-4;
+  margin-bottom: $liverpool-space-3;
+  box-shadow: $liverpool-shadow-sm;
+  transition: all $liverpool-transition-duration $liverpool-transition-easing;
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    box-shadow: $liverpool-shadow-base;
+    transform: translateY($xblock-event-card-hover-lift);
+    border-color: $liverpool-neutral-300;
+  }
+
+  &.selected {
+    border-left-color: $liverpool-blue;
+    background: rgba($liverpool-blue, 0.03);
+
+    .event-card-header h6 {
+      color: $liverpool-blue;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid $liverpool-blue;
+    outline-offset: 2px;
+  }
+
+  &:active {
+    transform: translateY(-1px);
+  }
+}
+
+// Header: Name + Actions
+.event-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $liverpool-space-3;
+
+  h6 {
+    font-family: 'Poppins', sans-serif;
+    font-size: $liverpool-font-size-base;
+    font-weight: $liverpool-font-weight-semibold;
+    color: $liverpool-charcoal;
+    margin: 0;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: $liverpool-space-2;
+  }
+}
+
+// Action buttons container
+.event-card-actions {
+  display: flex;
+  gap: $liverpool-space-1;
+  flex-shrink: 0;
+
+  .icon-btn {
+    width: $xblock-icon-button-size !important;
+    height: $xblock-icon-button-size !important;
+    min-width: $xblock-icon-button-size !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    border: none !important;
+    background: transparent !important;
+    color: $liverpool-neutral-500 !important;
+    transition: all 150ms ease !important;
+    cursor: pointer;
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    &:hover {
+      color: $liverpool-blue !important;
+      transform: scale(1.1);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    &.icon-btn-danger:hover {
+      background: rgba($liverpool-pink, 0.1) !important;
+      color: $liverpool-pink !important;
+    }
+  }
+}
+
+// Info rows
+.event-card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: $liverpool-font-size-sm;
+  color: $liverpool-charcoal;
+  margin-bottom: $liverpool-space-1;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Timestamp
+.event-timestamp {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: $liverpool-font-weight-semibold;
+  font-family: 'Poppins', monospace;
+  color: $liverpool-neutral-600;
+}
+
+// Type badge
+.event-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: $liverpool-space-1;
+  padding: $liverpool-space-1 $liverpool-space-3;
+  background: $liverpool-neutral-50;
+  border-radius: $liverpool-radius-badge;
+  font-size: $liverpool-font-size-xs;
+  font-weight: $liverpool-font-weight-semibold;
+  color: $liverpool-blue;
+  text-transform: capitalize;
+
+  svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+// Animation info
+.event-animation {
+  font-size: $liverpool-font-size-xs;
+  color: $liverpool-neutral-600;
+}
+
+// Duration
+.event-duration {
+  font-size: $liverpool-font-size-xs;
+  font-weight: $liverpool-font-weight-semibold;
+  font-family: 'Poppins', monospace;
+  color: $liverpool-teal;
+}

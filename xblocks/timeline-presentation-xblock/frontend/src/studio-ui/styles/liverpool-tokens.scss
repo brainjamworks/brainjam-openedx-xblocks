@@ -1,0 +1,100 @@
+/**
+ * Liverpool Design Tokens for Timeline Presentation XBlock Studio Editor
+ *
+ * Imports shared Liverpool tokens and adds XBlock-specific values.
+ * Use these tokens exclusively - no hardcoded values!
+ */
+
+// Import Liverpool shared design tokens
+@import '../../../../../../shared-styles/styles/liverpool-shared-tokens.scss';
+
+// =============================================================================
+// CONVENIENCE ALIASES (for easier use in this XBlock)
+// =============================================================================
+
+// Color aliases
+$liverpool-white: $liverpool-neutral-white;
+$liverpool-charcoal: $liverpool-neutral-700;
+$liverpool-neutral-50: $liverpool-neutral-100; // Map -50 to -100 (lightest gray)
+
+// Size aliases
+$liverpool-size-rounded-pill: $liverpool-radius-pill;
+$liverpool-card-border-radius: $liverpool-radius-lg; // 16px for card corners
+$liverpool-radius-card: $liverpool-card-border-radius;
+$liverpool-radius-badge: $liverpool-radius-sm;
+
+// Transition aliases
+$liverpool-transition-duration: $liverpool-duration-base;
+$liverpool-transition-easing: $liverpool-easing-in-out;
+
+// =============================================================================
+// XBLOCK-SPECIFIC LAYOUT TOKENS
+// =============================================================================
+
+// Column widths for three-column grid
+$xblock-event-sidebar-width: 280px;
+$xblock-properties-panel-width: 320px;
+
+// Height ratios for center column
+$xblock-waveform-height-ratio: 0.22; // 22% of available vertical space
+$xblock-toolbar-height: 56px;
+
+// Spacing overrides for tight layouts
+$xblock-compact-padding: 8px;
+$xblock-section-gap: 12px;
+
+// =============================================================================
+// COMPONENT-SPECIFIC TOKENS
+// =============================================================================
+
+// Event cards
+$xblock-event-card-accent-width: 3px;
+$xblock-event-card-hover-lift: -2px;
+
+// Icon buttons
+$xblock-icon-button-size: 32px;
+$xblock-icon-button-size-lg: 40px;
+
+// Form elements
+$xblock-form-field-height: 44px;
+$xblock-form-label-gap: 8px;
+
+// Modal close button
+$xblock-modal-close-size: 40px;
+$xblock-modal-close-offset: 16px;
+
+// Waveform
+$xblock-waveform-min-height: 120px;
+$xblock-waveform-max-height: 200px;
+
+// Canvas
+$xblock-canvas-min-height: 400px;
+
+// =============================================================================
+// EXPORT LIVERPOOL TOKENS FOR TYPESCRIPT
+// =============================================================================
+
+:export {
+  // Colors
+  liverpoolBlue: $liverpool-blue;
+  liverpoolTeal: $liverpool-teal;
+  liverpoolPink: $liverpool-pink;
+  liverpoolNeutral100: $liverpool-neutral-100;
+  liverpoolNeutral200: $liverpool-neutral-200;
+  liverpoolNeutral500: $liverpool-neutral-500;
+
+  // Spacing
+  space1: $liverpool-space-1;
+  space2: $liverpool-space-2;
+  space3: $liverpool-space-3;
+  space4: $liverpool-space-4;
+  space6: $liverpool-space-6;
+
+  // Radius
+  radiusCard: $liverpool-card-border-radius;
+  radiusPill: $liverpool-radius-pill;
+
+  // Layout
+  sidebarWidth: $xblock-event-sidebar-width;
+  propertiesWidth: $xblock-properties-panel-width;
+}
