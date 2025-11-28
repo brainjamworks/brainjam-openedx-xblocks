@@ -12,7 +12,7 @@
  */
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Stage, Layer, Image as KonvaImage, Text, Circle, Rect, Line, Arrow, Transformer } from 'react-konva';
+import { Stage, Layer, Image as KonvaImage, Text, Circle, Ring, Rect, Line, Arrow, Transformer } from 'react-konva';
 import type Konva from 'konva';
 import type { TimelineEvent, DrawingMode } from '../../common/types';
 import { pixelsToPercent, percentToPixels } from '../utils/coordinates';
@@ -375,6 +375,30 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
   };
 
   /**
+   * Create a ring event from center and radius (non-obscuring highlight)
+   */
+  const createRingEvent = (centerX: number, centerY: number, radius: number): Partial<TimelineEvent> => {
+    const percentPos = pixelsToPercent(centerX, centerY, stageDimensions.width, stageDimensions.height);
+    const percentRadius = (radius / stageDimensions.width) * 100;
+
+    return {
+      id: generateId(),
+      timestamp: 0,
+      elementType: 'shape',
+      shapeType: 'ring',
+      animation: 'fade',
+      animationDuration: 500,
+      position: percentPos,
+      dimensions: {
+        width: percentRadius * 2,
+        height: percentRadius * 2,
+      },
+      color: currentColor,
+      thickness: currentThickness, // Ring uses thickness for ring width
+    };
+  };
+
+  /**
    * Create a rectangle event from coordinates and dimensions
    */
   const createRectangleEvent = (x: number, y: number, width: number, height: number): Partial<TimelineEvent> => {
@@ -482,7 +506,7 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
       }
 
       // For shape/line/arrow modes: Start drawing (will update in handleStageMouseUp)
-      if (drawingMode === 'line' || drawingMode === 'arrow' || drawingMode === 'circle' || drawingMode === 'rectangle') {
+      if (drawingMode === 'line' || drawingMode === 'arrow' || drawingMode === 'circle' || drawingMode === 'ring' || drawingMode === 'rectangle') {
         startDrawing({ x: pos.x, y: pos.y });
         return;
       }
@@ -501,7 +525,7 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
       return;
     }
 
-    if (drawingMode === 'line' || drawingMode === 'arrow' || drawingMode === 'circle' || drawingMode === 'rectangle') {
+    if (drawingMode === 'line' || drawingMode === 'arrow' || drawingMode === 'circle' || drawingMode === 'ring' || drawingMode === 'rectangle') {
       startDrawing({ x: pos.x, y: pos.y });
     }
   };
@@ -575,6 +599,21 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
           color: currentColor,
           thickness: currentThickness,
         });
+      } else if (drawingMode === 'ring') {
+        const radius = Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2));
+        const percentPos = pixelsToPercent(start.x, start.y, stageDimensions.width, stageDimensions.height);
+        const percentRadius = (radius / stageDimensions.width) * 100;
+        onEventUpdate(editingEventId, {
+          elementType: 'shape',
+          shapeType: 'ring',
+          position: percentPos,
+          dimensions: {
+            width: percentRadius * 2,
+            height: percentRadius * 2,
+          },
+          color: currentColor,
+          thickness: currentThickness, // Ring uses thickness for ring width
+        });
       } else if (drawingMode === 'rectangle') {
         const width = Math.abs(end.x - start.x);
         const height = Math.abs(end.y - start.y);
@@ -612,6 +651,9 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
     } else if (drawingMode === 'circle') {
       const radius = Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2));
       newEvent = createCircleEvent(start.x, start.y, radius);
+    } else if (drawingMode === 'ring') {
+      const radius = Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2));
+      newEvent = createRingEvent(start.x, start.y, radius);
     } else if (drawingMode === 'rectangle') {
       const width = Math.abs(end.x - start.x);
       const height = Math.abs(end.y - start.y);
@@ -764,6 +806,19 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
 
         if (event.shapeType === 'circle') {
           return <Circle {...shapeProps} radius={width / 2} />;
+        } else if (event.shapeType === 'ring') {
+          // Ring - non-obscuring circular highlight
+          const outerRadius = width / 2;
+          const thickness = event.thickness || 4;
+          const innerRadius = Math.max(0, outerRadius - thickness);
+          return (
+            <Ring
+              {...shapeProps}
+              innerRadius={innerRadius}
+              outerRadius={outerRadius}
+              fill={undefined} // Remove fill - rings should be hollow
+            />
+          );
         } else if (event.shapeType === 'rectangle') {
           return (
             <Rect
@@ -908,6 +963,22 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
           fill={currentColor}
           stroke={currentColor}
           strokeWidth={1}
+          opacity={0.5}
+        />
+      );
+    }
+
+    if (drawingMode === 'ring') {
+      const radius = Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2));
+      const thickness = currentThickness || 4; // Default 4px ring thickness
+      return (
+        <Ring
+          x={start.x}
+          y={start.y}
+          innerRadius={Math.max(0, (radius || 1) - thickness)}
+          outerRadius={radius || 1}
+          stroke={currentColor}
+          strokeWidth={2}
           opacity={0.5}
         />
       );

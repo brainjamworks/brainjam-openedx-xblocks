@@ -73,7 +73,7 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
         result = await response.json();
       } else {
         const text = await response.text();
-        console.log('Non-JSON response:', text);
+        console.error('Non-JSON response:', text);
         result = { error: text || 'Upload failed' };
       }
 

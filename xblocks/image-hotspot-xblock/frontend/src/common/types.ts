@@ -153,11 +153,6 @@ export interface StudioViewProps {
 }
 
 /**
- * Feedback display variants
- */
-export type FeedbackVariant = 'success' | 'danger' | 'warning' | 'info';
-
-/**
  * Upload response from upload_image handler
  */
 export interface UploadImageResponse {

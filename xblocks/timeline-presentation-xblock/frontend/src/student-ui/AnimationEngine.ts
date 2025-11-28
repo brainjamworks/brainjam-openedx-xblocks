@@ -49,8 +49,8 @@ export function useTimelineSync(
 
     // Find events that should be triggered at current time
     const eventsToTrigger = timelineEvents.filter(event => {
-      const isInTimeRange = event.timestamp >= lastProcessedTime &&
-                           event.timestamp <= currentTime;
+      const isInTimeRange = event.timing.startTime >= lastProcessedTime &&
+                           event.timing.startTime <= currentTime;
       const notAlreadyActive = !activeEventStates.find(
         state => state.eventId === event.id
       );
@@ -194,7 +194,7 @@ export function calculateAnimationDelay(
   event: TimelineEvent,
   currentTime: number
 ): number {
-  const timeSinceTrigger = (currentTime - event.timestamp) * 1000;
+  const timeSinceTrigger = (currentTime - event.timing.startTime) * 1000;
   const delay = Math.max(0, -timeSinceTrigger);
   return delay;
 }

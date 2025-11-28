@@ -16,10 +16,10 @@
 /**
  * Animation types supported by timeline elements
  */
-export type AnimationType = 'fade' | 'scale' | 'wipe' | 'slide' | 'show';
+export type AnimationType = 'fade' | 'scale' | 'draw' | 'slide' | 'show';
 
 /**
- * Direction for directional animations (slide, wipe)
+ * Direction for directional animations (slide, draw)
  */
 export type AnimationDirection = 'up' | 'down' | 'left' | 'right';
 
@@ -31,12 +31,12 @@ export type ElementType = 'text' | 'shape' | 'line' | 'arrow';
 /**
  * Drawing modes for visual editor
  */
-export type DrawingMode = 'select' | 'text' | 'line' | 'arrow' | 'circle' | 'rectangle';
+export type DrawingMode = 'select' | 'text' | 'line' | 'arrow' | 'circle' | 'rectangle' | 'ring';
 
 /**
  * Shape types for shape elements
  */
-export type ShapeType = 'circle' | 'rectangle' | 'triangle';
+export type ShapeType = 'circle' | 'rectangle' | 'triangle' | 'ring';
 
 /**
  * Timeline phases for playback state machine
@@ -89,11 +89,13 @@ export interface KonvaAnimationConfig {
 
     // Shape-specific properties
     radius?: number;          // Circle
+    innerRadius?: number;     // Ring
+    outerRadius?: number;     // Ring
     width?: number;           // Rectangle, Text
     height?: number;          // Rectangle
     fill?: string;            // Shapes
-    stroke?: string;          // Lines, Arrows
-    strokeWidth?: number;     // Lines, Arrows
+    stroke?: string;          // Lines, Arrows, Ring
+    strokeWidth?: number;     // Lines, Arrows, Ring
     points?: number[];        // Lines, Arrows
 
     // Text properties

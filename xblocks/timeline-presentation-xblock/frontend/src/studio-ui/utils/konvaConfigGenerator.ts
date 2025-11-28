@@ -77,6 +77,39 @@ function generateKonvaProps(
           offsetX: radius,
           offsetY: radius,
         };
+      } else if (event.shapeType === 'ring') {
+        // Ring highlighting - non-obscuring circle outline
+        const diameter = event.dimensions?.width || 50;
+        const radius = ((diameter / 100) * dimensions.width) / 2;
+        const thickness = (event.thickness || 4) * scaleFactor; // Default 4px ring thickness
+
+        // For 'draw' animation: Use Circle with stroke (single path for clean animation)
+        // Ring has inner+outer circles that animate separately with dashOffset
+        if (event.animation === 'draw') {
+          const circumference = 2 * Math.PI * radius;
+          return {
+            ...baseProps,
+            radius,
+            stroke: event.color || '#00A689',
+            strokeWidth: thickness,
+            fill: undefined, // Hollow circle (no fill)
+            dash: [circumference], // Enable dash offset animation
+            offsetX: radius,
+            offsetY: radius,
+          };
+        }
+
+        // For other animations: Use Ring (inner+outer radius)
+        const innerRadius = radius - thickness;
+        return {
+          ...baseProps,
+          innerRadius,
+          outerRadius: radius,
+          stroke: event.color || '#00A689',
+          strokeWidth: 2 * scaleFactor, // Border stroke for crisp edge
+          offsetX: radius,
+          offsetY: radius,
+        };
       } else {
         // Rectangle
         const width = ((event.dimensions?.width || 100) / 100) * dimensions.width;
@@ -120,8 +153,8 @@ function generateKonvaProps(
         props.pointerAtEnding = true; // Ensure dash works on arrows
       }
 
-      // Add dash for wipe animation (constant throughout animation)
-      if (event.animation === 'wipe') {
+      // Add dash for draw animation (constant throughout animation)
+      if (event.animation === 'draw') {
         const length = calculateLineLength(event.lineCoordinates, dimensions);
         props.dash = [length]; // Single element array per Konva docs
       }
@@ -197,12 +230,12 @@ function generateInitialState(
       };
     }
 
-    case 'wipe': {
+    case 'draw': {
       // For lines: use dash offset (standard approach)
       if (event.elementType === 'line') {
         const lineLength = calculateLineLength(event.lineCoordinates!, dimensions);
         return {
-          opacity: 1, // Wipe doesn't fade
+          opacity: 1, // Draw doesn't fade
           dashOffset: lineLength,
         };
       }
@@ -218,7 +251,18 @@ function generateInitialState(
         };
       }
 
-      // For shapes: directional scale
+      // For rings: use dash offset (circular drawing animation)
+      if (event.elementType === 'shape' && event.shapeType === 'ring') {
+        const diameter = event.dimensions?.width || 50;
+        const radius = ((diameter / 100) * dimensions.width) / 2;
+        const circumference = 2 * Math.PI * radius;
+        return {
+          opacity: 1,
+          dashOffset: circumference, // Start fully hidden
+        };
+      }
+
+      // For other shapes: directional scale
       const dir = direction || 'right';
       if (dir === 'left' || dir === 'right') {
         return {
@@ -273,7 +317,7 @@ function generateTargetState(
         y: pos.y,
       };
 
-    case 'wipe': {
+    case 'draw': {
       // For lines: reveal by animating dash offset
       if (event.elementType === 'line') {
         return {
@@ -290,7 +334,15 @@ function generateTargetState(
         };
       }
 
-      // For shapes: scale to full size
+      // For rings: reveal by animating dash offset (circular drawing)
+      if (event.elementType === 'shape' && event.shapeType === 'ring') {
+        return {
+          opacity: 1,
+          dashOffset: 0, // Fully drawn
+        };
+      }
+
+      // For other shapes: scale to full size
       return {
         opacity: 1,
         scaleX: 1,
@@ -349,8 +401,8 @@ function getEasing(animationType: AnimationType): KonvaAnimationConfig['animatio
   switch (animationType) {
     case 'scale':
       return 'BackEaseOut'; // Nice bounce effect for scale
-    case 'wipe':
-      return 'Linear'; // Constant speed for wipe
+    case 'draw':
+      return 'Linear'; // Constant speed for draw
     case 'slide':
     case 'fade':
     default:

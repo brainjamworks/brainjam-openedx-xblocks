@@ -22,13 +22,13 @@ export const StudentView: React.FC<StudentViewProps> = ({
   runtime,
   questionText,
   imageUrl,
-  hotspots,
+  hotspots: _hotspots,
   studentClicks: initialClicks,
   currentScore,
   maxScore,
   attemptsRemaining: initialAttemptsRemaining,
   feedbackMode,
-  gradingMode,
+  gradingMode: _gradingMode,
   lastSubmissionResult: initialResult,
   isGraded
 }) => {
@@ -76,8 +76,6 @@ export const StudentView: React.FC<StudentViewProps> = ({
     // Convert to percentage (0-100)
     const percentX = (clickX / rect.width) * 100;
     const percentY = (clickY / rect.height) * 100;
-
-    console.log(`Click at: (${percentX.toFixed(2)}%, ${percentY.toFixed(2)}%)`);
 
     const newClick: HotspotClick = {
       x: percentX,

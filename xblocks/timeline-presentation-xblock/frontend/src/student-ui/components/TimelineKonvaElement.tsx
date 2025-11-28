@@ -11,7 +11,7 @@
  */
 
 import React, { useRef, useEffect, useMemo } from 'react';
-import { Text, Circle, Rect, Line, Arrow } from 'react-konva';
+import { Text, Circle, Ring, Rect, Line, Arrow } from 'react-konva';
 import type Konva from 'konva';
 import { TimelineEvent } from '../../common/types';
 import { generateKonvaConfig } from '../../studio-ui/utils/konvaConfigGenerator';
@@ -75,8 +75,8 @@ export const TimelineKonvaElement: React.FC<TimelineKonvaElementProps> = ({
       easing: Konva.Easings[animation.easing],
       ...animation.targetState,
       onFinish: () => {
-        // Pop arrowhead at end for wipe animations
-        if (event.elementType === 'arrow' && event.animation === 'wipe') {
+        // Pop arrowhead at end for draw animations
+        if (event.elementType === 'arrow' && event.animation === 'draw') {
           // Use scaled pointer values from konvaProps
           const targetPointerLength = konvaProps.pointerLength || 10;
           const targetPointerWidth = konvaProps.pointerWidth || 10;
@@ -136,6 +136,30 @@ export const TimelineKonvaElement: React.FC<TimelineKonvaElementProps> = ({
             listening={false}
           />
         );
+      } else if (event.shapeType === 'ring') {
+        // Ring can render as Circle (for draw animation) or Ring (for other animations)
+        // Check which properties are present in konvaProps
+        if ('radius' in konvaProps && !('innerRadius' in konvaProps)) {
+          // Draw animation: Use Circle with stroke (single path)
+          return (
+            <Circle
+              ref={nodeRef as React.RefObject<Konva.Circle>}
+              {...konvaProps}
+              {...animation.initialState}
+              listening={false}
+            />
+          );
+        } else {
+          // Other animations: Use Ring (inner+outer radius)
+          return (
+            <Ring
+              ref={nodeRef as React.RefObject<Konva.Ring>}
+              {...konvaProps}
+              {...animation.initialState}
+              listening={false}
+            />
+          );
+        }
       } else {
         // Rectangle
         return (

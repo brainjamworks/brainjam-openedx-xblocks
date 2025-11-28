@@ -52,6 +52,7 @@ export const DrawingToolbar: React.FC<DrawingToolbarProps> = ({
     { mode: 'line', label: 'Line', icon: HorizontalRule },
     { mode: 'arrow', label: 'Arrow', icon: ArrowForward },
     { mode: 'circle', label: 'Circle', icon: RadioButtonUnchecked },
+    { mode: 'ring', label: 'Ring', icon: RadioButtonUnchecked }, // Non-obscuring highlight
     { mode: 'rectangle', label: 'Rectangle', icon: CropSquare },
   ];
 
@@ -111,14 +112,14 @@ export const DrawingToolbar: React.FC<DrawingToolbarProps> = ({
           </Form.Group>
         </div>
 
-        {/* Line Thickness Slider (only for line/arrow modes) */}
-        {(currentMode === 'line' || currentMode === 'arrow') && (
+        {/* Thickness Slider (for line/arrow/ring modes) */}
+        {(currentMode === 'line' || currentMode === 'arrow' || currentMode === 'ring') && (
           <>
             <div className="drawing-toolbar-divider" />
             <div className="drawing-toolbar-thickness">
               <Form.Group className="mb-0">
                 <Form.Label className="mb-1 small">
-                  Thickness: {thickness}px
+                  {currentMode === 'ring' ? 'Ring Width' : 'Thickness'}: {thickness}px
                 </Form.Label>
                 <Form.Control
                   type="range"
@@ -128,7 +129,7 @@ export const DrawingToolbar: React.FC<DrawingToolbarProps> = ({
                   value={thickness}
                   onChange={(e) => onThicknessChange(parseInt(e.target.value))}
                   style={{ width: '150px' }}
-                  aria-label="Line thickness"
+                  aria-label={currentMode === 'ring' ? 'Ring width' : 'Line thickness'}
                 />
               </Form.Group>
             </div>

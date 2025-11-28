@@ -137,7 +137,7 @@ export const EventListView: React.FC<EventListViewProps> = ({
                         <strong>{event.name || 'Unnamed Event'}</strong>
                       </td>
                       <td>
-                        <strong>{formatTime(event.timestamp)}</strong>
+                        <strong>{formatTime(event.timing.startTime)}</strong>
                       </td>
                       <td>
                         <span className="text-capitalize">
@@ -170,42 +170,43 @@ export const EventListView: React.FC<EventListViewProps> = ({
                         <span className="text-muted small">{event.animationDuration}ms</span>
                       </td>
                       <td onClick={(e) => e.stopPropagation()}>
-                        <div className="d-flex justify-content-end">
-                          <IconButton
-                            src={Edit}
-                            iconAs="svg"
-                            alt="Edit"
+                        <div className="d-flex justify-content-end gap-1">
+                          <Button
+                            iconBefore={Edit}
                             onClick={(e) => {
                               e.stopPropagation();
                               onEditEvent(event);
                             }}
                             variant="primary"
                             size="sm"
-                            className="mr-1"
-                          />
-                          <IconButton
-                            src={ContentCopy}
-                            iconAs="svg"
-                            alt="Duplicate"
+                            className="px-2"
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            iconBefore={ContentCopy}
                             onClick={(e) => {
                               e.stopPropagation();
                               onDuplicateEvent(event);
                             }}
-                            variant="secondary"
+                            variant="outline-secondary"
                             size="sm"
-                            className="mr-1"
-                          />
-                          <IconButton
-                            src={Delete}
-                            iconAs="svg"
-                            alt="Delete"
+                            className="px-2"
+                          >
+                            Copy
+                          </Button>
+                          <Button
+                            iconBefore={Delete}
                             onClick={(e) => {
                               e.stopPropagation();
-                              handleDelete(event.id, event.timestamp);
+                              handleDelete(event.id, event.timing.startTime);
                             }}
                             variant="danger"
                             size="sm"
-                          />
+                            className="px-2"
+                          >
+                            Delete
+                          </Button>
                         </div>
                       </td>
                     </tr>

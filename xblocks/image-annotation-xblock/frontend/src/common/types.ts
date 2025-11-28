@@ -76,6 +76,18 @@ export interface ValidationResult {
 }
 
 /**
+ * Immediate Feedback Result - returned when submitting individual label in immediate mode
+ */
+export interface ImmediateFeedbackResult {
+  success: boolean;
+  correct: boolean;
+  score: number;
+  maxScore: number;
+  percentage: number;
+  attemptsRemaining: number | null;
+}
+
+/**
  * MULTI-PART EXAMPLE: For problems with multiple questions
  * Uncomment and modify for multi-part problems:
  */

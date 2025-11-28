@@ -35,6 +35,7 @@ interface AssessmentCanvasProps {
   onLabelDrop: (labelId: string, x: number, y: number, zoneId?: string) => void;
   onLabelRemove: (labelId: string) => void;
   disabled: boolean;
+  showingAnswer?: boolean; // When true, display correct answers and disable interaction
   showZones?: boolean; // For debug/studio mode
 }
 
@@ -52,6 +53,7 @@ export const AssessmentCanvas: React.FC<AssessmentCanvasProps> = ({
   onLabelDrop,
   onLabelRemove,
   disabled,
+  showingAnswer = false,
   showZones = false
 }) => {
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -123,31 +125,13 @@ export const AssessmentCanvas: React.FC<AssessmentCanvasProps> = ({
       const actualX = relativeX / canvasScale;
       const actualY = relativeY / canvasScale;
 
-      // DEBUG: Log drop position
-      console.log('=== DROP DETECTED ===', {
-        labelId: item.labelId,
-        labelType: labelType,
-        dropPixels: { x: actualX, y: actualY },
-        snapEnabled
-      });
-
       // Check if drop is near any zone (within zone's radius)
       if (snapEnabled) {
-        console.log(`=== CHECKING ${dropZones.length} ZONES ===`);
-
         for (const zone of dropZones) {
           // Zones are already in pixels, use directly
           const distance = Math.sqrt(
             Math.pow(actualX - zone.x, 2) + Math.pow(actualY - zone.y, 2)
           );
-
-          // DEBUG: Log zone check
-          console.log(`Zone ${zone.id}:`, {
-            zonePixels: { x: zone.x, y: zone.y, radius: zone.radius },
-            dropPixels: { x: actualX, y: actualY },
-            distance: distance.toFixed(2),
-            willSnap: distance <= zone.radius
-          });
 
           if (distance <= zone.radius) {
             // Check if zone is already occupied by a different label
@@ -158,24 +142,40 @@ export const AssessmentCanvas: React.FC<AssessmentCanvasProps> = ({
 
             if (occupyingLabelId) {
               // Zone occupied - reject drop, label returns to previous position
-              console.log(`❌ Zone ${zone.id} OCCUPIED by ${occupyingLabelId}`);
+              console.log('Zone occupied:', zone.id);
               return { snapped: false, occupied: true, zoneId: zone.id };
             }
 
             // Zone is free - snap to zone center
-            console.log(`✅ SNAPPED to zone ${zone.id}`, {
-              zonePixels: { x: zone.x, y: zone.y }
-            });
-            onLabelDrop(item.labelId, zone.x, zone.y, zone.id);
+            // Adjust coordinates based on label type to compensate for CSS transform
+            let storeX = zone.x;
+            let storeY = zone.y;
+
+            if (labelType === 'dot' || labelType === 'cross') {
+              // Dot/cross labels use translate(-25%, -25%) with marker at bottom-left
+              // Marker has a size and we need to center its CENTER, not its corner
+              const markerSize = labelType === 'dot' ? 15 : 25; // Unscaled pixels
+
+              // Marker center within container: (markerSize/2, containerHeight - markerSize/2)
+              // After transform(-25%, -25%), marker center is at:
+              //   x = left - 25%W + markerSize/2
+              //   y = top + 75%H - markerSize/2
+              // To center marker at zone:
+              //   left = zone.x + 25%W - markerSize/2
+              //   top = zone.y - 75%H + markerSize/2
+              storeX = zone.x + (labelDef.width * 0.25) - (markerSize / 2);
+              storeY = zone.y - (labelDef.height * 0.75) + (markerSize / 2);
+            }
+            // Normal labels use translate(-50%, -50%) which centers correctly at zone.x, zone.y
+
+            console.log('Label snapped to zone:', zone.id);
+            onLabelDrop(item.labelId, storeX, storeY, zone.id);
             return { snapped: true, zoneId: zone.id };
           }
         }
-
-        console.log('❌ NO SNAP - Too far from all zones');
       }
 
       // No zone nearby - don't update placement, label returns to start position
-      console.log('⚠️ Label returning to start position (no snap)');
       return { snapped: false };
     },
     collect: (monitor) => ({
@@ -279,7 +279,7 @@ export const AssessmentCanvas: React.FC<AssessmentCanvasProps> = ({
         labels={labels}
         placements={placements}
         onLabelRemove={onLabelRemove}
-        disabled={disabled}
+        disabled={disabled || showingAnswer}
       />
 
       <div
@@ -318,7 +318,7 @@ export const AssessmentCanvas: React.FC<AssessmentCanvasProps> = ({
             left: 0,
             width: '100%',
             height: '100%',
-            pointerEvents: disabled ? 'none' : 'auto'
+            pointerEvents: (disabled || showingAnswer) ? 'none' : 'auto'
           }}
         >
           {dropZones.map(zone => (
@@ -341,7 +341,7 @@ export const AssessmentCanvas: React.FC<AssessmentCanvasProps> = ({
             left: 0,
             width: '100%',
             height: '100%',
-            pointerEvents: disabled ? 'none' : 'auto'
+            pointerEvents: (disabled || showingAnswer) ? 'none' : 'auto'
           }}
         >
           {labels.map(label => {
@@ -358,7 +358,7 @@ export const AssessmentCanvas: React.FC<AssessmentCanvasProps> = ({
                 label={label}
                 placement={placement}
                 isCorrect={placement?.correct}
-                disabled={disabled}
+                disabled={disabled || showingAnswer}
                 scale={canvasScale}
               />
             );
@@ -367,10 +367,19 @@ export const AssessmentCanvas: React.FC<AssessmentCanvasProps> = ({
       </div>
 
       {/* Legend/Instructions */}
-      <div className="canvas-instructions">
+      <div className="canvas-instructions" style={{
+        backgroundColor: showingAnswer ? '#e7f3ff' : undefined,
+        borderLeft: showingAnswer ? '4px solid #0075b4' : undefined
+      }}>
         <p className="text-muted">
-          Drag labels to their correct positions on the image.
-          {snapEnabled && ' Labels will snap to target areas when close.'}
+          {showingAnswer ? (
+            <strong style={{ color: '#0075b4' }}>Showing Correct Answer - All labels positioned at their correct locations</strong>
+          ) : (
+            <>
+              Drag labels to their correct positions on the image.
+              {snapEnabled && ' Labels will snap to target areas when close.'}
+            </>
+          )}
         </p>
       </div>
     </div>

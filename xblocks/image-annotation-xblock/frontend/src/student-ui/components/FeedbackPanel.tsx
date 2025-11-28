@@ -39,10 +39,6 @@ export const FeedbackPanel: React.FC<FeedbackPanelProps> = ({
   // COMPUTED VALUES
   // =======================================================================
 
-  // DEBUG: Log what FeedbackPanel receives
-  console.log('=== FEEDBACK PANEL - VALIDATION RESULT ===', JSON.stringify(validationResult, null, 2));
-  console.log('=== FEEDBACK PANEL - VALIDATION RESULT TYPE ===', typeof validationResult, validationResult);
-
   // Add null-safety with defaults for old cached data
   const {
     score = 0,
@@ -51,17 +47,6 @@ export const FeedbackPanel: React.FC<FeedbackPanelProps> = ({
     results = {},
     feedbackMessage = ''
   } = validationResult || {};
-
-  // DEBUG: Log destructured values
-  console.log('=== FEEDBACK PANEL - DESTRUCTURED ===', {
-    score,
-    maxScore,
-    percentage,
-    results: results ? 'present' : 'missing',
-    feedbackMessage: feedbackMessage ? 'present' : 'missing',
-    scoreType: typeof score,
-    maxScoreType: typeof maxScore
-  });
 
   // Count correct and incorrect placements
   const totalPlacements = Object.keys(results).length;
@@ -118,81 +103,6 @@ export const FeedbackPanel: React.FC<FeedbackPanelProps> = ({
           </div>
         </div>
       </Alert>
-
-      {/* Per-Label Feedback - Show when not all correct or when showing answers */}
-      {(!allCorrect || showAnswer) && (
-        <div className="label-feedback-list">
-          <h5 className="feedback-heading">Label Placement Details</h5>
-          <div className="list-group">
-            {Object.entries(results).map(([labelId, placement]) => {
-              const label = getLabelById(labelId);
-              const expectedZone = getZoneById(placement.expected_zone);
-              const actualZone = placement.zone_id
-                ? getZoneById(placement.zone_id)
-                : undefined;
-
-              if (!label) return null;
-
-              const itemVariant = placement.correct ? 'success' : 'danger';
-              const icon = placement.correct ? '✓' : '✗';
-
-              return (
-                <div
-                  key={labelId}
-                  className={`list-group-item list-group-item-${itemVariant}`}
-                >
-                  <div className="d-flex align-items-start">
-                    <div className="me-3">
-                      <strong style={{ fontSize: '1.2em' }}>{icon}</strong>
-                    </div>
-                    <div className="flex-grow-1">
-                      <h6 className="mb-1">
-                        <strong>Label {label.label}</strong>
-                      </h6>
-
-                      {/* Expected placement */}
-                      <div className="mb-1">
-                        <small className="text-muted">Expected: </small>
-                        <small>
-                          {expectedZone?.description || `Zone ${placement.expected_zone}`}
-                        </small>
-                      </div>
-
-                      {/* Actual placement */}
-                      {!placement.correct && (
-                        <div className="mb-1">
-                          <small className="text-muted">Placed: </small>
-                          <small>
-                            {actualZone
-                              ? (actualZone.description || `Zone ${actualZone.id}`)
-                              : 'Outside any target zone'}
-                          </small>
-                        </div>
-                      )}
-
-                      {/* Distance information */}
-                      {placement.distance !== undefined && !placement.correct && (
-                        <div>
-                          <small className="text-muted">
-                            Distance from target: {placement.distance.toFixed(1)} pixels
-                          </small>
-                        </div>
-                      )}
-
-                      {/* Custom message */}
-                      {placement.message && (
-                        <div className="mt-1">
-                          <small className="text-muted">{placement.message}</small>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
 
       {/* Show Answer Hint */}
       {showAnswer && (

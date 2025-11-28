@@ -8,6 +8,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import RegionsPlugin, { Region } from 'wavesurfer.js/dist/plugins/regions.js';
+import { InfoOutline, PlayCircle, Pause } from '@openedx/paragon/icons';
+import Icon from '@openedx/paragon/dist/Icon';
+import Button from '@openedx/paragon/dist/Button';
 import type { TimelineEvent } from '../../common/types';
 
 interface WaveformTimelineProps {
@@ -65,12 +68,79 @@ export const WaveformTimeline: React.FC<WaveformTimelineProps> = ({
   const [isReady, setIsReady] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [loadedDuration, setLoadedDuration] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
 
   // Map to track region ID to event ID mapping
   const regionEventMapRef = useRef<Map<string, string>>(new Map());
 
   // Track if component is mounted to prevent error logging after unmount
   const isMountedRef = useRef<boolean>(true);
+
+  // Track if initial regions have been created (to prevent duplicates)
+  const initialRegionsCreatedRef = useRef<boolean>(false);
+
+  // Track previous events array to detect actual changes
+  const prevEventsRef = useRef<TimelineEvent[]>([]);
+
+  // =======================================================================
+  // REGION CREATION - Extract to function for use in ready handler and effect
+  // =======================================================================
+
+  const createRegions = React.useCallback((eventsToAdd: TimelineEvent[]) => {
+    if (!regionsPluginRef.current) {
+      console.warn('[WaveformTimeline] Cannot create regions - plugin not initialized');
+      return;
+    }
+
+    const regionsPlugin = regionsPluginRef.current;
+
+    // Clear existing regions
+    regionsPlugin.clearRegions();
+    regionEventMapRef.current.clear();
+
+    console.log(`[WaveformTimeline] Creating ${eventsToAdd.length} regions`);
+
+    // Add region for each event
+    eventsToAdd.forEach((event) => {
+      const color = getEventColor(event.elementType);
+
+      console.log('[WaveformTimeline] Adding region:', event.id, 'at', event.timing.startTime, 'seconds');
+
+      // Create region marker (small duration for visibility)
+      const region = regionsPlugin.addRegion({
+        start: event.timing.startTime,
+        end: event.timing.startTime + 0.5, // 500ms duration for visibility
+        color: color + '40',         // 25% opacity for region fill
+        drag: true,
+        resize: false,
+        content: event.name || `#${event.id.slice(-4)}`,
+      });
+
+      console.log('[WaveformTimeline] Region created:', region.id, 'actual start:', region.start, 'actual end:', region.end);
+
+      // Store mapping
+      regionEventMapRef.current.set(region.id, event.id);
+
+      // Handle region interactions
+      region.on('click', () => {
+        console.log('[WaveformTimeline] Region clicked:', event.id);
+        if (onEventClick) {
+          onEventClick(event);
+        }
+      });
+
+      region.on('update-end', () => {
+        console.log('[WaveformTimeline] Region dragged to:', region.start);
+        if (onEventUpdate) {
+          onEventUpdate(event.id, region.start);
+        }
+      });
+    });
+
+    console.log(`[WaveformTimeline] Successfully created ${eventsToAdd.length} regions`);
+  }, [onEventClick, onEventUpdate]);
 
   // =======================================================================
   // INITIALIZATION - Create WaveSurfer instance
@@ -80,9 +150,6 @@ export const WaveformTimeline: React.FC<WaveformTimelineProps> = ({
     if (!waveformRef.current || !audioUrl) {
       return;
     }
-
-    // Reset mounted flag when effect runs
-    isMountedRef.current = true;
 
     setIsLoading(true);
     setError(null);
@@ -109,19 +176,42 @@ export const WaveformTimeline: React.FC<WaveformTimelineProps> = ({
       wavesurferRef.current = wavesurfer;
 
       // Event Handlers
+      // Define error handler so we can remove it later in cleanup
+      const handleError = (err: Error) => {
+        console.error('[WaveformTimeline] Error loading audio:', err);
+        setError('Failed to load audio waveform');
+        setIsLoading(false);
+      };
+
       wavesurfer.on('ready', () => {
-        console.log('[WaveformTimeline] Waveform ready');
+        const duration = wavesurfer.getDuration();
+        console.log('[WaveformTimeline] Waveform ready, duration:', duration, 'seconds');
+        setLoadedDuration(duration);
         setIsReady(true);
         setIsLoading(false);
+
+        // Create initial regions HERE - WaveSurfer is definitely ready at this point
+        console.log('[WaveformTimeline] Creating initial regions in ready handler');
+        createRegions(events);
+        initialRegionsCreatedRef.current = true; // Mark initial regions as created
+        prevEventsRef.current = events; // Store events to detect future changes
       });
 
-      wavesurfer.on('error', (err) => {
-        // Only log errors if component is still mounted (prevents AbortError spam on unmount)
-        if (isMountedRef.current) {
-          console.error('[WaveformTimeline] Error loading audio:', err);
-          setError('Failed to load audio waveform');
-          setIsLoading(false);
-        }
+      wavesurfer.on('error', handleError);
+
+      // Playback event listeners
+      wavesurfer.on('play', () => {
+        console.log('[WaveformTimeline] Playback started');
+        setIsPlaying(true);
+      });
+
+      wavesurfer.on('pause', () => {
+        console.log('[WaveformTimeline] Playback paused');
+        setIsPlaying(false);
+      });
+
+      wavesurfer.on('timeupdate', (currentTime) => {
+        setCurrentTime(currentTime);
       });
 
       // Click on waveform to add event
@@ -133,19 +223,22 @@ export const WaveformTimeline: React.FC<WaveformTimelineProps> = ({
         }
       });
 
-      // Load audio
-      wavesurfer.load(audioUrl);
+      // Load audio with proper error handling
+      wavesurfer.load(audioUrl).catch((err) => {
+        // Ignore AbortError when component unmounts during load
+        if (err.name === 'AbortError') {
+          console.debug('[WaveformTimeline] Audio load aborted (component unmounted)');
+          return;
+        }
+        // Other errors still handled by 'error' event listener
+      });
 
       // Cleanup
       return () => {
-        // Mark as unmounted BEFORE destroying to prevent error handler from logging
-        isMountedRef.current = false;
-
-        try {
-          wavesurfer?.destroy();
-        } catch (err) {
-          // Ignore cleanup errors (e.g., AbortError if component unmounts during load)
-          console.debug('[WaveformTimeline] Cleanup error (safe to ignore):', err);
+        if (wavesurfer) {
+          // Remove error listener BEFORE destroying to prevent AbortError event from firing
+          wavesurfer.un('error', handleError);
+          wavesurfer.destroy();
         }
         wavesurferRef.current = null;
         regionsPluginRef.current = null;
@@ -159,55 +252,34 @@ export const WaveformTimeline: React.FC<WaveformTimelineProps> = ({
   }, [audioUrl, onAddEvent]);
 
   // =======================================================================
-  // REGIONS - Sync timeline events to waveform regions
+  // REGIONS - Sync timeline events to waveform regions when events change
   // =======================================================================
 
   useEffect(() => {
-    if (!isReady || !regionsPluginRef.current) {
+    // Only update regions if WaveSurfer is ready and duration is loaded
+    if (!isReady || !loadedDuration) {
       return;
     }
 
-    const regionsPlugin = regionsPluginRef.current;
+    // Skip if we haven't created initial regions yet (still in ready handler)
+    if (!initialRegionsCreatedRef.current) {
+      return;
+    }
 
-    // Clear existing regions
-    regionsPlugin.clearRegions();
-    regionEventMapRef.current.clear();
+    // Check if events actually changed (not just isReady/loadedDuration state changes)
+    const eventsChanged = events.length !== prevEventsRef.current.length ||
+                         events.some((event, index) => event.id !== prevEventsRef.current[index]?.id);
 
-    // Add region for each event
-    events.forEach((event) => {
-      const color = getEventColor(event.elementType);
+    if (!eventsChanged) {
+      console.log('[WaveformTimeline] Effect triggered but events unchanged, skipping region update');
+      return;
+    }
 
-      // Create region marker (small duration for visibility)
-      const region = regionsPlugin.addRegion({
-        start: event.timestamp,
-        end: event.timestamp + 0.5, // 500ms duration for visibility
-        color: color + '40',         // 25% opacity for region fill
-        drag: true,
-        resize: false,
-        content: event.name || `#${event.id.slice(-4)}`,
-      });
-
-      // Store mapping
-      regionEventMapRef.current.set(region.id, event.id);
-
-      // Handle region interactions
-      region.on('click', () => {
-        console.log('[WaveformTimeline] Region clicked:', event.id);
-        if (onEventClick) {
-          onEventClick(event);
-        }
-      });
-
-      region.on('update-end', () => {
-        console.log('[WaveformTimeline] Region dragged to:', region.start);
-        if (onEventUpdate) {
-          onEventUpdate(event.id, region.start);
-        }
-      });
-    });
-
-    console.log(`[WaveformTimeline] Created ${events.length} regions`);
-  }, [events, isReady, onEventClick, onEventUpdate]);
+    // Update regions when events actually change
+    console.log('[WaveformTimeline] Events changed, updating regions via effect');
+    createRegions(events);
+    prevEventsRef.current = events; // Store new events state
+  }, [events, isReady, loadedDuration, createRegions]);
 
   // =======================================================================
   // RENDER
@@ -217,11 +289,29 @@ export const WaveformTimeline: React.FC<WaveformTimelineProps> = ({
     <div className="waveform-timeline">
       <div className="waveform-timeline-header">
         <h6 className="mb-2">Audio Waveform Timeline</h6>
-        <p className="text-muted small mb-3">
-          {isLoading && 'Loading waveform...'}
-          {isReady && 'Click on waveform to add event • Drag markers to adjust timing'}
-          {error && error}
-        </p>
+        {isLoading && (
+          <p className="text-muted small mb-3">Loading waveform...</p>
+        )}
+        {isReady && (
+          <div
+            className="mb-3 p-2 d-flex align-items-start"
+            style={{
+              backgroundColor: '#E8EAEF',
+              borderRadius: '6px',
+              borderLeft: '4px solid #212b58',
+            }}
+          >
+            <Icon src={InfoOutline} style={{ marginRight: '8px', marginTop: '2px', color: '#212b58' }} />
+            <div className="small">
+              <strong>Create Events:</strong> Click anywhere on the waveform below to add a new event.
+              <br />
+              <strong>Adjust Timing:</strong> Drag existing markers left or right to change when they appear.
+            </div>
+          </div>
+        )}
+        {error && (
+          <p className="text-danger small mb-3">{error}</p>
+        )}
       </div>
 
       {/* Waveform container */}
@@ -236,6 +326,30 @@ export const WaveformTimeline: React.FC<WaveformTimelineProps> = ({
           backgroundColor: '#F8F9FA',
         }}
       />
+
+      {/* Playback Controls */}
+      {isReady && (
+        <div className="waveform-controls mt-3 d-flex justify-content-center align-items-center gap-2">
+          <Button
+            variant={isPlaying ? 'outline-primary' : 'primary'}
+            iconBefore={isPlaying ? Pause : PlayCircle}
+            onClick={() => wavesurferRef.current?.playPause()}
+            size="sm"
+          >
+            {isPlaying ? 'Pause' : 'Play'}
+          </Button>
+          <Button
+            variant="outline-secondary"
+            onClick={() => wavesurferRef.current?.stop()}
+            size="sm"
+          >
+            Stop
+          </Button>
+          <span className="ms-3 small text-muted">
+            {formatTime(currentTime)} / {formatTime(loadedDuration)}
+          </span>
+        </div>
+      )}
 
       {/* Legend */}
       {isReady && (

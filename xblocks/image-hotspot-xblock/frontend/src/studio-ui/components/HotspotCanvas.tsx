@@ -8,7 +8,7 @@
  * - Percentage-based coordinates for responsiveness
  */
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import type { Hotspot } from '../../common/types';
 
 interface HotspotCanvasProps {

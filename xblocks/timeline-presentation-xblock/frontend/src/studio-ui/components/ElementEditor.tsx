@@ -272,12 +272,12 @@ export const ElementEditor: React.FC<ElementEditorProps> = ({ event, onChange })
           <option value="fade">Fade In</option>
           <option value="scale">Scale</option>
           <option value="slide">Slide</option>
-          <option value="wipe">Wipe</option>
+          <option value="draw">Draw</option>
           <option value="show">Show (instant)</option>
         </Form.Control>
       </Form.Group>
 
-      {/* Animation Direction (for slide only - wipe follows arrow drawn direction) */}
+      {/* Animation Direction (for slide only - draw follows element direction) */}
       {event.animation === 'slide' && (
         <Form.Group className="mt-3">
           <Form.Label>Animation Direction</Form.Label>

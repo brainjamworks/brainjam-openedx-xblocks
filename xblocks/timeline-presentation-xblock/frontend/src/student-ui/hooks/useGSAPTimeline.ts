@@ -55,7 +55,7 @@ export function useGSAPTimeline({
     const newVisibleIds = new Set<string>();
 
     events.forEach(event => {
-      const startTime = event.timestamp;
+      const startTime = event.timing.startTime;
 
       // Element should be visible if audio has reached or passed its timestamp
       if (audioCurrentTime >= startTime) {

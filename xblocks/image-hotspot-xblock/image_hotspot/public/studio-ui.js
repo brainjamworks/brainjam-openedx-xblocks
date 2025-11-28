@@ -24443,7 +24443,7 @@ const PI = ({ runtime: e, fields: t }) => {
         k = await y.json();
       else {
         const _ = await y.text();
-        console.log("Non-JSON response:", _), k = { error: _ || "Upload failed" };
+        console.error("Non-JSON response:", _), k = { error: _ || "Upload failed" };
       }
       if (y.ok && k.asset)
         r(k.asset.url);

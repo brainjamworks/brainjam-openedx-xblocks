@@ -31,22 +31,29 @@ interface EventPropertiesPanelProps {
  * Get valid animation types for an element type
  * Based on Animation Design System research
  */
-function getValidAnimations(elementType?: ElementType): AnimationType[] {
+function getValidAnimations(elementType?: ElementType, shapeType?: ShapeType): AnimationType[] {
   if (!elementType) {
     // If no element type set, show all (defensive)
-    return ['fade', 'scale', 'slide', 'wipe', 'show'];
+    return ['fade', 'scale', 'slide', 'draw', 'show'];
   }
 
   switch (elementType) {
     case 'text':
+      // Text: Essential Three + scale
+      return ['fade', 'scale', 'slide', 'show'];
+
     case 'shape':
-      // Text and shapes: Essential Three + scale
+      // Ring supports draw animation (dash offset circular drawing)
+      if (shapeType === 'ring') {
+        return ['fade', 'scale', 'draw', 'slide', 'show'];
+      }
+      // Other shapes (circle, rectangle): Essential Three + scale
       return ['fade', 'scale', 'slide', 'show'];
 
     case 'line':
     case 'arrow':
-      // Lines and arrows: Essential Three + wipe
-      return ['fade', 'wipe', 'show'];
+      // Lines and arrows: Essential Three + draw
+      return ['fade', 'draw', 'show'];
 
     default:
       return ['fade', 'show'];
@@ -371,12 +378,12 @@ export const EventPropertiesPanel: React.FC<EventPropertiesPanelProps> = ({
               value={event.animation}
               onChange={(e) => onChange({ animation: e.target.value as AnimationType })}
             >
-              {getValidAnimations(event.elementType).map((animType) => (
+              {getValidAnimations(event.elementType, event.shapeType).map((animType) => (
                 <option key={animType} value={animType}>
                   {animType === 'fade' && 'Fade In'}
                   {animType === 'scale' && 'Scale'}
                   {animType === 'slide' && 'Slide'}
-                  {animType === 'wipe' && 'Wipe'}
+                  {animType === 'draw' && 'Draw'}
                   {animType === 'show' && 'Show (instant)'}
                 </option>
               ))}
@@ -384,11 +391,11 @@ export const EventPropertiesPanel: React.FC<EventPropertiesPanelProps> = ({
             <Form.Text className="text-muted">
               {event.elementType === 'text' || event.elementType === 'shape'
                 ? 'Text and shapes support fade, scale, slide, and show animations'
-                : 'Lines and arrows support fade, wipe, and show animations'}
+                : 'Lines and arrows support fade, draw, and show animations'}
             </Form.Text>
           </Form.Group>
 
-          {/* Animation Direction (for slide only - wipe always follows drawn direction) */}
+          {/* Animation Direction (for slide only - draw always follows element direction) */}
           {event.animation === 'slide' && (
             <Form.Group className="mb-3">
               <Form.Label>Animation Direction</Form.Label>

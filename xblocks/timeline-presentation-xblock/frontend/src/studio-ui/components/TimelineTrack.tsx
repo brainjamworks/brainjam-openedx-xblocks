@@ -122,7 +122,7 @@ export const TimelineTrack: React.FC<TimelineTrackProps> = ({
 
             {/* Event blocks */}
             {sortedEvents.map((event, idx) => {
-              const position = getEventPosition(event.timestamp);
+              const position = getEventPosition(event.timing.startTime);
               const color = getEventColor(event.elementType);
 
               return (
@@ -144,7 +144,7 @@ export const TimelineTrack: React.FC<TimelineTrackProps> = ({
                     transition: 'all 0.2s',
                     zIndex: sortedEvents.length - idx,
                   }}
-                  title={`${formatTime(event.timestamp)} - ${event.elementType}`}
+                  title={`${formatTime(event.timing.startTime)} - ${event.elementType}`}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = 'translate(-50%, -50%) scale(1.5)';
                   }}

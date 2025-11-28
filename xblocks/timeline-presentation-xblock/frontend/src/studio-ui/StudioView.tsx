@@ -403,8 +403,10 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
   };
 
   const handleWaveformEventUpdate = (eventId: string, newTimestamp: number) => {
-    // Update timestamp in service
-    timelineEventsService.update(eventId, { timestamp: newTimestamp });
+    // Update timestamp in service (v2 format)
+    timelineEventsService.update(eventId, {
+      timing: { startTime: newTimestamp }
+    });
     console.log(`[Timeline] Event ${eventId} moved to ${newTimestamp.toFixed(2)}s`);
   };
 
@@ -417,7 +419,7 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
     const newEvent: TimelineEvent = {
       id: `event_${Date.now()}`,
       name: eventName,
-      timestamp: timestamp,
+      timing: { startTime: timestamp },
       position: { x: 50, y: 50 },
       // No elementType, animation, or other presets
       // User must configure in Design tab
@@ -444,7 +446,7 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
     const newEvent: TimelineEvent = {
       id: `event-${Date.now()}`,
       name: eventName,
-      timestamp: 0,
+      timing: { startTime: 0 },
       position: { x: 50, y: 50 },
       // No elementType, animation, or other presets
       // User must configure in Design tab
@@ -482,7 +484,10 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
       ...event,
       id: `event-${Date.now()}`,
       name: duplicatedName,
-      timestamp: Math.min(((event.timestamp ?? 0) + 1), audioDuration || 999),
+      timing: {
+        ...event.timing,
+        startTime: Math.min(((event.timing.startTime ?? 0) + 1), audioDuration || 999),
+      },
     };
 
     // Generate Konva config for duplicated event
@@ -789,7 +794,7 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
                       <option value="">-- Select an event --</option>
                       {timelineEvents.map((event) => (
                         <option key={event.id} value={event.id}>
-                          {event.name || 'Unnamed Event'} (t={formatTime(event.timestamp ?? 0)})
+                          {event.name || 'Unnamed Event'} (t={formatTime(event.timing?.startTime ?? 0)})
                         </option>
                       ))}
                     </Form.Control>
@@ -824,6 +829,7 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
                     {drawingMode === 'line' && ' - Add line to selected event'}
                     {drawingMode === 'arrow' && ' - Add arrow to selected event'}
                     {drawingMode === 'circle' && ' - Add circle to selected event'}
+                    {drawingMode === 'ring' && ' - Add ring highlight (non-obscuring)'}
                     {drawingMode === 'rectangle' && ' - Add rectangle to selected event'}
                   </Alert>
 

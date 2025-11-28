@@ -57,7 +57,7 @@ const mapStorylineAnimation = (storylineAnim: string): AnimationType => {
     'entrance': 'slide',
     'fade': 'fade',
     'scale': 'scale',
-    'wipe': 'wipe',
+    'wipe': 'draw',
     'slide': 'slide',
   };
   return mapping[storylineAnim.toLowerCase()] || 'fade';
@@ -191,7 +191,10 @@ export const TimelineEventEditor: React.FC<TimelineEventEditorProps> = ({
     const duplicated = {
       ...event,
       id: `event-${Date.now()}`,
-      timestamp: Math.min((event.timestamp + 1), audioDuration || 999),
+      timing: {
+        ...event.timing,
+        startTime: Math.min((event.timing.startTime + 1), audioDuration || 999),
+      },
     };
 
     // Generate Konva config for duplicated event
@@ -413,7 +416,7 @@ export const TimelineEventEditor: React.FC<TimelineEventEditorProps> = ({
                   <div className="flex-grow-1">
                     <div className="d-flex align-items-center mb-1">
                       <span className="badge badge-secondary mr-2">#{index + 1}</span>
-                      <strong>{formatTime(event.timestamp)}</strong>
+                      <strong>{formatTime(event.timing.startTime)}</strong>
                       <span className="mx-2">-</span>
                       <span className="text-capitalize">{event.elementType}</span>
                       {event.elementType === 'text' && event.content && (
@@ -652,7 +655,7 @@ export const TimelineEventEditor: React.FC<TimelineEventEditorProps> = ({
                   {importPreview.sampleEvents.map((event, idx) => (
                     <div key={idx} className="mb-1">
                       <span className="badge badge-secondary mr-2">#{idx + 1}</span>
-                      <strong>{formatTime(event.timestamp)}</strong>
+                      <strong>{formatTime(event.timing.startTime)}</strong>
                       <span className="mx-2">-</span>
                       <span className="text-capitalize">{event.elementType}</span>
                       <span className="mx-2">•</span>

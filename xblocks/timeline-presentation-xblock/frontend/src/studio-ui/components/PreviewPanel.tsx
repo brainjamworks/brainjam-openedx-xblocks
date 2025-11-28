@@ -28,7 +28,7 @@ export const PreviewPanel: React.FC<PreviewPanelProps> = ({
 
   useEffect(() => {
     // Update active events based on current time
-    const active = events.filter(event => event.timestamp <= currentTime);
+    const active = events.filter(event => event.timing.startTime <= currentTime);
     setActiveEvents(active);
   }, [currentTime, events]);
 
