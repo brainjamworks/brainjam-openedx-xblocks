@@ -184,6 +184,13 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
       setZoomLevel(calculatedZoom); // Start at auto-fit
       setStagePosition({ x: 0, y: 0 }); // Reset pan position
 
+      // DEBUG: Log canvas initialization
+      console.group('🎨 [STUDIO] Canvas Initialized');
+      console.log('Image dimensions:', img.width, 'x', img.height);
+      console.log('Stage dimensions:', img.width, 'x', img.height);
+      console.log('Auto-fit zoom:', calculatedZoom);
+      console.groupEnd();
+
       // IMPORTANT: Save ORIGINAL image dimensions (not zoomed) to backend
       // This ensures percentage calculations work correctly
       if (onCanvasDimensionsChange) {
@@ -318,9 +325,18 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
   const createTextEvent = (x: number, y: number): Partial<TimelineEvent> => {
     const percentPos = pixelsToPercent(x, y, stageDimensions.width, stageDimensions.height);
 
+    // DEBUG: Log text creation
+    console.group('📝 [STUDIO] Creating Text Element');
+    console.log('Pixel position (clicked):', { x, y });
+    console.log('Stage dimensions:', stageDimensions);
+    console.log('Percentage position (saved):', percentPos);
+    console.groupEnd();
+
     return {
       id: generateId(),
-      timestamp: 0,
+      timing: {
+        startTime: 0,
+      },
       elementType: 'text',
       animation: 'fade',
       animationDuration: 500,
@@ -340,7 +356,9 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
 
     return {
       id: generateId(),
-      timestamp: 0,
+      timing: {
+        startTime: 0,
+      },
       elementType: 'line',
       animation: 'fade',
       animationDuration: 500,
@@ -365,7 +383,9 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
 
     return {
       id: generateId(),
-      timestamp: 0,
+      timing: {
+        startTime: 0,
+      },
       elementType: 'arrow',
       animation: 'fade',
       animationDuration: 500,
@@ -388,9 +408,20 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
     const percentPos = pixelsToPercent(centerX, centerY, stageDimensions.width, stageDimensions.height);
     const percentRadius = (radius / stageDimensions.width) * 100;
 
+    // DEBUG: Log circle creation
+    console.group('⭕ [STUDIO] Creating Circle Element');
+    console.log('Pixel position (center):', { x: centerX, y: centerY });
+    console.log('Pixel radius:', radius);
+    console.log('Stage dimensions:', stageDimensions);
+    console.log('Percentage position (saved):', percentPos);
+    console.log('Percentage diameter (saved):', percentRadius * 2);
+    console.groupEnd();
+
     return {
       id: generateId(),
-      timestamp: 0,
+      timing: {
+        startTime: 0,
+      },
       elementType: 'shape',
       shapeType: 'circle',
       animation: 'fade',
@@ -414,7 +445,9 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
 
     return {
       id: generateId(),
-      timestamp: 0,
+      timing: {
+        startTime: 0,
+      },
       elementType: 'shape',
       shapeType: 'ring',
       animation: 'fade',
@@ -439,7 +472,9 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
 
     return {
       id: generateId(),
-      timestamp: 0,
+      timing: {
+        startTime: 0,
+      },
       elementType: 'shape',
       shapeType: 'rectangle',
       animation: 'fade',

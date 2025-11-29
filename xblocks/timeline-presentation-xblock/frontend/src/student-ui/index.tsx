@@ -45,6 +45,7 @@ export const renderBlock = (
           imageUrl={data.imageUrl}
           audioUrl={data.audioUrl}
           timelineEvents={data.timelineEvents}
+          editorCanvasDimensions={data.editorCanvasDimensions}
           runtime={runtime}
         />
       </IntlProvider>

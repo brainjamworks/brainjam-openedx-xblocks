@@ -204,7 +204,7 @@ class TimelinePresentation(XBlock):
             'imageUrl': self.image_url,
             'audioUrl': self.audio_url,
             'timelineEvents': self.timeline_events,
-            'editorCanvasDimensions': self.editor_canvas_dimensions,
+            'editorCanvasDimensions': dict(self.editor_canvas_dimensions) if self.editor_canvas_dimensions else None,
             'showTimelineControls': self.show_timeline_controls,
             'autoplay': self.autoplay,
         })

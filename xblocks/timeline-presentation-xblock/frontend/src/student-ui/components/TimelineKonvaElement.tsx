@@ -49,7 +49,18 @@ export const TimelineKonvaElement: React.FC<TimelineKonvaElementProps> = ({
       console.warn(`Event ${event.id} missing stageDimensions`);
       return null;
     }
-    return generateKonvaConfig(event, stageDimensions, sizingScaleFactor);
+
+    const config = generateKonvaConfig(event, stageDimensions, sizingScaleFactor);
+
+    // DEBUG: Log final element rendering
+    console.group(`🎭 [ELEMENT] Rendering ${event.elementType}`);
+    console.log('Event data:', event);
+    console.log('Stage dimensions:', stageDimensions);
+    console.log('Sizing scale factor:', sizingScaleFactor);
+    console.log('Generated config:', config);
+    console.groupEnd();
+
+    return config;
   }, [event, stageDimensions, sizingScaleFactor]);
 
   /**

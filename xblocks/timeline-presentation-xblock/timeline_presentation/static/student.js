@@ -31,13 +31,9 @@ function TimelinePresentationStudentView(runtime, element, data) {
       // The runtime.handlerUrl() method needs this to generate correct URLs
       runtime.element = element;
 
-      // ARCHITECTURAL: Add runtime to data for API calls
-      // Runtime is needed for xblockPost and handler URL generation
-      data.runtime = runtime;
-
       // ARCHITECTURAL: Call the render function exported by Vite bundle
-      // Pass DOM element and data from Python
-      renderBlock(domElement, data);
+      // Pass DOM element, data from Python, and runtime for API calls
+      renderBlock(domElement, data, runtime);
     } catch (error) {
       // ARCHITECTURAL: Error handling with user feedback
       // If bundle fails to load or React crashes, show friendly error

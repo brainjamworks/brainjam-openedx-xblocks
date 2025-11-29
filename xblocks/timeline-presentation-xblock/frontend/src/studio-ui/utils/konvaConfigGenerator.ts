@@ -31,10 +31,21 @@ export function generateKonvaConfig(
   canvasDimensions: CanvasDimensions,
   scaleFactor: number = 1
 ): KonvaAnimationConfig {
-  return {
+  // DEBUG: Log config generation
+  console.group(`🔧 [CONFIG] Generating for ${event.elementType} (${event.id})`);
+  console.log('Input - Event position (%):', event.position);
+  console.log('Input - Canvas dimensions:', canvasDimensions);
+  console.log('Input - Scale factor:', scaleFactor);
+
+  const config = {
     konvaProps: generateKonvaProps(event, canvasDimensions, scaleFactor),
     animation: generateAnimationStates(event, canvasDimensions, scaleFactor),
   };
+
+  console.log('Output - Konva props:', config.konvaProps);
+  console.groupEnd();
+
+  return config;
 }
 
 /**
@@ -49,6 +60,13 @@ function generateKonvaProps(
   const x = (event.position.x / 100) * dimensions.width;
   const y = (event.position.y / 100) * dimensions.height;
 
+  // DEBUG: Log percentage → pixel conversion
+  console.log('  📍 Position conversion:', {
+    percentage: event.position,
+    calculation: `(${event.position.x}% / 100) * ${dimensions.width} = ${x}, (${event.position.y}% / 100) * ${dimensions.height} = ${y}`,
+    pixels: { x, y }
+  });
+
   // Base properties (common to all elements)
   const baseProps = { x, y };
 
@@ -62,7 +80,6 @@ function generateKonvaProps(
         fontSize,
         fontFamily: 'Poppins, sans-serif',
         fill: event.color || '#333F48',
-        offsetY: fontSize / 2,
       };
     }
 
@@ -74,8 +91,6 @@ function generateKonvaProps(
           ...baseProps,
           radius,
           fill: event.color || '#00A689',
-          offsetX: radius,
-          offsetY: radius,
         };
       } else if (event.shapeType === 'ring') {
         // Ring highlighting - non-obscuring circle outline
@@ -94,8 +109,6 @@ function generateKonvaProps(
             strokeWidth: thickness,
             fill: undefined, // Hollow circle (no fill)
             dash: [circumference], // Enable dash offset animation
-            offsetX: radius,
-            offsetY: radius,
           };
         }
 
@@ -107,8 +120,6 @@ function generateKonvaProps(
           outerRadius: radius,
           stroke: event.color || '#00A689',
           strokeWidth: 2 * scaleFactor, // Border stroke for crisp edge
-          offsetX: radius,
-          offsetY: radius,
         };
       } else {
         // Rectangle
@@ -148,8 +159,8 @@ function generateKonvaProps(
       // Add arrow-specific properties
       if (event.elementType === 'arrow') {
         props.fill = event.color || '#212b58';
-        props.pointerLength = 10 * scaleFactor;
-        props.pointerWidth = 10 * scaleFactor;
+        props.pointerLength = 10;
+        props.pointerWidth = 10;
         props.pointerAtEnding = true; // Ensure dash works on arrows
       }
 
