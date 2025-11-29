@@ -1,196 +1,233 @@
 /**
- * ARCHITECTURAL: XBlock structural styles only
+ * ARCHITECTURAL: XBlock structural styles with Paragon isolation
  *
- * Paragon CSS is loaded from CDN at runtime (via Python fragment)
- * This file contains ONLY XBlock-specific layout and structural styles
- * Use CSS variables for colors (--pgn-color-*) to respect theme
+ * CRITICAL ORDER: Reset legacy CSS first, then load Paragon + Liverpool
+ *
+ * CSS Loading Order:
+ * 1. Legacy Studio CSS (loaded by Studio)
+ * 2. Modal reset with "all: initial" (studio-editor.scss)
+ * 3. Paragon 23.14.9 (loaded via Python add_css_url AFTER this file)
+ * 4. Liverpool authoring theme (loaded via Python add_css_url AFTER this file)
+ *
+ * This ensures Paragon + Liverpool apply cleanly after legacy reset
  */
 
-@import '../../../../../../shared-styles/styles/liverpool-shared-tokens';
+// Import XBlock styles (includes "all: initial" reset)
+@import './studio-editor';
 
-// IMPLEMENTATION: Studio editor styles
-.drag-drop-matching-studio-view {
-  padding-left: 3rem;
-  padding-right: 3rem;
+// // IMPLEMENTATION: Studio editor styles
+// .drag-drop-matching-studio-view {
+//   padding-left: 3rem;
+//   padding-right: 3rem;
 
-  // Form.Switch layout - label left, toggle right
-  .pgn__form-switch {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
+//   // Form.Switch layout - label left, toggle right
+//   .pgn__form-switch {
+//     display: flex;
+//     align-items: center;
+//     justify-content: space-between;
+//     width: 100%;
 
-    .pgn__form-label {
-      order: 1; // Label first (left)
-    }
+//     .pgn__form-label {
+//       order: 1; // Label first (left)
+//     }
 
-    .pgn__form-switch-input {
-      flex-shrink: 0;
-      order: 2; // Toggle second (right)
-    }
-  }
+//     .pgn__form-switch-input {
+//       flex-shrink: 0;
+//       order: 2; // Toggle second (right)
+//     }
+//   }
 
-  // Sticky action buttons - extend full width
-  .drag-drop-matching-sticky-actions {
-    position: sticky;
-    bottom: 0;
-    background-color: var(--pgn-color-bg-base, #ffffff);
-    z-index: 100;
-    margin-left: -3rem;
-    margin-right: -3rem;
-    margin-top: 2rem;
-    padding-left: 3rem;
-    padding-right: 3rem;
-    padding-bottom: 1.5rem;
-    padding-top: 1.5rem;
-    box-shadow: $liverpool-sticky-action-shadow;
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-  }
-}
+//   // Sticky action buttons - extend full width
+//   .drag-drop-matching-sticky-actions {
+//     position: sticky;
+//     bottom: 0;
+//     background-color: var(--pgn-color-bg-base, #ffffff);
+//     z-index: 100;
+//     margin-left: -3rem;
+//     margin-right: -3rem;
+//     margin-top: 2rem;
+//     padding-left: 3rem;
+//     padding-right: 3rem;
+//     padding-bottom: 1.5rem;
+//     padding-top: 1.5rem;
+//     box-shadow: $liverpool-sticky-action-shadow;
+//     touch-action: manipulation;
+//     -webkit-tap-highlight-color: transparent;
+//   }
+// }
 
-// ListView styles
-.drag-drop-matching-list-view {
-  .pair-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
+// // Override root component styling inside modal to fill completely
+// // This matches the pattern from timeline-presentation-xblock
+// .modal-type-drag_drop_matching .drag-drop-matching-studio-view {
+//   height: 100%;
+//   display: flex;
+//   flex-direction: column;
+//   padding: 0 !important;        // Remove the 3rem padding inside modal
+//   max-width: none !important;
+//   margin: 0 !important;
+//   flex: 1 !important;           // Expand to fill parent height
+// }
 
-  .pair-list-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 1.2rem;
-    padding: 1.5rem 0;
-    border-bottom: 1px solid var(--pgn-color-border-base, #e9ecef);
+// // Make Form fill available height in modal and enable scrolling
+// .modal-type-drag_drop_matching .drag-drop-matching-studio-view > form {
+//   flex: 1;                    // Fill remaining vertical space
+//   display: flex;
+//   flex-direction: column;
+//   min-height: 0;              // Critical for flexbox scrolling
+//   overflow-y: auto;           // Enable scrolling within form
+// }
 
-    &:last-child {
-      border-bottom: none;
-    }
+// // Make ListView expand to fill available space in form
+// .modal-type-drag_drop_matching .drag-drop-matching-list-view {
+//   display: flex !important;
+//   flex-direction: column !important;
+//   flex: 1 !important;
+//   overflow-y: auto !important;
+//   min-height: 0 !important;
+// }
 
-    &.dragging {
-      opacity: 0.5;
-      cursor: grabbing;
-    }
+// // ListView styles
+// .drag-drop-matching-list-view {
+//   .pair-list {
+//     display: flex;
+//     flex-direction: column;
+//     gap: 0;
+//   }
 
-    &.drag-over {
-      border-top: $liverpool-drag-over-border;
-    }
+//   .pair-list-item {
+//     display: flex;
+//     align-items: flex-start;
+//     gap: 1.2rem;
+//     padding: 1.5rem 0;
+//     border-bottom: 1px solid var(--pgn-color-border-base, #e9ecef);
 
-    .pair-drag-handle {
-      color: var(--pgn-color-text-muted, #adb5bd);
-      cursor: grab;
-      padding-top: 0.3rem;
-      flex-shrink: 0;
-      user-select: none;
+//     &:last-child {
+//       border-bottom: none;
+//     }
 
-      .pgn__icon {
-        width: 2rem;
-        height: 2rem;
-      }
+//     &.dragging {
+//       opacity: 0.5;
+//       cursor: grabbing;
+//     }
 
-      &:hover {
-        color: var(--pgn-color-text-secondary, #6c757d);
-      }
+//     &.drag-over {
+//       border-top: $liverpool-drag-over-border;
+//     }
 
-      &:active {
-        cursor: grabbing;
-      }
-    }
+//     .pair-drag-handle {
+//       color: var(--pgn-color-text-muted, #adb5bd);
+//       cursor: grab;
+//       padding-top: 0.3rem;
+//       flex-shrink: 0;
+//       user-select: none;
 
-    .pair-content {
-      flex: 1;
-      min-width: 0;
+//       .pgn__icon {
+//         width: 2rem;
+//         height: 2rem;
+//       }
 
-      .pair-main {
-        margin-bottom: 0.5rem;
-      }
+//       &:hover {
+//         color: var(--pgn-color-text-secondary, #6c757d);
+//       }
 
-      .pair-label {
-        font-weight: 600;
-        margin-right: 0.5rem;
-      }
+//       &:active {
+//         cursor: grabbing;
+//       }
+//     }
 
-      .pair-term {
-        font-weight: 600;
-      }
+//     .pair-content {
+//       flex: 1;
+//       min-width: 0;
 
-      .pair-arrow {
-        margin: 0 0.25rem;
-      }
-    }
+//       .pair-main {
+//         margin-bottom: 0.5rem;
+//       }
 
-    .pair-actions {
-      display: flex;
-      gap: 1.5rem;
-      flex-shrink: 0;
-      padding-top: 0.3rem;
+//       .pair-label {
+//         font-weight: 600;
+//         margin-right: 0.5rem;
+//       }
 
-      .btn-link {
-        padding: 0;
+//       .pair-term {
+//         font-weight: 600;
+//       }
 
-        &.text-danger:disabled {
-          opacity: 0.4;
-        }
-      }
-    }
-  }
+//       .pair-arrow {
+//         margin: 0 0.25rem;
+//       }
+//     }
 
-  .settings-section {
-    margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--pgn-color-border-base, #dee2e6);
-  }
-}
+//     .pair-actions {
+//       display: flex;
+//       gap: 1.5rem;
+//       flex-shrink: 0;
+//       padding-top: 0.3rem;
 
-// EditView styles
-.drag-drop-matching-edit-view {
-  .edit-header {
-    h3 {
-      margin: 0;
-      font-weight: 600;
-    }
-  }
+//       .btn-link {
+//         padding: 0;
 
-  .section-label {
-    font-weight: 700;
-    margin: 0;
-  }
+//         &.text-danger:disabled {
+//           opacity: 0.4;
+//         }
+//       }
+//     }
+//   }
 
-  .pgn__form-label {
-    font-weight: 500;
-  }
+//   .settings-section {
+//     margin-top: 2rem;
+//     padding-top: 2rem;
+//     border-top: 1px solid var(--pgn-color-border-base, #dee2e6);
+//   }
+// }
 
-  // Sticky action buttons
-  .drag-drop-matching-sticky-actions {
-    position: sticky;
-    bottom: 0;
-    background-color: var(--pgn-color-bg-base, #ffffff);
-    z-index: 100;
-    margin-left: 0;
-    margin-right: 0;
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-    padding-bottom: 0;
-    border-top: 1px solid var(--pgn-color-border-base, #dee2e6);
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-  }
-}
+// // EditView styles
+// .drag-drop-matching-edit-view {
+//   .edit-header {
+//     h3 {
+//       margin: 0;
+//       font-weight: 600;
+//     }
+//   }
 
-// Hide Studio's modal action buttons (Save/Close)
-// We provide our own buttons with clearer labels
-.modal-type-drag_drop_matching .modal-actions {
-  display: none !important;
-}
+//   .section-label {
+//     font-weight: 700;
+//     margin: 0;
+//   }
 
-// Hide the action-cancel close button
-.modal-type-drag_drop_matching .action-cancel {
-  display: none !important;
-}
+//   .pgn__form-label {
+//     font-weight: 500;
+//   }
 
-// Hide any close buttons in header as well
-.modal-type-drag_drop_matching .modal-header .close,
-.modal-type-drag_drop_matching .modal-header .btn-close {
-  display: none !important;
-}
+//   // Sticky action buttons
+//   .drag-drop-matching-sticky-actions {
+//     position: sticky;
+//     bottom: 0;
+//     background-color: var(--pgn-color-bg-base, #ffffff);
+//     z-index: 100;
+//     margin-left: 0;
+//     margin-right: 0;
+//     margin-top: 2rem;
+//     padding-top: 1.5rem;
+//     padding-bottom: 0;
+//     border-top: 1px solid var(--pgn-color-border-base, #dee2e6);
+//     touch-action: manipulation;
+//     -webkit-tap-highlight-color: transparent;
+//   }
+// }
+
+// // Hide Studio's modal action buttons (Save/Close)
+// // We provide our own buttons with clearer labels
+// .modal-type-drag_drop_matching .modal-actions {
+//   display: none !important;
+// }
+
+// // Hide the action-cancel close button
+// .modal-type-drag_drop_matching .action-cancel {
+//   display: none !important;
+// }
+
+// // Hide any close buttons in header as well
+// .modal-type-drag_drop_matching .modal-header .close,
+// .modal-type-drag_drop_matching .modal-header .btn-close {
+//   display: none !important;
+// }

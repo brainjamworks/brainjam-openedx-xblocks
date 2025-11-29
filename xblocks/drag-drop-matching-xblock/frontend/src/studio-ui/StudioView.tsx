@@ -4,14 +4,19 @@
  * Main container that orchestrates between ListView and EditView.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Button from '@openedx/paragon/dist/Button';
 import Form from '@openedx/paragon/dist/Form';
 import Alert from '@openedx/paragon/dist/Alert';
+import ModalDialog from '@openedx/paragon/dist/Modal/ModalDialog';
 import { xblockPost } from '../common/api';
 import type { StudioViewProps, MatchingPair } from '../common/types';
-import { ListView } from './ListView';
 import { EditView } from './EditView';
+import { ModalHeader } from './components/ModalHeader';
+import { ModalFooter } from './components/ModalFooter';
+import { EditorLayout } from './components/EditorLayout';
+import { MainContentArea } from './components/MainContentArea';
+import { SettingsSidebar } from './components/SettingsSidebar';
 
 /**
  * View modes
@@ -29,6 +34,7 @@ export const StudioView: React.FC<StudioViewProps> = ({
   const [randomizeItems, setRandomizeItems] = useState(fields.randomize_items);
   const [weight, setWeight] = useState(fields.weight);
   const [maxAttempts, setMaxAttempts] = useState(fields.max_attempts);
+  const [unlimited, setUnlimited] = useState(fields.unlimited_attempts || false);
   const [feedbackMode, setFeedbackMode] = useState(fields.show_feedback_mode);
 
   // UI state
@@ -36,6 +42,26 @@ export const StudioView: React.FC<StudioViewProps> = ({
   const [editingIndex, setEditingIndex] = useState<number>(-1);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  // Ref to EditView's save function
+  const editViewSaveRef = useRef<(() => void) | null>(null);
+
+  /**
+   * Disable legacy Liverpool Studio CSS that interferes with Paragon
+   * NOTE: We provide essential modal structure CSS in studio-editor.scss
+   */
+  useEffect(() => {
+    const legacySheets = [
+      '/static/studio/liverpool-dental-legacy/css/studio-main-v1.css',
+      '/static/studio/liverpool-dental-legacy/css/course-unit-mfe-iframe-bundle.css'
+    ];
+
+    document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
+      if (legacySheets.some(path => link.href.includes(path))) {
+        link.disabled = true;
+      }
+    });
+  }, []); // Run once on mount
 
   /**
    * Add new pair - creates empty pair and opens editor
@@ -89,12 +115,9 @@ export const StudioView: React.FC<StudioViewProps> = ({
   };
 
   /**
-   * Reorder pair via drag and drop
+   * Reorder pair via drag and drop (@dnd-kit)
    */
-  const handleReorder = (fromIndex: number, toIndex: number) => {
-    const newPairs = [...matchingPairs];
-    const [movedPair] = newPairs.splice(fromIndex, 1);
-    newPairs.splice(toIndex, 0, movedPair);
+  const handleReorder = (newPairs: MatchingPair[]) => {
     setMatchingPairs(newPairs);
   };
 
@@ -178,6 +201,7 @@ export const StudioView: React.FC<StudioViewProps> = ({
         explanation: '', // Removed explanation field
         weight,
         max_attempts: maxAttempts,
+        unlimited_attempts: unlimited,
         show_feedback_mode: feedbackMode
       });
 
@@ -220,48 +244,52 @@ export const StudioView: React.FC<StudioViewProps> = ({
   };
 
   return (
-    <div className="drag-drop-matching-studio-view">
-      {/* Alert messages */}
-      {message && (
-        <Alert
-          variant={message.type === 'success' ? 'success' : 'danger'}
-          dismissible
-          onClose={() => setMessage(null)}
-        >
-          {message.text}
-        </Alert>
-      )}
+    <div className="modal-container-fullscreen">
+      <ModalHeader
+        title={displayName || "Drag and Drop Matching"}
+        onClose={handleCancel}
+        onTitleChange={setDisplayName}
+      />
 
-      <Form>
-        {/* Display Name field - always visible */}
-        <Form.Group className="mb-4">
-          <Form.Label>Display Name</Form.Label>
-          <Form.Control
-            type="text"
-            value={displayName}
-            onChange={(e) => setDisplayName(e.target.value)}
-            placeholder="Enter display name"
-          />
-        </Form.Group>
+      <ModalDialog.Body className="pb-0">
+        {/* Alert messages */}
+        {message && (
+          <Alert
+            variant={message.type === 'success' ? 'success' : 'danger'}
+            dismissible
+            onClose={() => setMessage(null)}
+          >
+            {message.text}
+          </Alert>
+        )}
 
-        {/* Render ListView or EditView based on mode */}
         {viewMode === 'list' ? (
-          <ListView
-            pairs={matchingPairs}
-            questionText={questionText}
-            randomizeItems={randomizeItems}
-            weight={weight}
-            maxAttempts={maxAttempts}
-            feedbackMode={feedbackMode}
-            onQuestionTextChange={setQuestionText}
-            onRandomizeChange={setRandomizeItems}
-            onWeightChange={setWeight}
-            onMaxAttemptsChange={setMaxAttempts}
-            onFeedbackModeChange={setFeedbackMode}
-            onAddPair={handleAddPair}
-            onEditPair={handleEditPair}
-            onDeletePair={handleDeletePair}
-            onReorder={handleReorder}
+          <EditorLayout
+            mainContent={
+              <MainContentArea
+                questionText={questionText}
+                pairs={matchingPairs}
+                onQuestionTextChange={setQuestionText}
+                onAddPair={handleAddPair}
+                onEditPair={handleEditPair}
+                onDeletePair={handleDeletePair}
+                onReorder={handleReorder}
+              />
+            }
+            sidebar={
+              <SettingsSidebar
+                weight={weight}
+                maxAttempts={maxAttempts}
+                unlimited={unlimited}
+                randomizeItems={randomizeItems}
+                feedbackMode={feedbackMode}
+                onWeightChange={setWeight}
+                onMaxAttemptsChange={setMaxAttempts}
+                onUnlimitedChange={setUnlimited}
+                onRandomizeChange={setRandomizeItems}
+                onFeedbackModeChange={setFeedbackMode}
+              />
+            }
           />
         ) : (
           <EditView
@@ -270,30 +298,20 @@ export const StudioView: React.FC<StudioViewProps> = ({
             totalPairs={matchingPairs.length}
             onSave={handleSavePair}
             onCancel={handleCancelEdit}
+            saveRef={editViewSaveRef}
           />
         )}
+      </ModalDialog.Body>
 
-        {/* ARCHITECTURAL: Save/Cancel buttons - only visible in list view */}
-        {viewMode === 'list' && (
-          <div className="drag-drop-matching-sticky-actions d-flex justify-content-end border-top pt-3">
-            <Button
-              variant="tertiary"
-              onClick={handleCancel}
-              disabled={saving}
-              className="mr-2"
-            >
-              Close Without Saving
-            </Button>
-            <Button
-              variant="primary"
-              onClick={handleSave}
-              disabled={saving}
-            >
-              {saving ? 'Saving...' : 'Save All Changes'}
-            </Button>
-          </div>
-        )}
-      </Form>
+      <ModalFooter
+        viewMode={viewMode}
+        onSave={handleSave}
+        onCancel={handleCancel}
+        saveDisabled={saving || matchingPairs.length === 0}
+        onSavePair={() => editViewSaveRef.current?.()}
+        onBackToList={handleCancelEdit}
+        savePairDisabled={false}
+      />
     </div>
   );
 };

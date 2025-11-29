@@ -35,6 +35,7 @@ export const renderBlock = (element: Element | null, data: StudentData) => {
 <IntlProvider locale="en">
           <StudentView
             runtime={data.runtime}
+            displayName={data.displayName}
             questionText={data.questionText}
             terms={data.terms}
             descriptions={data.descriptions}

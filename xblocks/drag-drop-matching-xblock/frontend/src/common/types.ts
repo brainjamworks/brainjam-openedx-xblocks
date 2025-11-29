@@ -102,6 +102,7 @@ export interface BatchSubmissionResult {
  * Matches the data dict in student_view()
  */
 export interface StudentViewData {
+  displayName: string;
   questionText: string;
   terms: Term[];
   descriptions: Description[];
@@ -139,6 +140,7 @@ export interface StudioViewFields {
   explanation: string;
   weight: number;
   max_attempts: number;
+  unlimited_attempts: boolean;
   show_feedback_mode: string;
 }
 
@@ -158,6 +160,7 @@ export interface StudioViewFields {
  */
 export interface StudentViewProps {
   runtime: XBlockRuntime;
+  displayName: string;
   questionText: string;
   terms: Term[];
   descriptions: Description[];

@@ -66,6 +66,13 @@ class DragDropMatching(ScorableXBlockMixin, XBlock):
         help="Maximum number of submission attempts (0 = unlimited)"
     )
 
+    unlimited_attempts = Boolean(
+        display_name="Unlimited Attempts",
+        default=False,
+        scope=Scope.settings,
+        help="Allow unlimited attempts (overrides max_attempts when True)"
+    )
+
     show_feedback_mode = String(
         display_name="Feedback Mode",
         default="on_submit",
@@ -303,11 +310,7 @@ class DragDropMatching(ScorableXBlockMixin, XBlock):
 
         # ARCHITECTURAL: Add bootstrap loader (never changes)
         bootstrap_js = self.resource_string("static/student.js")
-        frag.add_javascript(bootstrap_js)        # Load Paragon CSS from CDN (runtime, not bundled)
-        frag.add_css_url('https://cdn.jsdelivr.net/npm/@openedx/paragon@23.0.0/dist/core.min.css')
-        frag.add_css_url('https://cdn.jsdelivr.net/npm/@openedx/paragon@23.0.0/dist/light.min.css')
-
-
+        frag.add_javascript(bootstrap_js)
 
         # ARCHITECTURAL: Add XBlock custom styles (minimal)
         frag.add_css_url(self.runtime.local_resource_url(self, 'public/student-ui.css'))
@@ -358,6 +361,7 @@ class DragDropMatching(ScorableXBlockMixin, XBlock):
         frag.initialize_js('DragDropMatchingStudentView', {
             'url': self.runtime.local_resource_url(self, 'public/student-ui.js'),
             # IMPLEMENTATION: Drag and drop matching data
+            'displayName': self.display_name,
             'questionText': self.question_text,
             'terms': terms,
             'descriptions': descriptions,
@@ -383,14 +387,16 @@ class DragDropMatching(ScorableXBlockMixin, XBlock):
 
         # ARCHITECTURAL: Add bootstrap loader
         bootstrap_js = self.resource_string("static/studio.js")
-        frag.add_javascript(bootstrap_js)        # Load Paragon CSS from CDN (runtime, not bundled)
-        frag.add_css_url('https://cdn.jsdelivr.net/npm/@openedx/paragon@23.0.0/dist/core.min.css')
-        frag.add_css_url('https://cdn.jsdelivr.net/npm/@openedx/paragon@23.0.0/dist/light.min.css')
+        frag.add_javascript(bootstrap_js)
 
-
-
-        # ARCHITECTURAL: Add XBlock custom styles (minimal)
+        # ARCHITECTURAL: Load XBlock styles in correct order
+        # 1. Load studio-ui.css FIRST (contains all: initial reset)
         frag.add_css_url(self.runtime.local_resource_url(self, 'public/studio-ui.css'))
+
+        # 2. Load Paragon/Liverpool AFTER reset (re-applies clean styles)
+        frag.add_css_url('https://cdn.jsdelivr.net/npm/@openedx/paragon@23.14.9/dist/core.min.css')
+        frag.add_css_url('https://cdn.jsdelivr.net/npm/@openedx/paragon@23.14.9/dist/light.min.css')
+        frag.add_css_url('https://cdn.jsdelivr.net/npm/@brainjam/liverpool-dental-theme@1.1.0/liverpool-authoring-complete.css')
 
         # Parse matching pairs
         try:
@@ -410,6 +416,7 @@ class DragDropMatching(ScorableXBlockMixin, XBlock):
                 'explanation': self.explanation,
                 'weight': self.weight,
                 'max_attempts': self.max_attempts,
+                'unlimited_attempts': self.unlimited_attempts,
                 'show_feedback_mode': self.show_feedback_mode,
             }
         })
@@ -779,6 +786,7 @@ class DragDropMatching(ScorableXBlockMixin, XBlock):
         self.explanation = data.get('explanation', '').strip()
         self.weight = weight
         self.max_attempts = max_attempts
+        self.unlimited_attempts = data.get('unlimited_attempts', False)
         self.show_feedback_mode = data.get('show_feedback_mode', 'on_submit')
 
         return {

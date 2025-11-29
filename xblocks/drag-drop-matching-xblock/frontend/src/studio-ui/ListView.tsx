@@ -10,8 +10,7 @@
 import React, { useState } from 'react';
 import Button from '@openedx/paragon/dist/Button';
 import Form from '@openedx/paragon/dist/Form';
-import Add from '@openedx/paragon/icons/es5/Add';
-import DragIndicator from '@openedx/paragon/icons/es5/DragIndicator';
+import { Add, DragIndicator } from '@openedx/paragon/icons';
 
 /**
  * Single matching pair structure

@@ -4,7 +4,7 @@
  * Form to create/edit individual matching pair.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@openedx/paragon/dist/Button';
 import Form from '@openedx/paragon/dist/Form';
 
@@ -26,6 +26,7 @@ interface EditViewProps {
   totalPairs: number;
   onSave: (pair: MatchingPair) => void;
   onCancel: () => void;
+  saveRef?: React.MutableRefObject<(() => void) | null>;
 }
 
 /**
@@ -36,7 +37,8 @@ export const EditView: React.FC<EditViewProps> = ({
   pairIndex,
   totalPairs,
   onSave,
-  onCancel
+  onCancel,
+  saveRef
 }) => {
   // Local state for form fields
   const [term, setTerm] = useState(pair.term);
@@ -80,10 +82,19 @@ export const EditView: React.FC<EditViewProps> = ({
     }
   };
 
+  /**
+   * Expose handleSave to parent via ref
+   */
+  useEffect(() => {
+    if (saveRef) {
+      saveRef.current = handleSave;
+    }
+  }, [term, description, saveRef]);
+
   return (
     <div className="drag-drop-matching-edit-view">
       {/* Header */}
-      <div className="edit-header mb-4">
+      <div className="h4 mb-3">
         <h3>
           {pairIndex === -1 ? 'New Matching Pair' : `Editing Pair ${pairIndex + 1} of ${totalPairs}`}
         </h3>
@@ -136,23 +147,6 @@ export const EditView: React.FC<EditViewProps> = ({
               {description.length} / 200 characters
             </Form.Text>
           </Form.Group>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="drag-drop-matching-sticky-actions d-flex justify-content-end">
-          <Button
-            variant="tertiary"
-            onClick={onCancel}
-            className="mr-2"
-          >
-            Back to List
-          </Button>
-          <Button
-            variant="primary"
-            onClick={handleSave}
-          >
-            Save Pair
-          </Button>
         </div>
       </Form>
     </div>

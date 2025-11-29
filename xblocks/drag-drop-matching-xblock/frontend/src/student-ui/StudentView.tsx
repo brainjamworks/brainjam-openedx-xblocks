@@ -26,6 +26,7 @@ import { Connector } from './components/Connector';
  */
 export const StudentView: React.FC<StudentViewProps> = ({
   runtime,
+  displayName,
   questionText,
   terms,
   descriptions,
@@ -191,7 +192,7 @@ export const StudentView: React.FC<StudentViewProps> = ({
       <div className="drag-drop-matching-student-view" ref={containerRef}>
         {/* Problem Header */}
         <div className="problem-header">
-          <h3 className="problem-title">Drag and Drop Matching</h3>
+          <h3 className="problem-title">{displayName}</h3>
           <div className="problem-points">
             {maxScore.toFixed(maxScore % 1 === 0 ? 0 : 1)}/{maxScore.toFixed(maxScore % 1 === 0 ? 0 : 1)} point{maxScore !== 1 ? 's' : ''} ({isGraded ? 'graded' : 'ungraded'})
           </div>
