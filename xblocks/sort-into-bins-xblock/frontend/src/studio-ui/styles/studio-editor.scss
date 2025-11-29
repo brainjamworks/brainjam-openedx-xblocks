@@ -1,0 +1,960 @@
+// /**
+//  * Studio Fullscreen Modal Styles
+//  *
+//  * Beautiful, professional design for 98vh × 98vw modal
+//  * Liverpool design tokens and modern UI patterns
+//  */
+
+// // ============================================================================
+// // LIVERPOOL DESIGN TOKENS
+// // ============================================================================
+
+// $liverpool-blue: #212b58;
+// $liverpool-blue-light: #9BA4C5;
+// $liverpool-teal: #00A689;
+// $liverpool-pink: #EF426F;
+// $liverpool-sky-blue: #009CDD;
+
+// $liverpool-neutral-white: #ffffff;
+// $liverpool-neutral-50: #F8F9FA;
+// $liverpool-neutral-100: #E8EAEF;
+// $liverpool-neutral-200: #DBDBD3;
+// $liverpool-neutral-500: #8d9695;
+// $liverpool-neutral-600: #6c757d;
+// $liverpool-neutral-900: #333f48;
+
+// $liverpool-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
+// $liverpool-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+// $liverpool-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
+// $liverpool-shadow-xl: 0 24px 48px rgba(0, 0, 0, 0.22);
+
+// $liverpool-radius-sm: 8px;
+// $liverpool-radius-md: 12px;
+// $liverpool-radius-lg: 16px;
+// $liverpool-radius-xl: 20px;
+
+// $liverpool-space-1: 4px;
+// $liverpool-space-2: 8px;
+// $liverpool-space-3: 12px;
+// $liverpool-space-4: 16px;
+// $liverpool-space-6: 24px;
+// $liverpool-space-8: 32px;
+
+// // ============================================================================
+// // MODAL CONTAINER
+// // ============================================================================
+
+// .modal-container-fullscreen {
+//   display: flex;
+//   flex-direction: column;
+//   height: 100%;
+//   background: $liverpool-neutral-white;
+//   font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+// }
+
+// // ============================================================================
+// // MODAL HEADER
+// // ============================================================================
+
+// .modal-header-fullscreen {
+//   flex-shrink: 0;
+//   background: #ffffff;
+//   color: #212529;
+//   padding: $liverpool-space-4 $liverpool-space-6;
+//   border-bottom: 1px solid #dee2e6;
+//   box-shadow: none;
+// }
+
+// .modal-header-content {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   max-width: 100%;
+// }
+
+// .modal-header-titles {
+//   display: flex;
+//   flex-direction: column;
+//   gap: $liverpool-space-1;
+// }
+
+// .modal-header-title {
+//   margin: 0;
+//   font-size: 20px;
+//   font-weight: 600;
+//   letter-spacing: -0.02em;
+//   color: #212529;
+// }
+
+// .modal-header-subtitle {
+//   font-size: 14px;
+//   font-weight: 400;
+//   color: #6c757d;
+// }
+
+// .modal-header-close {
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   width: 40px;
+//   height: 40px;
+//   background: transparent;
+//   border: 1px solid #dee2e6;
+//   border-radius: 6px;
+//   color: #495057;
+//   cursor: pointer;
+//   transition: all 0.2s ease;
+
+//   &:hover {
+//     background: #f8f9fa;
+//     border-color: #adb5bd;
+//     transform: scale(1.05);
+//   }
+
+//   &:active {
+//     transform: scale(0.95);
+//   }
+// }
+
+// // ============================================================================
+// // MODAL BODY
+// // ============================================================================
+
+// .modal-body-fullscreen {
+//   flex: 1 1 auto;
+//   min-height: 0;
+//   overflow-y: auto;
+//   padding: $liverpool-space-4;
+// }
+
+// // ============================================================================
+// // MODAL FOOTER
+// // ============================================================================
+
+// .modal-footer-fullscreen {
+//   flex-shrink: 0;
+//   background: $liverpool-neutral-white;
+//   border-top: 1px solid $liverpool-neutral-200;
+//   padding: $liverpool-space-4 $liverpool-space-6;
+//   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.04);
+// }
+
+// .modal-footer-content {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   gap: $liverpool-space-4;
+// }
+
+// // ============================================================================
+// // THREE-COLUMN GRID LAYOUT
+// // ============================================================================
+
+// .studio-editor-fullscreen {
+//   display: grid;
+//   grid-template-columns: 250px 1fr 300px;
+//   gap: $liverpool-space-4;
+//   height: 100%;
+//   max-height: 100%;
+// }
+
+// // Left Column - Event List
+// .studio-column-left {
+//   display: flex;
+//   flex-direction: column;
+//   gap: $liverpool-space-3;
+//   overflow-y: auto;
+//   overflow-x: hidden;
+// }
+
+// // Center Column - Waveform + Canvas
+// .studio-column-center {
+//   display: flex;
+//   flex-direction: column;
+//   gap: $liverpool-space-4;
+//   min-height: 0;
+// }
+
+// // Right Column - Properties
+// .studio-column-right {
+//   display: flex;
+//   flex-direction: column;
+//   gap: $liverpool-space-3;
+//   overflow-y: auto;
+//   overflow-x: hidden;
+// }
+
+// // ============================================================================
+// // BEAUTIFUL CARD COMPONENTS
+// // ============================================================================
+
+// .studio-card {
+//   background: $liverpool-neutral-white;
+//   border-radius: 6px;
+//   box-shadow: $liverpool-shadow-sm;
+//   padding: $liverpool-space-4;
+//   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+//   &:hover {
+//     box-shadow: $liverpool-shadow-md;
+//   }
+// }
+
+// .studio-card-header {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   margin-bottom: $liverpool-space-3;
+//   padding-bottom: $liverpool-space-3;
+//   border-bottom: 1px solid $liverpool-neutral-100;
+// }
+
+// .studio-card-title {
+//   margin: 0;
+//   font-size: 16px;
+//   font-weight: 600;
+//   color: $liverpool-neutral-900;
+// }
+
+// .studio-card-body {
+//   display: flex;
+//   flex-direction: column;
+//   gap: $liverpool-space-3;
+// }
+
+// // ============================================================================
+// // EVENT LIST CARDS
+// // ============================================================================
+
+// .event-card {
+//   background: $liverpool-neutral-white;
+//   border: 1px solid $liverpool-neutral-200;
+//   border-radius: 6px;
+//   padding: $liverpool-space-3;
+//   cursor: pointer;
+//   transition: all 0.2s ease;
+//   position: relative;
+
+//   &::before {
+//     content: '';
+//     position: absolute;
+//     left: 0;
+//     top: 0;
+//     bottom: 0;
+//     width: 4px;
+//     background: transparent;
+//     border-radius: 6px 0 0 6px;
+//     transition: background 0.2s ease;
+//   }
+
+//   &:hover {
+//     box-shadow: $liverpool-shadow-md;
+//     transform: translateY(-2px);
+//     border-color: $liverpool-blue-light;
+//   }
+
+//   &.selected {
+//     border-color: $liverpool-blue;
+//     background: lighten($liverpool-blue, 48%);
+
+//     &::before {
+//       background: $liverpool-blue;
+//     }
+//   }
+// }
+
+// .event-card-header {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   margin-bottom: $liverpool-space-2;
+// }
+
+// .event-card-name {
+//   font-weight: 600;
+//   font-size: 14px;
+//   color: $liverpool-neutral-900;
+// }
+
+// .event-card-type {
+//   display: inline-flex;
+//   align-items: center;
+//   gap: $liverpool-space-1;
+//   padding: 2px 8px;
+//   background: $liverpool-neutral-100;
+//   border-radius: 12px;
+//   font-size: 12px;
+//   font-weight: 500;
+//   color: $liverpool-neutral-600;
+// }
+
+// .event-card-time {
+//   font-size: 12px;
+//   color: $liverpool-neutral-500;
+//   font-family: 'SF Mono', Monaco, Consolas, monospace;
+// }
+
+// // ============================================================================
+// // WAVEFORM PANEL
+// // ============================================================================
+
+// .waveform-panel {
+//   background: $liverpool-neutral-white;
+//   border-radius: 6px;
+//   box-shadow: $liverpool-shadow-sm;
+//   padding: $liverpool-space-4;
+//   height: 30%;
+//   min-height: 200px;
+//   display: flex;
+//   flex-direction: column;
+// }
+
+// // ============================================================================
+// // CANVAS PANEL
+// // ============================================================================
+
+// .canvas-panel {
+//   background: $liverpool-neutral-white;
+//   border-radius: 6px;
+//   box-shadow: $liverpool-shadow-sm;
+//   padding: $liverpool-space-4;
+//   flex: 1;
+//   min-height: 0;
+//   display: flex;
+//   flex-direction: column;
+// }
+
+// // ============================================================================
+// // PROPERTIES PANEL
+// // ============================================================================
+
+// .properties-panel {
+//   background: $liverpool-neutral-white;
+//   border-radius: 6px;
+//   box-shadow: $liverpool-shadow-sm;
+//   padding: $liverpool-space-4;
+// }
+
+// .properties-section {
+//   margin-bottom: $liverpool-space-4;
+
+//   &:last-child {
+//     margin-bottom: 0;
+//   }
+// }
+
+// .properties-label {
+//   display: block;
+//   font-size: 14px;
+//   font-weight: 600;
+//   color: $liverpool-neutral-900;
+//   margin-bottom: $liverpool-space-2;
+// }
+
+// // ============================================================================
+// // SMOOTH ANIMATIONS
+// // ============================================================================
+
+// @keyframes fadeIn {
+//   from {
+//     opacity: 0;
+//     transform: translateY(8px);
+//   }
+//   to {
+//     opacity: 1;
+//     transform: translateY(0);
+//   }
+// }
+
+// @keyframes slideInRight {
+//   from {
+//     opacity: 0;
+//     transform: translateX(20px);
+//   }
+//   to {
+//     opacity: 1;
+//     transform: translateX(0);
+//   }
+// }
+
+// .fade-enter {
+//   animation: fadeIn 0.3s ease;
+// }
+
+// .slide-enter {
+//   animation: slideInRight 0.3s ease;
+// }
+
+// // ============================================================================
+// // SCROLLBAR STYLING
+// // ============================================================================
+
+// .studio-column-left,
+// .studio-column-right {
+//   &::-webkit-scrollbar {
+//     width: 8px;
+//   }
+
+//   &::-webkit-scrollbar-track {
+//     background: transparent;
+//   }
+
+//   &::-webkit-scrollbar-thumb {
+//     background: $liverpool-neutral-200;
+//     border-radius: 4px;
+
+//     &:hover {
+//       background: $liverpool-neutral-500;
+//     }
+//   }
+// }
+
+// // ============================================================================
+// // RESPONSIVE BEHAVIOR
+// // ============================================================================
+
+// @media (max-width: 1366px) {
+//   .studio-editor-fullscreen {
+//     grid-template-columns: 220px 1fr 280px;
+//   }
+// }
+
+// @media (max-width: 1200px) {
+//   .studio-editor-fullscreen {
+//     grid-template-columns: 200px 1fr 260px;
+//   }
+// }
+
+// // ============================================================================
+// // OPENEDX MODAL OVERRIDE - Fullscreen for Timeline Presentation
+// // ============================================================================
+// // LEGACY CSS RESET FOR MODAL
+// // ============================================================================
+// // Purpose: Isolate XBlock modal from Studio legacy CSS interference
+// // Context: Studio loads legacy CSS that conflicts with Paragon utility classes
+// //          MFE doesn't have legacy CSS - only Paragon 23.14.9 + Liverpool theme
+// // Fix: Reset ALL legacy styles, then Paragon + Liverpool (from minimal-paragon.scss)
+// //      apply cleanly without interference
+// // Date: 2025-11-29
+// // ============================================================================
+
+// ============================================================================
+// ESSENTIAL MODAL STRUCTURE CSS (VERBATIM FROM EDX-PLATFORM)
+// ============================================================================
+// Source: edx-platform/cms/static/sass/elements/_modal-window.scss
+//         edx-platform/cms/static/sass/elements/_modal.scss
+//         edx-platform/cms/static/sass/course-unit-mfe-iframe-bundle.scss
+// Purpose: Exact modal structure CSS with resolved SASS variable values
+// Note: Form element styling excluded - Paragon handles inputs/buttons/labels
+// Date: 2025-11-29
+// ============================================================================
+
+// Modal container structure (Lines 7-311 from _modal-window.scss)
+// NOTE: All visual styling removed - only structural CSS kept
+// Paragon ModalDialog provides all visual styling
+[class*="view-"] .modal-window {
+  box-sizing: border-box;
+  position: absolute;
+  width: 50%;
+  background-color: transparent;
+  text-align: left;
+
+  .modal-content {
+    position: relative;
+    background-color: transparent;
+  }
+}
+
+// Modal actions/footer layout (Lines 272-310 from _modal-window.scss)
+// NOTE: Visual styling removed - Paragon ModalDialog.Footer handles visuals
+[class*="view-"] .modal-window .modal-actions,
+[class*="view-"] .modal-window .xblock-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  background-color: transparent;
+
+  .action-item {
+    display: inline-block;
+    margin-right: 15px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+// Large modal sizing (Lines 338-392 from _modal-window.scss)
+// NOTE: Visual styling removed - only structural sizing kept
+[class*="view-"] .modal-lg {
+  width: 95%;
+  min-width: 550px;
+  height: auto;
+
+  &.modal-editor {
+    .modal-content {
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+  }
+}
+
+// Modal editor flexbox (Lines 281-458 from course-unit-mfe-iframe-bundle.scss)
+// NOTE: Visual styling removed - only flexbox structure kept
+.modal-window.modal-editor {
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+
+  .edit-xblock-modal {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+
+    .modal-content {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+  }
+}
+
+// Modal window overlay/backdrop (Lines 580-591 from _modal-window.scss)
+[class*="view-"] .modal-window-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgb(0, 0, 0);
+  opacity: 0.5;
+  z-index: 1000;
+}
+
+// Prevent background scrolling (Lines 83-85 from _modal.scss)
+body.modal-open {
+  overflow: hidden;
+}
+
+// ============================================================================
+// HIDE LEGACY STUDIO MODAL ELEMENTS
+// ============================================================================
+
+.modal-type-sort_into_bins {
+  // Hide legacy Studio modal header
+  .modal-header {
+    display: none !important;
+  }
+
+  // Hide legacy Studio modal footer actions (Save/Cancel buttons)
+  .modal-actions {
+    display: none !important;
+  }
+}
+
+// ============================================================================
+// MODAL DIMENSIONS
+// ============================================================================
+
+.modal-type-sort_into_bins.modal-window.modal-editor {
+  // Large modal with comfortable margins
+  width: 90vw !important;
+  height: 90vh !important;
+  max-width: none !important;
+  max-height: none !important;
+
+  // Center the modal
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  margin: 0 !important;
+
+  // Ensure modal appears above overlay
+  z-index: 1001 !important;
+}
+
+// ============================================================================
+// OPENEDX WRAPPER ELEMENTS - Full Flex Chain
+// ============================================================================
+// Fix for modal shrinking issue - OpenEdX adds wrapper elements that don't
+// participate in flex layout by default. Force them to grow and fill space.
+// Based on: .skills/debug-modal-whitespace.md Pattern 1
+
+// Target the xblock-editor wrapper
+[class*="view-"] .wrapper .modal-type-sort_into_bins .xblock-editor {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  overflow: hidden !important;
+}
+
+// Target the xblock wrapper
+[class*="view-"] .wrapper .modal-type-sort_into_bins .xblock {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  overflow: hidden !important;
+}
+
+// ============================================================================
+// REACT COMPONENT CONTAINER - White Background
+// ============================================================================
+// Apply white background to custom modal container to match Paragon components
+
+.modal-container-fullscreen {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;  // Enable flex shrinking and scrolling
+  flex: 1 !important;  // Grow to fill parent modal
+  background: var(--pgn-color-modal-content-bg);
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  // Header and footer stay fixed height (don't shrink)
+  .pgn__modal-header,
+  .pgn__modal-footer {
+    flex-shrink: 0;
+  }
+
+  // Body fills remaining space and scrolls when needed
+  .pgn__modal-body {
+    flex: 1 1 auto;      // Grow to fill available space
+    min-height: 0;       // CRITICAL: Enable scrolling in flex container
+    overflow-y: auto;    // Scroll when content exceeds height
+    overflow-x: hidden;  // No horizontal scroll
+  }
+}
+
+// ============================================================================
+// MFE EDITOR LAYOUT (COPIED FROM MFE - DO NOT MODIFY)
+// ============================================================================
+// Source: frontend-app-authoring EditProblemView/index.scss
+// Purpose: Two-column layout with fixed-width settings sidebar
+// Date: 2025-11-29
+// ============================================================================
+
+.editProblemView {
+  .editProblemView-settingsColumn {
+    width: 320px;
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+
+  .settingsOption {
+    .pgn__form-checkbox .pgn__form-label {
+      min-width: .8rem;
+    }
+  }
+}
+
+// ============================================================================
+// MFE SETTINGS WIDGET (COPIED FROM MFE - DO NOT MODIFY)
+// ============================================================================
+// Source: frontend-app-authoring SettingsWidget/index.scss
+// Purpose: Settings sidebar styling
+// Date: 2025-11-29
+// ============================================================================
+
+.settingsCardTitleSection {
+  padding-bottom: 0;
+}
+
+.settingsWidget {
+  margin-top: 40px;
+
+  .pgn__form-text {
+    font-size: small;
+  }
+}
+
+// // ============================================================================
+// // Purpose: Maintain fullscreen modal (98vw × 98vh) for timeline editor
+// // Context: This overrides the Liverpool theme's modal sizing to ensure
+// //          timeline presentation always gets maximum editing space
+// // Date: 2025-11-28
+// // ============================================================================
+
+// // Override modal size to fullscreen for timeline presentation
+// // Note: Modal exists in iframe context, so no need for .wrapper or [class*="view-"] prefix
+// .modal-type-sort_into_bins.modal-window.modal-editor {
+//   // Fullscreen dimensions with small margins
+//   width: 98vw !important;
+//   height: 98vh !important;
+//   max-width: none !important;
+//   max-height: none !important;
+
+//   // CRITICAL: Override JavaScript inline styles (top, left) for proper centering
+//   position: fixed !important;
+//   top: 50% !important;
+//   left: 50% !important;
+//   transform: translate(-50%, -50%) !important;
+//   margin: 0 !important;
+
+//   // Liverpool design system styling
+//   box-shadow: 0 24px 48px 0 rgba(0, 0, 0, 0.22) !important;  // liverpool-shadow-xl
+//   border-radius: 20px !important;  // liverpool-radius-lg
+
+//   // Flexbox layout for proper content stretching
+//   display: flex !important;
+//   flex-direction: column !important;
+// }
+
+// // Inner wrapper also needs flexbox (critical for proper layout)
+// [class*="view-"] .wrapper .modal-type-sort_into_bins.modal-window.modal-editor > div {
+//   display: flex !important;
+//   flex-direction: column !important;
+//   flex: 1 1 auto !important;
+//   min-height: 0 !important;
+// }
+
+// // Edit-xblock-modal container - fill 100% height to eliminate gap
+// [class*="view-"] .wrapper .modal-type-sort_into_bins .edit-xblock-modal {
+//   display: flex !important;
+//   flex-direction: column !important;
+//   flex: 1 1 100% !important;  // Use flex instead of height in flexbox context
+//   min-height: 0 !important;
+// }
+
+// // Make XBlock wrapper divs expand to fill modal height
+// [class*="view-"] .wrapper .modal-type-sort_into_bins .xblock-editor {
+//   display: flex !important;
+//   flex-direction: column !important;
+//   flex: 1 !important;
+//   overflow: hidden !important;
+// }
+
+// [class*="view-"] .wrapper .modal-type-sort_into_bins .xblock {
+//   display: flex !important;
+//   flex-direction: column !important;
+//   flex: 1 !important;
+//   overflow: hidden !important;
+// }
+
+// // CRITICAL: Override the max-height restriction on modal-content
+// // This overrides: [class*="view-"] .modal-lg.modal-editor .edit-xblock-modal .modal-content { max-height: calc(100vh - 144px); }
+// [class*="view-"] .wrapper .modal-type-sort_into_bins .edit-xblock-modal .modal-content {
+//   max-height: none !important;
+//   height: 100% !important;
+//   display: flex !important;
+//   flex-direction: column !important;
+// }
+
+// // Modal header - hidden for fullscreen editor
+// [class*="view-"] .wrapper .modal-type-sort_into_bins .edit-xblock-modal .modal-header {
+//   display: none !important;
+// }
+
+// // Modal content - fill entire modal (no header/footer)
+// [class*="view-"] .wrapper .modal-type-sort_into_bins .edit-xblock-modal .modal-content {
+//   // Take full height since header and footer are hidden
+//   flex: 1 1 100% !important;
+//   height: 100% !important;
+
+//   // CRITICAL: min-height 0 enables scrolling in flexbox
+//   min-height: 0 !important;
+
+//   // Scrolling behavior
+//   overflow-y: auto !important;
+//   overflow-x: hidden !important;
+//   scroll-behavior: smooth !important;
+
+//   // Remove padding to maximize space
+//   padding: 0 !important;
+
+//   // Background
+//   background-color: #ffffff !important;  // liverpool-neutral-white
+// }
+
+// // Modal actions - hidden for fullscreen editor (must override inline style)
+// [class*="view-"] .wrapper .modal-type-sort_into_bins .edit-xblock-modal .modal-actions {
+//   display: none !important;
+// }
+
+// // ============================================================================
+// // SETTINGS CARDS (MFE Pattern)
+// // ============================================================================
+
+// .settings-sidebar {
+//   margin-top: 40px; // Exact 40px to match MFE (base font is 10px, so 2.5rem = 25px)
+// }
+
+// .settingsOption {
+//   margin-bottom: $liverpool-space-4;
+
+//   .settingsCardTitleSection {
+//     padding: $liverpool-space-3 $liverpool-space-4;
+
+//     .collapsible-trigger {
+//       cursor: pointer;
+//       width: 100%;
+//       background: none;
+//       border: none;
+//       padding: 0;
+//       display: flex;
+//       justify-content: space-between;
+//       align-items: center;
+
+//       &:hover {
+//         opacity: 0.8;
+//       }
+//     }
+//   }
+
+//   .x-small {
+//     font-size: 14px;
+//     font-weight: 600;
+//     letter-spacing: 0.01em;
+//   }
+
+//   .small {
+//     font-size: 14px;
+//   }
+
+//   // Form elements in settings cards
+//   .form-group {
+//     margin-bottom: $liverpool-space-3;
+
+//     &:last-child {
+//       margin-bottom: 0;
+//     }
+//   }
+
+//   .form-control-feedback {
+//     font-size: 12px;
+//     color: $liverpool-neutral-500;
+//     margin-top: $liverpool-space-1;
+//   }
+
+//   .decoration-control-label {
+//     font-size: 14px;
+//   }
+// }
+
+// // Collapsible body styling
+// .collapsible-body {
+//   .pt-0 {
+//     padding-top: 0 !important;
+//   }
+// }
+
+// // ============================================================================
+// // MAIN CONTENT AREA
+// // ============================================================================
+
+// .main-content-area {
+//   padding: $liverpool-space-4;
+//   height: 100%;
+//   overflow-y: auto;
+
+//   h3 {
+//     font-size: 1.25rem;
+//     font-weight: 600;
+//     margin: 0;
+//   }
+// }
+
+// // Pair list styles
+// .pair-list {
+//   display: flex;
+//   flex-direction: column;
+//   gap: $liverpool-space-3;
+// }
+
+// .pair-list-item {
+//   display: flex;
+//   align-items: center;
+//   gap: $liverpool-space-3;
+//   padding: $liverpool-space-3;
+//   background: $liverpool-neutral-white;
+//   border: 1px solid $liverpool-neutral-200;
+//   border-radius: 6px;
+//   transition: all 0.2s ease;
+
+//   &:hover {
+//     box-shadow: $liverpool-shadow-sm;
+//   }
+
+//   &.dragging {
+//     opacity: 0.5;
+//   }
+
+//   &.drag-over {
+//     border-color: $liverpool-blue;
+//     background: lighten($liverpool-blue, 48%);
+//   }
+// }
+
+// .pair-drag-handle {
+//   color: $liverpool-neutral-500;
+//   cursor: grab;
+
+//   &:active {
+//     cursor: grabbing;
+//   }
+// }
+
+// .pair-content {
+//   flex: 1;
+//   min-width: 0;
+// }
+
+// .pair-main {
+//   display: flex;
+//   align-items: center;
+//   gap: $liverpool-space-2;
+// }
+
+// .pair-label {
+//   font-weight: 600;
+//   color: $liverpool-neutral-600;
+//   white-space: nowrap;
+// }
+
+// .pair-term {
+//   font-weight: 500;
+//   color: $liverpool-neutral-900;
+// }
+
+// .pair-arrow {
+//   color: $liverpool-neutral-500;
+// }
+
+// .pair-description {
+//   color: $liverpool-neutral-600;
+//   flex: 1;
+//   min-width: 0;
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+//   white-space: nowrap;
+// }
+
+// .pair-actions {
+//   display: flex;
+//   gap: $liverpool-space-2;
+//   flex-shrink: 0;
+// }
+
+// // Responsive: Tablet
+// @media (max-width: 1024px) {
+//   [class*="view-"] .wrapper .modal-type-sort_into_bins.modal-window.modal-editor {
+//     width: 96vw !important;
+//     height: 96vh !important;
+//     margin: 2vh auto !important;
+//   }
+// }
+
+// // Responsive: Mobile (fullscreen with no margins)
+// @media (max-width: 768px) {
+//   [class*="view-"] .wrapper .modal-type-sort_into_bins.modal-window.modal-editor {
+//     width: 100vw !important;
+//     height: 100vh !important;
+//     margin: 0 !important;
+//     border-radius: 0 !important;
+//   }
+// }

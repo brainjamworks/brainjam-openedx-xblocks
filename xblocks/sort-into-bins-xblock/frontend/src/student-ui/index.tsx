@@ -25,7 +25,7 @@ export const renderBlock = (element: Element | null, data: StudentViewData & { r
     <React.StrictMode>
       <StudentView
         runtime={data.runtime}
-        problemTitle={data.problemTitle}
+        displayName={data.displayName}
         instructions={data.instructions}
         bins={data.bins}
         items={data.items}

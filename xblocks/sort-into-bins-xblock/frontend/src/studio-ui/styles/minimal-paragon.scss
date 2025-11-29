@@ -6,6 +6,12 @@
  * This file contains ONLY XBlock-specific layout and structural styles
  */
 
+// COMMENTED OUT - Starting fresh with MFE modal pattern
+// Will import studio-editor.scss instead
+
+@import './studio-editor';
+
+/*
 // Import Liverpool shared tokens
 @import '../../../../../../shared-styles/styles/liverpool-shared-tokens';
 
@@ -359,3 +365,4 @@
     }
   }
 }
+*/

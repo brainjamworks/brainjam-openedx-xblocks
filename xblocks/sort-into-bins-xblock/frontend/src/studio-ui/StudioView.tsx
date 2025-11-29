@@ -1,52 +1,84 @@
 /**
- * Sort Into Bins - Studio View Component
+ * Studio View Component for Sort Into Bins XBlock
  *
- * Single-page editor with inline editing for bins and items.
- * Follows the pattern established by drag-drop-matching and image-hotspot.
+ * Main container that orchestrates between ListView and EditViews (Bin/Item).
+ * Uses MFE modal pattern with view mode switching.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Button from '@openedx/paragon/dist/Button';
 import Form from '@openedx/paragon/dist/Form';
 import Alert from '@openedx/paragon/dist/Alert';
-import Card from '@openedx/paragon/dist/Card';
+import ModalDialog from '@openedx/paragon/dist/Modal/ModalDialog';
 import { xblockPost } from '../common/api';
 import type { StudioViewProps, BinDefinition, SortableItem } from '../common/types';
-import { BinsList } from './components/BinsList';
-import { ItemsList } from './components/ItemsList';
+import { EditBinView } from './EditBinView';
+import { EditItemView } from './EditItemView';
+import { ModalHeader } from './components/ModalHeader';
+import { ModalFooter } from './components/ModalFooter';
+import { EditorLayout } from './components/EditorLayout';
+import { MainContentArea } from './components/MainContentArea';
+import { SettingsSidebar } from './components/SettingsSidebar';
 import './styles/minimal-paragon.scss';
+
+/**
+ * View modes
+ */
+type ViewMode = 'list' | 'edit-bin' | 'edit-item';
 
 export const StudioView: React.FC<StudioViewProps> = ({
   runtime,
-  fields,
+  fields
 }) => {
-  // =========================================================================
+  // =======================================================================
   // STATE - Form Fields
-  // =========================================================================
+  // =======================================================================
 
   const [displayName, setDisplayName] = useState(fields.display_name);
-  const [problemTitle, setProblemTitle] = useState(fields.problem_title);
   const [instructions, setInstructions] = useState(fields.instructions);
-  const [randomizeItems, setRandomizeItems] = useState(fields.randomize_items);
   const [explanation, setExplanation] = useState(fields.explanation);
   const [bins, setBins] = useState<BinDefinition[]>(fields.bins);
   const [items, setItems] = useState<SortableItem[]>(fields.items);
   const [weight, setWeight] = useState(fields.weight);
   const [maxAttempts, setMaxAttempts] = useState(fields.max_attempts);
-  const [gradingMode, setGradingMode] = useState(fields.grading_mode);
-  const [showCorrectAnswers, setShowCorrectAnswers] = useState(fields.show_correct_answers);
+  const [unlimited, setUnlimited] = useState(fields.max_attempts === 0);
+  const [randomizeItems, setRandomizeItems] = useState(fields.randomize_items);
   const [feedbackMode, setFeedbackMode] = useState(fields.show_feedback_mode);
+  const [showCorrectAnswers, setShowCorrectAnswers] = useState(fields.show_correct_answers);
 
-  // =========================================================================
+  // =======================================================================
   // STATE - UI
-  // =========================================================================
+  // =======================================================================
 
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const [editingType, setEditingType] = useState<'bin' | 'item' | null>(null);
+  const [editingIndex, setEditingIndex] = useState<number>(-1);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  // =========================================================================
+  // Ref to edit view's save function
+  const editViewSaveRef = useRef<(() => void) | null>(null);
+
+  // =======================================================================
+  // EFFECTS - Disable Legacy CSS
+  // =======================================================================
+
+  useEffect(() => {
+    const legacySheets = [
+      '/static/studio/liverpool-dental-legacy/css/studio-main-v1.css',
+      '/static/studio/liverpool-dental-legacy/css/course-unit-mfe-iframe-bundle.css'
+    ];
+
+    document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
+      if (legacySheets.some(path => link.href.includes(path))) {
+        link.disabled = true;
+      }
+    });
+  }, []);
+
+  // =======================================================================
   // HANDLERS - Bins
-  // =========================================================================
+  // =======================================================================
 
   const handleAddBin = () => {
     if (bins.length >= 10) {
@@ -56,19 +88,32 @@ export const StudioView: React.FC<StudioViewProps> = ({
 
     const newBin: BinDefinition = {
       id: `bin_${Date.now()}`,
-      label: `Bin ${bins.length + 1}`,
+      label: '',
       description: '',
-      max_capacity: 0, // 0 = unlimited
+      max_capacity: 0,
     };
 
     setBins([...bins, newBin]);
-    setMessage({ type: 'success', text: 'Bin added' });
+    setEditingIndex(bins.length);
+    setEditingType('bin');
+    setViewMode('edit-bin');
   };
 
-  const handleEditBin = (index: number, updatedBin: BinDefinition) => {
+  const handleEditBin = (index: number) => {
+    setEditingIndex(index);
+    setEditingType('bin');
+    setViewMode('edit-bin');
+  };
+
+  const handleSaveBin = (updatedBin: BinDefinition) => {
     const newBins = [...bins];
-    newBins[index] = updatedBin;
+    newBins[editingIndex] = updatedBin;
     setBins(newBins);
+
+    setViewMode('list');
+    setEditingIndex(-1);
+    setEditingType(null);
+    setMessage({ type: 'success', text: 'Bin saved' });
   };
 
   const handleDeleteBin = (index: number) => {
@@ -78,9 +123,8 @@ export const StudioView: React.FC<StudioViewProps> = ({
     }
 
     const binToDelete = bins[index];
-
-    // Check if any items reference this bin
     const itemsUsingBin = items.filter(item => item.correct_bin_id === binToDelete.id);
+
     if (itemsUsingBin.length > 0) {
       if (!confirm(`This bin is referenced by ${itemsUsingBin.length} item(s). Delete anyway?`)) {
         return;
@@ -91,16 +135,13 @@ export const StudioView: React.FC<StudioViewProps> = ({
     setMessage({ type: 'success', text: 'Bin deleted' });
   };
 
-  const handleReorderBins = (fromIndex: number, toIndex: number) => {
-    const newBins = [...bins];
-    const [movedBin] = newBins.splice(fromIndex, 1);
-    newBins.splice(toIndex, 0, movedBin);
+  const handleBinsReorder = (newBins: BinDefinition[]) => {
     setBins(newBins);
   };
 
-  // =========================================================================
+  // =======================================================================
   // HANDLERS - Items
-  // =========================================================================
+  // =======================================================================
 
   const handleAddItem = () => {
     if (items.length >= 50) {
@@ -116,18 +157,31 @@ export const StudioView: React.FC<StudioViewProps> = ({
     const newItem: SortableItem = {
       id: `item_${Date.now()}`,
       type: 'text',
-      content: `Item ${items.length + 1}`,
-      correct_bin_id: bins[0].id, // Default to first bin
+      content: '',
+      correct_bin_id: bins[0].id,
     };
 
     setItems([...items, newItem]);
-    setMessage({ type: 'success', text: 'Item added' });
+    setEditingIndex(items.length);
+    setEditingType('item');
+    setViewMode('edit-item');
   };
 
-  const handleEditItem = (index: number, updatedItem: SortableItem) => {
+  const handleEditItem = (index: number) => {
+    setEditingIndex(index);
+    setEditingType('item');
+    setViewMode('edit-item');
+  };
+
+  const handleSaveItem = (updatedItem: SortableItem) => {
     const newItems = [...items];
-    newItems[index] = updatedItem;
+    newItems[editingIndex] = updatedItem;
     setItems(newItems);
+
+    setViewMode('list');
+    setEditingIndex(-1);
+    setEditingType(null);
+    setMessage({ type: 'success', text: 'Item saved' });
   };
 
   const handleDeleteItem = (index: number) => {
@@ -140,16 +194,36 @@ export const StudioView: React.FC<StudioViewProps> = ({
     setMessage({ type: 'success', text: 'Item deleted' });
   };
 
-  const handleReorderItems = (fromIndex: number, toIndex: number) => {
-    const newItems = [...items];
-    const [movedItem] = newItems.splice(fromIndex, 1);
-    newItems.splice(toIndex, 0, movedItem);
+  const handleItemsReorder = (newItems: SortableItem[]) => {
     setItems(newItems);
   };
 
-  // =========================================================================
-  // HANDLERS - Save/Cancel
-  // =========================================================================
+  // =======================================================================
+  // HANDLERS - Edit View Navigation
+  // =======================================================================
+
+  const handleCancelEdit = () => {
+    // If editing new unsaved bin/item, remove it
+    if (editingType === 'bin') {
+      const bin = bins[editingIndex];
+      if (!bin.label && !bin.description) {
+        setBins(bins.filter((_, i) => i !== editingIndex));
+      }
+    } else if (editingType === 'item') {
+      const item = items[editingIndex];
+      if (!item.content) {
+        setItems(items.filter((_, i) => i !== editingIndex));
+      }
+    }
+
+    setViewMode('list');
+    setEditingIndex(-1);
+    setEditingType(null);
+  };
+
+  // =======================================================================
+  // HANDLERS - Save/Cancel All
+  // =======================================================================
 
   const handleSave = async () => {
     setSaving(true);
@@ -159,12 +233,6 @@ export const StudioView: React.FC<StudioViewProps> = ({
       // Client-side validation
       if (!displayName.trim()) {
         setMessage({ type: 'error', text: 'Display name is required' });
-        setSaving(false);
-        return;
-      }
-
-      if (!problemTitle.trim()) {
-        setMessage({ type: 'error', text: 'Problem title is required' });
         setSaving(false);
         return;
       }
@@ -181,7 +249,7 @@ export const StudioView: React.FC<StudioViewProps> = ({
         return;
       }
 
-      // Validate bins
+      // Validate each bin
       for (let i = 0; i < bins.length; i++) {
         const bin = bins[i];
         if (!bin.label.trim()) {
@@ -189,15 +257,9 @@ export const StudioView: React.FC<StudioViewProps> = ({
           setSaving(false);
           return;
         }
-        if (bin.max_capacity < 0) {
-          setMessage({ type: 'error', text: `Bin ${i + 1}: Capacity cannot be negative` });
-          setSaving(false);
-          return;
-        }
       }
 
-      // Validate items
-      const binIds = new Set(bins.map(b => b.id));
+      // Validate each item
       for (let i = 0; i < items.length; i++) {
         const item = items[i];
         if (!item.content.trim()) {
@@ -205,30 +267,24 @@ export const StudioView: React.FC<StudioViewProps> = ({
           setSaving(false);
           return;
         }
-        if (!binIds.has(item.correct_bin_id)) {
-          setMessage({ type: 'error', text: `Item ${i + 1}: Invalid bin assignment` });
-          setSaving(false);
-          return;
-        }
       }
 
-      // ARCHITECTURAL: Notify Studio that save is starting
+      // Notify Studio save starting
       if (runtime.notify) {
         runtime.notify('save', { state: 'start' });
       }
 
-      // ARCHITECTURAL: Use xblockPost helper for CSRF-protected requests
+      // POST to backend
       const result = await xblockPost(runtime, 'save_data', {
         display_name: displayName,
-        problem_title: problemTitle,
         instructions,
         randomize_items: randomizeItems,
         explanation,
         bins,
         items,
         weight,
-        max_attempts: maxAttempts,
-        grading_mode: gradingMode,
+        max_attempts: unlimited ? 0 : maxAttempts,
+        grading_mode: 'partial_credit',
         show_correct_answers: showCorrectAnswers,
         show_feedback_mode: feedbackMode,
       });
@@ -236,7 +292,6 @@ export const StudioView: React.FC<StudioViewProps> = ({
       if (result.success) {
         setMessage({ type: 'success', text: 'Changes saved successfully!' });
 
-        // ARCHITECTURAL: Notify Studio that save completed
         if (runtime.notify) {
           runtime.notify('save', { state: 'end' });
         }
@@ -259,233 +314,108 @@ export const StudioView: React.FC<StudioViewProps> = ({
     }
   };
 
-  /**
-   * ARCHITECTURAL: Cancel handler
-   * DON'T CHANGE: This notify pattern closes the Studio modal
-   */
   const handleCancel = () => {
     if (runtime.notify) {
       runtime.notify('cancel', {});
     }
   };
 
-  // =========================================================================
+  // Trigger edit view save
+  const handleSaveEditView = () => {
+    if (editViewSaveRef.current) {
+      editViewSaveRef.current();
+    }
+  };
+
+  // =======================================================================
   // RENDER
-  // =========================================================================
+  // =======================================================================
 
   return (
-    <div className="sort-into-bins-studio-view">
-      {/* Alert messages */}
-      {message && (
-        <Alert
-          variant={message.type === 'success' ? 'success' : 'danger'}
-          dismissible
-          onClose={() => setMessage(null)}
-        >
-          {message.text}
-        </Alert>
-      )}
+    <div className="modal-container-fullscreen">
+      <ModalHeader
+        title={displayName || "Sort Into Bins"}
+        onClose={handleCancel}
+        onTitleChange={setDisplayName}
+      />
 
-      <Form>
-        {/* Basic Settings Card */}
-        <Card className="mb-4">
-          <Card.Header title="Basic Settings" />
-          <Card.Section>
-            {/* Display Name */}
-            <Form.Group className="mb-3">
-              <Form.Label>Display Name *</Form.Label>
-              <Form.Control
-                type="text"
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                placeholder="Sort Into Bins"
-              />
-              <Form.Text>The name shown in the course outline.</Form.Text>
-            </Form.Group>
-
-            {/* Problem Title */}
-            <Form.Group className="mb-3">
-              <Form.Label>Problem Title *</Form.Label>
-              <Form.Control
-                type="text"
-                value={problemTitle}
-                onChange={(e) => setProblemTitle(e.target.value)}
-                placeholder="Sort the items into the correct bins"
-              />
-              <Form.Text>Title displayed at the top of the problem.</Form.Text>
-            </Form.Group>
-
-            {/* Instructions */}
-            <Form.Group className="mb-3">
-              <Form.Label>Instructions</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                value={instructions}
-                onChange={(e) => setInstructions(e.target.value)}
-                placeholder="Drag each item into the bin where it belongs."
-              />
-              <Form.Text>Instructions shown to students (supports HTML).</Form.Text>
-            </Form.Group>
-
-            {/* Explanation */}
-            <Form.Group className="mb-3">
-              <Form.Label>Explanation (Optional)</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                value={explanation}
-                onChange={(e) => setExplanation(e.target.value)}
-                placeholder="Explanation shown after submission..."
-              />
-              <Form.Text>
-                Optional explanation shown after submission (supports HTML).
-              </Form.Text>
-            </Form.Group>
-          </Card.Section>
-        </Card>
-
-        {/* Bins Card */}
-        <Card className="mb-4">
-          <Card.Header title="Bins" subtitle={`${bins.length} bin(s)`} />
-          <Card.Section>
-            <BinsList
-              bins={bins}
-              onAdd={handleAddBin}
-              onEdit={handleEditBin}
-              onDelete={handleDeleteBin}
-              onReorder={handleReorderBins}
-            />
-          </Card.Section>
-        </Card>
-
-        {/* Items Card */}
-        <Card className="mb-4">
-          <Card.Header title="Items" subtitle={`${items.length} item(s)`} />
-          <Card.Section>
-            <ItemsList
-              items={items}
-              bins={bins}
-              onAdd={handleAddItem}
-              onEdit={handleEditItem}
-              onDelete={handleDeleteItem}
-              onReorder={handleReorderItems}
-            />
-          </Card.Section>
-        </Card>
-
-        {/* Problem Settings Card */}
-        <Card className="mb-4">
-          <Card.Header title="Problem Settings" />
-          <Card.Section>
-            {/* Weight */}
-            <Form.Group className="mb-3">
-              <Form.Label>Weight</Form.Label>
-              <Form.Control
-                type="number"
-                min={0}
-                step={0.1}
-                value={weight}
-                onChange={(e) => setWeight(parseFloat(e.target.value) || 0)}
-              />
-              <Form.Text>
-                Maximum grade for this problem (affects course grade calculation).
-              </Form.Text>
-            </Form.Group>
-
-            {/* Max Attempts */}
-            <Form.Group className="mb-3">
-              <Form.Label>Maximum Attempts</Form.Label>
-              <Form.Control
-                type="number"
-                min={0}
-                value={maxAttempts}
-                onChange={(e) => setMaxAttempts(parseInt(e.target.value) || 0)}
-              />
-              <Form.Text>Maximum number of submission attempts (0 = unlimited).</Form.Text>
-            </Form.Group>
-
-            {/* Grading Mode */}
-            <Form.Group className="mb-3">
-              <Form.Label>Grading Mode</Form.Label>
-              <Form.Control
-                as="select"
-                value={gradingMode}
-                onChange={(e) => setGradingMode(e.target.value as 'all_or_nothing' | 'partial_credit')}
-              >
-                <option value="partial_credit">Partial Credit</option>
-                <option value="all_or_nothing">All or Nothing</option>
-              </Form.Control>
-              <Form.Text>
-                Partial Credit: Points per correct item. All or Nothing: Must be perfect.
-              </Form.Text>
-            </Form.Group>
-
-            {/* Show Correct Answers */}
-            <Form.Group className="mb-3">
-              <Form.Label>Show Correct Answers</Form.Label>
-              <Form.Control
-                as="select"
-                value={showCorrectAnswers}
-                onChange={(e) => setShowCorrectAnswers(e.target.value as 'never' | 'after_attempts' | 'always')}
-              >
-                <option value="never">Never</option>
-                <option value="after_attempts">After Max Attempts</option>
-                <option value="always">Always</option>
-              </Form.Control>
-              <Form.Text>When to show correct answers to students.</Form.Text>
-            </Form.Group>
-
-            {/* Feedback Mode */}
-            <Form.Group className="mb-3">
-              <Form.Label>Feedback Mode</Form.Label>
-              <Form.Control
-                as="select"
-                value={feedbackMode}
-                onChange={(e) => setFeedbackMode(e.target.value as 'immediate' | 'on_submit')}
-              >
-                <option value="on_submit">On Submit</option>
-                <option value="immediate">Immediate</option>
-              </Form.Control>
-              <Form.Text>
-                On Submit: Feedback after clicking Submit. Immediate: Instant feedback per item.
-              </Form.Text>
-            </Form.Group>
-
-            {/* Randomize Items */}
-            <Form.Group className="mb-3">
-              <Form.Switch
-                checked={randomizeItems}
-                onChange={(e) => setRandomizeItems(e.target.checked)}
-              >
-                Randomize Items
-              </Form.Switch>
-              <Form.Text>
-                Randomize the order of items on each page load. Students will see items in a different order.
-              </Form.Text>
-            </Form.Group>
-          </Card.Section>
-        </Card>
-
-        {/* ARCHITECTURAL: Save/Cancel buttons */}
-        <div className="sort-into-bins-sticky-actions d-flex justify-content-end border-top pt-3">
-          <Button
-            variant="tertiary"
-            onClick={handleCancel}
-            disabled={saving}
-            className="mr-2"
+      <ModalDialog.Body className="pb-0">
+        {/* Alert messages */}
+        {message && (
+          <Alert
+            variant={message.type === 'success' ? 'success' : 'danger'}
+            dismissible
+            onClose={() => setMessage(null)}
           >
-            Close Without Saving
-          </Button>
-          <Button
-            variant="primary"
-            onClick={handleSave}
-            disabled={saving}
-          >
-            {saving ? 'Saving...' : 'Save All Changes'}
-          </Button>
-        </div>
-      </Form>
+            {message.text}
+          </Alert>
+        )}
+
+        {viewMode === 'list' ? (
+          <EditorLayout
+            mainContent={
+              <MainContentArea
+                instructions={instructions}
+                explanation={explanation}
+                bins={bins}
+                items={items}
+                onInstructionsChange={setInstructions}
+                onExplanationChange={setExplanation}
+                onBinsReorder={handleBinsReorder}
+                onItemsReorder={handleItemsReorder}
+                onAddBin={handleAddBin}
+                onEditBin={handleEditBin}
+                onDeleteBin={handleDeleteBin}
+                onAddItem={handleAddItem}
+                onEditItem={handleEditItem}
+                onDeleteItem={handleDeleteItem}
+              />
+            }
+            sidebar={
+              <SettingsSidebar
+                weight={weight}
+                maxAttempts={maxAttempts}
+                unlimited={unlimited}
+                randomizeItems={randomizeItems}
+                feedbackMode={feedbackMode}
+                showCorrectAnswers={showCorrectAnswers}
+                onWeightChange={setWeight}
+                onMaxAttemptsChange={setMaxAttempts}
+                onUnlimitedChange={setUnlimited}
+                onRandomizeChange={setRandomizeItems}
+                onFeedbackModeChange={setFeedbackMode}
+                onShowCorrectAnswersChange={setShowCorrectAnswers}
+              />
+            }
+          />
+        ) : viewMode === 'edit-bin' ? (
+          <EditBinView
+            bin={bins[editingIndex]}
+            onSave={handleSaveBin}
+            onCancel={handleCancelEdit}
+            saveRef={editViewSaveRef}
+          />
+        ) : (
+          <EditItemView
+            item={items[editingIndex]}
+            bins={bins}
+            onSave={handleSaveItem}
+            onCancel={handleCancelEdit}
+            saveRef={editViewSaveRef}
+          />
+        )}
+      </ModalDialog.Body>
+
+      <ModalFooter
+        viewMode={viewMode === 'list' ? 'list' : 'edit'}
+        editingType={editingType}
+        onSave={handleSave}
+        onCancel={handleCancel}
+        saveDisabled={saving || bins.length === 0 || items.length === 0}
+        onSavePair={handleSaveEditView}
+        onBackToList={handleCancelEdit}
+        savePairDisabled={false}
+      />
     </div>
   );
 };

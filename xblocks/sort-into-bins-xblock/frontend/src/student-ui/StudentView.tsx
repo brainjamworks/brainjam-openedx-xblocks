@@ -23,7 +23,7 @@ import './styles/minimal-paragon.scss';
 
 export const StudentView: React.FC<StudentViewProps> = ({
   runtime,
-  problemTitle,
+  displayName,
   instructions,
   bins,
   items,
@@ -275,7 +275,7 @@ export const StudentView: React.FC<StudentViewProps> = ({
       <div className="sort-into-bins-student-view">
         {/* Header */}
         <div className="problem-header">
-          <h3 className="problem-title">{problemTitle}</h3>
+          <h3 className="problem-title">{displayName}</h3>
           <div className="problem-points">
             {maxScore.toFixed(maxScore % 1 === 0 ? 0 : 1)}/{maxScore.toFixed(maxScore % 1 === 0 ? 0 : 1)} point{maxScore !== 1 ? 's' : ''} ({isGraded ? 'graded' : 'ungraded'})
           </div>

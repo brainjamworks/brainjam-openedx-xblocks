@@ -131,7 +131,7 @@ export interface SubmissionResult {
  * Student view data passed from Python
  */
 export interface StudentViewData {
-  problemTitle: string;
+  displayName: string;
   instructions: string;
   bins: BinDefinition[];
   items: SortableItem[];
@@ -151,7 +151,6 @@ export interface StudentViewData {
  */
 export interface StudioViewFields {
   display_name: string;
-  problem_title: string;
   instructions: string;
   randomize_items: boolean;
   bins: BinDefinition[];
@@ -169,7 +168,7 @@ export interface StudioViewFields {
  */
 export interface StudentViewProps {
   runtime: XBlockRuntime;
-  problemTitle: string;
+  displayName: string;
   instructions: string;
   bins: BinDefinition[];
   items: SortableItem[];

@@ -82,14 +82,6 @@ class SortIntoBins(ScorableXBlockMixin, XBlock):
     # CONTENT: Problem definition (Scope.content)
     # =========================================================================
 
-    problem_title = String(
-        display_name="Problem Title",
-        default="Sort the items into the correct bins",
-        scope=Scope.content,
-        help="Title shown at top of problem",
-        multiline_editor=False
-    )
-
     instructions = String(
         display_name="Instructions",
         default="Drag each item into the bin where it belongs.",
@@ -348,7 +340,7 @@ class SortIntoBins(ScorableXBlockMixin, XBlock):
         # Initialize React component
         frag.initialize_js('SortIntoBinsStudentView', {
             'url': self.runtime.local_resource_url(self, 'public/student-ui.js'),
-            'problemTitle': self.problem_title,
+            'displayName': self.display_name,
             'instructions': self.instructions,
             'bins': json.loads(self.bins),
             'items': items_data,
@@ -373,19 +365,20 @@ class SortIntoBins(ScorableXBlockMixin, XBlock):
         bootstrap_js = self.resource_string("static/studio.js")
         frag.add_javascript(bootstrap_js)
 
-        # Load Paragon CSS from CDN (runtime, not bundled)
-        frag.add_css_url('https://cdn.jsdelivr.net/npm/@openedx/paragon@23.0.0/dist/core.min.css')
-        frag.add_css_url('https://cdn.jsdelivr.net/npm/@openedx/paragon@23.0.0/dist/light.min.css')
-
-        # Add XBlock custom styles (minimal)
+        # Load XBlock styles in correct order
+        # 1. Load studio-ui.css FIRST (contains all: initial reset)
         frag.add_css_url(self.runtime.local_resource_url(self, 'public/studio-ui.css'))
+
+        # 2. Load Paragon/Liverpool AFTER reset (re-applies clean styles)
+        frag.add_css_url('https://cdn.jsdelivr.net/npm/@openedx/paragon@23.14.9/dist/core.min.css')
+        frag.add_css_url('https://cdn.jsdelivr.net/npm/@openedx/paragon@23.14.9/dist/light.min.css')
+        frag.add_css_url('https://cdn.jsdelivr.net/npm/@brainjam/liverpool-dental-theme@1.1.0/liverpool-authoring-complete.css')
 
         # Initialize React component
         frag.initialize_js('SortIntoBinsStudioView', {
             'url': self.runtime.local_resource_url(self, 'public/studio-ui.js'),
             'fields': {
                 'display_name': self.display_name,
-                'problem_title': self.problem_title,
                 'instructions': self.instructions,
                 'randomize_items': self.randomize_items,
                 'bins': json.loads(self.bins),
@@ -678,10 +671,6 @@ class SortIntoBins(ScorableXBlockMixin, XBlock):
         if not display_name:
             return {'success': False, 'error': 'Display name is required'}
 
-        problem_title = data.get('problem_title', '').strip()
-        if not problem_title:
-            return {'success': False, 'error': 'Problem title is required'}
-
         # VALIDATE BINS
         bins = data.get('bins', [])
         if not isinstance(bins, list) or len(bins) < 1:
@@ -736,7 +725,6 @@ class SortIntoBins(ScorableXBlockMixin, XBlock):
 
         # SAVE DATA
         self.display_name = display_name
-        self.problem_title = problem_title
         self.instructions = data.get('instructions', '').strip()
         self.randomize_items = data.get('randomize_items', True)
         self.bins = json.dumps(bins)
@@ -750,8 +738,7 @@ class SortIntoBins(ScorableXBlockMixin, XBlock):
 
         return {
             'success': True,
-            'display_name': self.display_name,
-            'problem_title': self.problem_title
+            'display_name': self.display_name
         }
 
     @XBlock.json_handler
@@ -783,7 +770,6 @@ class SortIntoBins(ScorableXBlockMixin, XBlock):
             ("SortIntoBins Anatomy Categories",
              """<sort_into_bins
                     display_name="Anatomy Quiz"
-                    problem_title="Sort teeth into categories"
                     weight="2.0"
                     max_attempts="5"
                     grading_mode="partial_credit"

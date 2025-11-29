@@ -10371,7 +10371,7 @@ const Qp = ({
   )) })
 ] }), n1 = ({
   runtime: e,
-  problemTitle: t,
+  displayName: t,
   instructions: n,
   bins: r,
   items: i,
@@ -10599,7 +10599,7 @@ const Qp = ({
       n1,
       {
         runtime: t.runtime,
-        problemTitle: t.problemTitle,
+        displayName: t.displayName,
         instructions: t.instructions,
         bins: t.bins,
         items: t.items,

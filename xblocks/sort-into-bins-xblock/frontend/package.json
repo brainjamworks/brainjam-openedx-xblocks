@@ -12,19 +12,23 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/modifiers": "^9.0.0",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "@openedx/paragon": "^23.0.0",
+    "react": "^18.2.0",
     "react-dnd": "^14.0.5",
-    "react-dnd-html5-backend": "^14.1.0"
+    "react-dnd-html5-backend": "^14.1.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.2.0",
-    "vite": "^5.0.0",
-    "typescript": "^5.3.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
-    "sass": "^1.69.0"
+    "@vitejs/plugin-react": "^4.2.0",
+    "sass": "^1.69.0",
+    "typescript": "^5.3.0",
+    "vite": "^5.0.0"
   },
   "comments": {
     "versions": {
