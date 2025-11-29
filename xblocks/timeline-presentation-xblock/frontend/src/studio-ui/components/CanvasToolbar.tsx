@@ -30,10 +30,6 @@ import '../styles/canvas-toolbar.scss';
 interface CanvasToolbarProps {
   currentMode: DrawingMode;
   onModeChange: (mode: DrawingMode) => void;
-  color: string;
-  onColorChange: (color: string) => void;
-  thickness: number;
-  onThicknessChange: (thickness: number) => void;
 }
 
 const modes: Array<{ mode: DrawingMode; label: string; icon: any }> = [
@@ -49,13 +45,7 @@ const modes: Array<{ mode: DrawingMode; label: string; icon: any }> = [
 export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
   currentMode,
   onModeChange,
-  color,
-  onColorChange,
-  thickness,
-  onThicknessChange,
 }) => {
-  const showThickness = currentMode === 'line' || currentMode === 'arrow' || currentMode === 'ring';
-
   return (
     <div className="canvas-toolbar">
       {/* Mode buttons */}
@@ -75,48 +65,6 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
           </Button>
         ))}
       </div>
-
-      {/* Color picker */}
-      <div className="canvas-toolbar-section">
-        <label className="canvas-toolbar-label">Color</label>
-        <div className="canvas-toolbar-color">
-          <input
-            type="color"
-            value={color}
-            onChange={(e) => onColorChange(e.target.value)}
-            className="canvas-toolbar-color-picker"
-            aria-label="Select drawing color"
-          />
-          <input
-            type="text"
-            value={color}
-            onChange={(e) => onColorChange(e.target.value)}
-            placeholder="#000000"
-            pattern="^#[0-9A-Fa-f]{6}$"
-            className="canvas-toolbar-color-input"
-            aria-label="Color hex code"
-          />
-        </div>
-      </div>
-
-      {/* Thickness slider */}
-      {showThickness && (
-        <div className="canvas-toolbar-section">
-          <label className="canvas-toolbar-label">
-            {currentMode === 'ring' ? 'Ring Width' : 'Thickness'}: {thickness}px
-          </label>
-          <input
-            type="range"
-            min="1"
-            max="10"
-            step="1"
-            value={thickness}
-            onChange={(e) => onThicknessChange(parseInt(e.target.value))}
-            className="canvas-toolbar-slider"
-            aria-label={currentMode === 'ring' ? 'Ring width' : 'Line thickness'}
-          />
-        </div>
-      )}
     </div>
   );
 };

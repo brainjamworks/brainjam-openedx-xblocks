@@ -459,12 +459,13 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
   // ============================================================================
 
   /**
-   * Get mouse position relative to stage
+   * Get mouse position relative to stage (accounting for zoom/pan transforms)
    */
   const getMousePos = (e: any): { x: number; y: number } | null => {
     const stage = stageRef.current;
     if (!stage) return null;
-    return stage.getPointerPosition();
+    // Use getRelativePointerPosition to account for stage scale/position transforms
+    return stage.getRelativePointerPosition();
   };
 
   /**

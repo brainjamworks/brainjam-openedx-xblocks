@@ -227,3 +227,87 @@
     transform: translateY(0);
   }
 }
+
+// =============================================================================
+// GLASSMORPHISM TABS - Matching LMS Course Tabs
+// =============================================================================
+// Subtle frosted glass pills matching Liverpool's LMS aesthetic
+// =============================================================================
+
+/* Main tabs container */
+.timeline-presentation-xblock-studio-view .pgn__tabs {
+  background: transparent !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  margin-bottom: 1.5rem !important;
+}
+
+/* Nav bar wrapper */
+.timeline-presentation-xblock-studio-view .nav-tabs {
+  margin-bottom: 0 !important;
+  border-bottom: none !important;
+  background: transparent !important;
+}
+
+/* Tab links - Subtle glass pills */
+.timeline-presentation-xblock-studio-view .nav-link {
+  /* Light frosted glass */
+  background: rgba(255, 255, 255, 0.6) !important;
+  backdrop-filter: blur(10px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(120%) !important;
+
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  border-radius: 14px !important;
+
+  color: #333F48 !important;
+  font-weight: 500 !important;
+  font-size: 0.9375rem !important;
+
+  padding: 0.625rem 1.25rem !important;
+  margin: 0 0.25rem !important;
+
+  /* Very subtle shadow */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+
+  transition: all 150ms ease !important;
+}
+
+/* Hover state - slightly brighter */
+.timeline-presentation-xblock-studio-view .nav-link:hover {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05) !important;
+  color: #212b58 !important;
+}
+
+/* Active tab - Liverpool Blue glass tint */
+.timeline-presentation-xblock-studio-view .nav-link.active {
+  background: rgba(33, 43, 88, 0.12) !important;
+  backdrop-filter: blur(15px) saturate(130%) !important;
+  -webkit-backdrop-filter: blur(15px) saturate(130%) !important;
+
+  border: 1px solid rgba(33, 43, 88, 0.2) !important;
+  box-shadow:
+    0 2px 8px rgba(33, 43, 88, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+
+  color: #15376D !important;
+  font-weight: 600 !important;
+}
+
+/* Focus state - Liverpool teal outline */
+.timeline-presentation-xblock-studio-view .nav-link:focus {
+  outline: 2px solid #00A689 !important;
+  outline-offset: 2px !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .timeline-presentation-xblock-studio-view .nav-link {
+    font-size: 0.875rem !important;
+    padding: 0.5rem 1rem !important;
+    margin: 0 0.125rem !important;
+    backdrop-filter: blur(8px) saturate(120%) !important;
+    -webkit-backdrop-filter: blur(8px) saturate(120%) !important;
+  }
+}

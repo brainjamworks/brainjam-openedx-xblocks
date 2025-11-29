@@ -30,6 +30,7 @@ import { EditorActions } from './components/EditorActions';
 
 // NEW STYLES
 import './styles/studio-layout.scss';
+import './styles/setup-tab.scss';
 
 interface StudioViewProps {
   runtime: XBlockRuntime;
@@ -542,96 +543,75 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
       >
         {/* Setup Tab - Combined Basic Information + Assets */}
         <Tabs.Tab eventKey="setup" title="Setup">
-          <div style={{ margin: '0 auto' }}>
+          <div className="timeline-presentation-setup-tab">
             {/* Basic Information Section */}
-            <Card className="mb-4" style={{ border: '1px solid #DBDBD3', borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-              <Card.Body style={{ padding: '2rem' }}>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#212b58', marginBottom: '1.5rem' }}>Basic Information</h3>
+            <div className="setup-card">
+              <h3 className="setup-card-title">Basic Information</h3>
 
-                <Form.Group className="mb-4">
-                  <Form.Label style={{ fontWeight: 500, color: '#333f48', marginBottom: '0.5rem' }}>Display Name *</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={displayName}
-                    onChange={(e) => setDisplayName(e.target.value)}
-                    placeholder="e.g., Dental Anatomy Timeline"
-                    style={{
-                      borderRadius: '8px',
-                      border: '1px solid #DBDBD3',
-                      padding: '0.75rem 1rem',
-                      fontSize: '1rem'
-                    }}
-                  />
-                </Form.Group>
+              <div className="setup-form-group">
+                <label className="setup-form-label">Display Name *</label>
+                <input
+                  type="text"
+                  className="setup-form-input"
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  placeholder="e.g., Dental Anatomy Timeline"
+                />
+              </div>
 
-                <Form.Group className="mb-4">
-                  <Form.Label style={{ fontWeight: 500, color: '#333f48', marginBottom: '0.5rem' }}>Student Title *</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder="e.g., Understanding Tooth Development"
-                    style={{
-                      borderRadius: '8px',
-                      border: '1px solid #DBDBD3',
-                      padding: '0.75rem 1rem',
-                      fontSize: '1rem'
-                    }}
-                  />
-                </Form.Group>
+              <div className="setup-form-group">
+                <label className="setup-form-label">Student Title *</label>
+                <input
+                  type="text"
+                  className="setup-form-input"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="e.g., Understanding Tooth Development"
+                />
+              </div>
 
-                <Form.Group className="mb-0">
-                  <Form.Label style={{ fontWeight: 500, color: '#333f48', marginBottom: '0.5rem' }}>Description</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Brief description of this presentation"
-                    style={{
-                      borderRadius: '8px',
-                      border: '1px solid #DBDBD3',
-                      padding: '0.75rem 1rem',
-                      fontSize: '1rem',
-                      resize: 'vertical'
-                    }}
-                  />
-                </Form.Group>
-              </Card.Body>
-            </Card>
+              <div className="setup-form-group">
+                <label className="setup-form-label">Description</label>
+                <textarea
+                  className="setup-form-textarea"
+                  rows={3}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Brief description of this presentation"
+                />
+              </div>
+            </div>
 
             {/* Assets Section */}
-            <Card className="mb-4" style={{ border: '1px solid #DBDBD3', borderRadius: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-              <Card.Body style={{ padding: '2rem' }}>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#212b58', marginBottom: '1.5rem' }}>Assets</h3>
+            <div className="setup-card">
+              <h3 className="setup-card-title">Assets</h3>
 
-                <div className="mb-4">
-                  <AssetUploader
-                    label="Diagram Image *"
-                    accept="image/png,image/jpeg,image/jpg"
-                    currentAsset={imageUrl}
-                    assetType="image"
-                    onUpload={handleImageUpload}
-                    onDelete={handleDeleteImage}
-                    uploading={uploadingImage}
-                    error={imageError}
-                  />
-                </div>
+              <div className="setup-form-group">
+                <AssetUploader
+                  label="Diagram Image *"
+                  accept="image/png,image/jpeg,image/jpg"
+                  currentAsset={imageUrl}
+                  assetType="image"
+                  onUpload={handleImageUpload}
+                  onDelete={handleDeleteImage}
+                  uploading={uploadingImage}
+                  error={imageError}
+                />
+              </div>
 
-                <div className="mb-0">
-                  <AssetUploader
-                    label="Audio Narration *"
-                    accept="audio/mpeg,audio/mp3"
-                    currentAsset={audioUrl}
-                    assetType="audio"
-                    onUpload={handleAudioUpload}
-                    onDelete={handleDeleteAudio}
-                    uploading={uploadingAudio}
-                    error={audioError}
-                  />
-                </div>
-              </Card.Body>
-            </Card>
+              <div className="setup-form-group">
+                <AssetUploader
+                  label="Audio Narration *"
+                  accept="audio/mpeg,audio/mp3"
+                  currentAsset={audioUrl}
+                  assetType="audio"
+                  onUpload={handleAudioUpload}
+                  onDelete={handleDeleteAudio}
+                  uploading={uploadingAudio}
+                  error={audioError}
+                />
+              </div>
+            </div>
           </div>
         </Tabs.Tab>
 
@@ -695,7 +675,7 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
                   onThicknessChange={setDrawingThickness}
                 />
 
-                <div style={{ flex: 1, minHeight: 0, maxHeight: 'calc(98vh - 336px)', background: '#fff', borderRadius: '16px', boxShadow: '0 4px 8px rgba(0,0,0,0.12)', overflow: 'auto' }}>
+                <div style={{ flex: 1, minHeight: 0, maxHeight: 'calc(98vh - 336px)', background: '#fff', borderRadius: '16px', boxShadow: '0 4px 8px rgba(0,0,0,0.12)', overflow: 'hidden' }}>
                   <VisualEditor
                     backgroundImageUrl={imageUrl}
                     events={timelineEvents}
@@ -739,19 +719,18 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
 
       {/* Action Buttons (shown outside editor tab) */}
       {activeTab !== 'editor' && (
-        <div className="d-flex justify-content-end mt-4 pt-3 border-top">
+        <div className="setup-actions">
           <Button
-            variant="tertiary"
             onClick={handleCancel}
             disabled={saving}
-            className="mr-2"
+            className="setup-btn setup-btn-cancel"
           >
             Cancel
           </Button>
           <Button
-            variant="primary"
             onClick={handleSave}
             disabled={saving}
+            className="setup-btn setup-btn-save"
           >
             {saving ? 'Saving...' : 'Save'}
           </Button>

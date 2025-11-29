@@ -1,0 +1,294 @@
+/**
+ * Setup Tab Styles
+ *
+ * Comprehensive styling for the Timeline Presentation Setup tab.
+ * Matches the beautiful Editor tab styling using Liverpool design tokens.
+ */
+
+@import './liverpool-tokens.scss';
+
+// =============================================================================
+// SETUP TAB CONTAINER
+// =============================================================================
+
+.timeline-presentation-setup-tab {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $liverpool-space-4;
+  padding: $liverpool-space-4 $liverpool-space-4;
+}
+
+// =============================================================================
+// CARD SECTIONS
+// =============================================================================
+
+.setup-card {
+  background: $liverpool-white;
+  border: 1px solid $liverpool-neutral-200;
+  border-radius: $liverpool-radius-card;
+  box-shadow: $liverpool-shadow-base;
+  padding: $liverpool-space-6;
+  transition: box-shadow $liverpool-duration-base;
+
+  &:hover {
+    box-shadow: $liverpool-shadow-md;
+  }
+}
+
+.setup-card-title {
+  font-family: $liverpool-font-primary;
+  font-size: $liverpool-font-size-lg;
+  font-weight: $liverpool-font-weight-semibold;
+  color: $liverpool-charcoal;
+  margin-bottom: $liverpool-space-5;
+  margin-top: 0;
+}
+
+// =============================================================================
+// FORM FIELDS
+// =============================================================================
+
+.setup-form-group {
+  margin-bottom: $liverpool-space-4;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.setup-form-label {
+  display: block;
+  font-family: $liverpool-font-primary;
+  font-size: $liverpool-font-size-sm;
+  font-weight: $liverpool-font-weight-medium;
+  color: $liverpool-neutral-600;
+  margin-bottom: $liverpool-space-2;
+}
+
+.setup-form-input,
+.setup-form-textarea {
+  width: 100%;
+  padding: $liverpool-space-3 $liverpool-space-4;
+  border: 1px solid $liverpool-neutral-200;
+  border-radius: $liverpool-radius-sm;
+  font-family: $liverpool-font-primary;
+  font-size: $liverpool-font-size-base;
+  color: $liverpool-charcoal;
+  background: $liverpool-white;
+  transition: all $liverpool-duration-base;
+
+  &::placeholder {
+    color: $liverpool-neutral-400;
+  }
+
+  &:hover {
+    border-color: $liverpool-neutral-300;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $liverpool-blue;
+    box-shadow: 0 0 0 3px rgba($liverpool-blue, 0.1);
+  }
+}
+
+.setup-form-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+// =============================================================================
+// ASSET UPLOADER
+// =============================================================================
+
+.asset-uploader {
+  // Label
+  .asset-uploader-label {
+    display: block;
+    font-family: $liverpool-font-primary;
+    font-size: $liverpool-font-size-sm;
+    font-weight: $liverpool-font-weight-medium;
+    color: $liverpool-neutral-600;
+    margin-bottom: $liverpool-space-3;
+  }
+
+  // Current asset preview card
+  .asset-preview-card {
+    background: $liverpool-neutral-100;
+    border: 1px solid $liverpool-neutral-200;
+    border-radius: $liverpool-radius-sm;
+    padding: $liverpool-space-4;
+    margin-bottom: $liverpool-space-3;
+  }
+
+  .asset-preview-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $liverpool-space-4;
+  }
+
+  .asset-preview-media {
+    display: flex;
+    align-items: center;
+    gap: $liverpool-space-2;
+  }
+
+  .asset-preview-image {
+    max-width: 200px;
+    max-height: 150px;
+    object-fit: contain;
+    border-radius: $liverpool-radius-sm;
+  }
+
+  .asset-preview-audio {
+    display: flex;
+    align-items: center;
+    gap: $liverpool-space-2;
+
+    audio {
+      max-width: 300px;
+    }
+  }
+
+  // Delete button
+  .asset-delete-btn {
+    border-radius: $liverpool-radius-pill !important;
+    padding: $liverpool-space-2 $liverpool-space-4 !important;
+    font-family: $liverpool-font-primary !important;
+    font-weight: $liverpool-font-weight-semibold !important;
+    font-size: $liverpool-font-size-sm !important;
+    background: $liverpool-pink !important;
+    border-color: $liverpool-pink !important;
+    color: $liverpool-white !important;
+    transition: all $liverpool-duration-base !important;
+    box-shadow: $liverpool-shadow-sm !important;
+
+    &:hover:not(:disabled) {
+      background: darken($liverpool-pink, 8%) !important;
+      box-shadow: $liverpool-shadow-base !important;
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      box-shadow: none !important;
+      transform: translateY(0);
+    }
+  }
+
+  // Upload dropzone
+  .upload-dropzone {
+    border: 2px dashed $liverpool-neutral-300;
+    border-radius: $liverpool-radius-sm;
+    padding: $liverpool-space-6;
+    text-align: center;
+    background: $liverpool-neutral-100;
+    transition: all $liverpool-duration-base;
+    cursor: pointer;
+
+    &:hover {
+      border-color: $liverpool-blue;
+      background: $liverpool-white;
+    }
+
+    &.drag-over {
+      border-color: $liverpool-teal;
+      background: rgba($liverpool-teal, 0.05);
+    }
+
+    &.uploading {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  .upload-icon {
+    font-size: 3rem;
+    color: $liverpool-neutral-500;
+    margin-bottom: $liverpool-space-3;
+  }
+
+  .upload-text {
+    font-family: $liverpool-font-primary;
+    font-size: $liverpool-font-size-base;
+    color: $liverpool-charcoal;
+    margin-bottom: $liverpool-space-2;
+  }
+
+  .upload-browse-link {
+    color: $liverpool-blue !important;
+    font-weight: $liverpool-font-weight-semibold !important;
+    padding: 0 !important;
+    background: none !important;
+    border: none !important;
+
+    &:hover {
+      color: darken($liverpool-blue, 8%) !important;
+      text-decoration: underline !important;
+    }
+  }
+
+  .upload-helper {
+    font-family: $liverpool-font-primary;
+    font-size: $liverpool-font-size-xs;
+    color: $liverpool-text-muted;
+    line-height: $liverpool-line-height-relaxed;
+  }
+}
+
+// =============================================================================
+// ACTION BUTTONS
+// =============================================================================
+
+.setup-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: $liverpool-space-2;
+  padding: $liverpool-space-3 $liverpool-space-4;
+  margin: 0 $liverpool-space-4; // Add horizontal margin to align with editor grid padding
+}
+
+.setup-btn {
+  border-radius: $liverpool-radius-pill !important;
+  padding: $liverpool-space-3 $liverpool-space-6 !important;
+  font-family: $liverpool-font-primary !important;
+  font-weight: $liverpool-font-weight-semibold !important;
+  font-size: $liverpool-font-size-base !important;
+  transition: all $liverpool-duration-base $liverpool-easing-in-out !important;
+  white-space: nowrap;
+
+  &.setup-btn-save {
+    background: $liverpool-blue !important;
+    border-color: $liverpool-blue !important;
+    color: $liverpool-white !important;
+    box-shadow: $liverpool-shadow-sm !important;
+
+    &:hover:not(:disabled) {
+      background: darken($liverpool-blue, 8%) !important;
+      border-color: darken($liverpool-blue, 8%) !important;
+      box-shadow: $liverpool-shadow-base !important;
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      box-shadow: none !important;
+      transform: translateY(0);
+    }
+  }
+
+  &.setup-btn-cancel {
+    border: 1px solid $liverpool-neutral-300 !important;
+    background: $liverpool-white !important;
+    color: $liverpool-charcoal !important;
+
+    &:hover:not(:disabled) {
+      border-color: $liverpool-neutral-400 !important;
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+  }
+}

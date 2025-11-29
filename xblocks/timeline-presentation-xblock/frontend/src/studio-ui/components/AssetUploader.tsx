@@ -94,7 +94,7 @@ export const AssetUploader: React.FC<AssetUploaderProps> = ({
 
   return (
     <div className="asset-uploader">
-      <label className="mb-2 d-block font-weight-bold">{label}</label>
+      <label className="asset-uploader-label">{label}</label>
 
       {error && (
         <Alert variant="danger" dismissible className="mb-3">
@@ -104,36 +104,33 @@ export const AssetUploader: React.FC<AssetUploaderProps> = ({
 
       {/* Current Asset Display */}
       {currentAsset && !uploading && (
-        <Card className="mb-3">
-          <Card.Body>
-            <div className="d-flex align-items-center justify-content-between">
-              <div className="flex-grow-1">
-                {assetType === 'image' ? (
-                  <img
-                    src={currentAsset}
-                    alt="Current asset"
-                    style={{ maxWidth: '200px', maxHeight: '150px', objectFit: 'contain' }}
-                  />
-                ) : (
-                  <div className="d-flex align-items-center">
-                    <FilePresent className="mr-2" />
-                    <audio controls src={currentAsset} style={{ maxWidth: '300px' }} />
-                  </div>
-                )}
-              </div>
-              {onDelete && (
-                <Button
-                  variant="danger"
-                  iconBefore={Delete}
-                  onClick={onDelete}
-                  size="sm"
-                >
-                  Remove
-                </Button>
+        <div className="asset-preview-card">
+          <div className="asset-preview-content">
+            <div className="asset-preview-media">
+              {assetType === 'image' ? (
+                <img
+                  src={currentAsset}
+                  alt="Current asset"
+                  className="asset-preview-image"
+                />
+              ) : (
+                <div className="asset-preview-audio">
+                  <FilePresent />
+                  <audio controls src={currentAsset} />
+                </div>
               )}
             </div>
-          </Card.Body>
-        </Card>
+            {onDelete && (
+              <Button
+                iconBefore={Delete}
+                onClick={onDelete}
+                className="asset-delete-btn"
+              >
+                Remove
+              </Button>
+            )}
+          </div>
+        </div>
       )}
 
       {/* Upload Area */}
@@ -142,35 +139,26 @@ export const AssetUploader: React.FC<AssetUploaderProps> = ({
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
-        style={{
-          border: `2px dashed ${dragOver ? '#0075b4' : '#ccc'}`,
-          borderRadius: '8px',
-          padding: '2rem',
-          textAlign: 'center',
-          backgroundColor: dragOver ? '#f0f8ff' : '#fafafa',
-          transition: 'all 0.2s',
-          cursor: uploading ? 'not-allowed' : 'pointer',
-        }}
       >
         {uploading ? (
           <div>
             <Spinner animation="border" className="mb-2" />
-            <p className="mb-0">Uploading...</p>
+            <p className="upload-text">Uploading...</p>
           </div>
         ) : (
           <>
-            <Upload style={{ fontSize: '3rem', color: '#6c757d' }} className="mb-2" />
-            <p className="mb-2">
+            <Upload className="upload-icon" />
+            <p className="upload-text">
               Drag and drop your {assetType} here, or{' '}
-              <Button variant="link" onClick={handleBrowseClick} className="p-0">
+              <Button onClick={handleBrowseClick} className="upload-browse-link">
                 browse
               </Button>
             </p>
-            <small className="text-muted">
+            <div className="upload-helper">
               Accepted formats: {accept}
               <br />
               Max size: {assetType === 'image' ? '10MB' : '50MB'}
-            </small>
+            </div>
           </>
         )}
       </div>
