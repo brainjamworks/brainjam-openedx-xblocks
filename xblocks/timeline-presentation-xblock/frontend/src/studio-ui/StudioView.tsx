@@ -13,9 +13,10 @@ import Card from '@openedx/paragon/dist/Card';
 import Tabs from '@openedx/paragon/dist/Tabs';
 import IconButton from '@openedx/paragon/dist/IconButton';
 import Icon from '@openedx/paragon/dist/Icon';
+import { StandardModal } from '@openedx/paragon';
 import { Close } from '@openedx/paragon/icons';
 import { xblockPost, XBlockRuntime } from '../common/api';
-import type { StudioViewFields, TimelineEvent, AssetUploadResponse, DrawingMode } from '../common/types';
+import type { StudioViewFields, TimelineEvent, AssetUploadResponse, DrawingMode, CourseAsset, ListAssetsResponse } from '../common/types';
 import { AssetUploader } from './components/AssetUploader';
 import { VisualEditor } from './components/VisualEditor';
 import { generateKonvaConfig } from './utils/konvaConfigGenerator';
@@ -94,6 +95,11 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
   const [drawingMode, setDrawingMode] = useState<DrawingMode>('select');
   const [drawingColor, setDrawingColor] = useState('#212b58'); // Liverpool blue
   const [drawingThickness, setDrawingThickness] = useState(2);
+
+  // Course images browser state
+  const [showAssetPicker, setShowAssetPicker] = useState(false);
+  const [loadingAssets, setLoadingAssets] = useState(false);
+  const [courseAssets, setCourseAssets] = useState<CourseAsset[]>([]);
 
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -301,6 +307,34 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
       setAudioUrl('');
       setAudioDuration(0);
     }
+  };
+
+  // =======================================================================
+  // HANDLERS - Course Images Browser
+  // =======================================================================
+
+  const handleOpenAssetPicker = async () => {
+    setShowAssetPicker(true);
+    setLoadingAssets(true);
+
+    try {
+      const result = await xblockPost<ListAssetsResponse>(runtime, 'list_course_assets', {});
+
+      if (result.success && result.assets) {
+        setCourseAssets(result.assets);
+      } else {
+        console.error('Failed to load assets:', result.error);
+      }
+    } catch (error) {
+      console.error('Asset list error:', error);
+    } finally {
+      setLoadingAssets(false);
+    }
+  };
+
+  const handleSelectAsset = (asset: CourseAsset) => {
+    setImageUrl(asset.url);
+    setShowAssetPicker(false);
   };
 
   // =======================================================================
@@ -597,6 +631,18 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
                   uploading={uploadingImage}
                   error={imageError}
                 />
+
+                {/* Course Images Browser Button */}
+                <div className="mt-2">
+                  <Button
+                    variant="outline-primary"
+                    onClick={handleOpenAssetPicker}
+                    disabled={uploadingImage}
+                    size="sm"
+                  >
+                    Browse Course Images
+                  </Button>
+                </div>
               </div>
 
               <div className="setup-form-group">
@@ -736,6 +782,81 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
           </Button>
         </div>
       )}
+
+      {/* Course Images Browser Modal */}
+      <StandardModal
+        title="Choose Course Image"
+        isOpen={showAssetPicker}
+        onClose={() => setShowAssetPicker(false)}
+        size="lg"
+        isOverflowVisible={false}
+        footerNode={
+          <Button variant="tertiary" onClick={() => setShowAssetPicker(false)}>
+            Close
+          </Button>
+        }
+      >
+        {loadingAssets ? (
+          <div className="text-center p-4">
+            <p>Loading images...</p>
+          </div>
+        ) : courseAssets.length === 0 ? (
+          <div className="text-center p-4">
+            <p>No images found in course. Upload an image first.</p>
+          </div>
+        ) : (
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
+            gap: '1rem',
+            padding: '1rem'
+          }}>
+            {courseAssets.map((asset) => (
+              <div
+                key={asset.url}
+                onClick={() => handleSelectAsset(asset)}
+                style={{
+                  cursor: 'pointer',
+                  border: imageUrl === asset.url ? '2px solid #0075b4' : '1px solid #ccc',
+                  padding: '0.5rem',
+                  borderRadius: '4px',
+                  transition: 'border-color 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  if (imageUrl !== asset.url) {
+                    e.currentTarget.style.borderColor = '#999';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (imageUrl !== asset.url) {
+                    e.currentTarget.style.borderColor = '#ccc';
+                  }
+                }}
+              >
+                <img
+                  src={asset.thumbnail_url || asset.url}
+                  alt={asset.filename}
+                  style={{
+                    width: '100%',
+                    height: '100px',
+                    objectFit: 'cover',
+                    borderRadius: '2px'
+                  }}
+                />
+                <small style={{
+                  display: 'block',
+                  marginTop: '0.5rem',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap'
+                }}>
+                  {asset.filename}
+                </small>
+              </div>
+            ))}
+          </div>
+        )}
+      </StandardModal>
     </div>
   );
 };

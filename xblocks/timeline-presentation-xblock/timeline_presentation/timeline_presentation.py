@@ -362,6 +362,88 @@ class TimelinePresentation(XBlock):
                 'error': f'Upload failed: {str(e)}'
             }
 
+    @XBlock.json_handler
+    def list_course_assets(self, data, suffix=''):
+        """
+        List all image assets from the course contentstore.
+
+        Returns a list of image assets for the course images browser modal.
+        Filters for image types only and sorts by upload date (most recent first).
+        """
+        if not CONTENTSTORE_AVAILABLE:
+            return {
+                'success': False,
+                'error': 'Contentstore not available'
+            }
+
+        try:
+            course_key = self.runtime.course_id
+
+            # Filter for image types only
+            image_types = [
+                'image/jpeg',
+                'image/png',
+                'image/gif',
+                'image/webp',
+                'image/svg+xml'
+            ]
+            filter_params = {'contentType': {'$in': image_types}}
+
+            # Get all image assets from contentstore
+            all_assets, total_count = contentstore().get_all_content_for_course(
+                course_key,
+                start=0,
+                maxresults=500,  # Reasonable limit for asset picker
+                sort=[('uploadDate', DESCENDING)],  # Most recent first
+                filter_params=filter_params
+            )
+
+            # Format assets for frontend consumption
+            image_assets = []
+            for asset in all_assets:
+                asset_key = asset.get('asset_key')
+
+                # Get portable URL (relative path)
+                portable_url = StaticContent.get_static_path_from_location(asset_key)
+
+                # Get full canonicalized URL for display
+                asset_url = StaticContent.get_canonicalized_asset_path(
+                    course_key,
+                    portable_url,
+                    '',
+                    []
+                )
+
+                # Extract filename from asset key
+                filename = asset_key.block_id
+
+                # Get upload date
+                upload_date = asset.get('uploadDate', '')
+                if upload_date:
+                    upload_date = upload_date.isoformat() if hasattr(upload_date, 'isoformat') else str(upload_date)
+
+                image_assets.append({
+                    'filename': filename,
+                    'url': asset_url,
+                    'portable_url': portable_url,
+                    'content_type': asset.get('contentType', ''),
+                    'upload_date': upload_date,
+                    'thumbnail_url': asset_url  # Could generate thumbnails in the future
+                })
+
+            return {
+                'success': True,
+                'assets': image_assets,
+                'count': len(image_assets)
+            }
+
+        except Exception as e:
+            logger.exception(f"Error listing course assets: {str(e)}")
+            return {
+                'success': False,
+                'error': f'Failed to list assets: {str(e)}'
+            }
+
     # =============================================================================
     # WORKBENCH: Testing scenarios
     # =============================================================================
