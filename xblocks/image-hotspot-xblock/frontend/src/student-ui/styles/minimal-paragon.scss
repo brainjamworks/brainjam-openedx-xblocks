@@ -99,18 +99,6 @@
     }
   }
 
-  // Pulse animation for SVG answer hotspots
-  @keyframes pulse {
-    0%, 100% {
-      transform: scale(1);
-      opacity: 1;
-    }
-    50% {
-      transform: scale(1.03);
-      opacity: 0.85;
-    }
-  }
-
   // Processing Overlay
   .processing-overlay {
     position: absolute;

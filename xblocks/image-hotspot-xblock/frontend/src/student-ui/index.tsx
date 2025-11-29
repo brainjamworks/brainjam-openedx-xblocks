@@ -19,6 +19,7 @@ export const renderBlock = (element: Element | null, data: StudentViewData & { r
 <IntlProvider locale="en">
           <StudentView
             runtime={data.runtime}
+            displayName={data.displayName}
             questionText={data.questionText}
             imageUrl={data.imageUrl}
             hotspots={data.hotspots}

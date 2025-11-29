@@ -97,6 +97,7 @@ export interface BatchSubmissionResult {
  * Matches the data dict in student_view()
  */
 export interface StudentViewData {
+  displayName: string;
   questionText: string;
   imageUrl: string;
   hotspots: Hotspot[];
@@ -131,6 +132,7 @@ export interface StudioViewFields {
  */
 export interface StudentViewProps {
   runtime: XBlockRuntime;
+  displayName: string;
   questionText: string;
   imageUrl: string;
   hotspots: Hotspot[];

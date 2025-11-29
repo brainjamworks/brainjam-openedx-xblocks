@@ -20,6 +20,7 @@ import type { StudentViewProps, SubmissionResult, HotspotClick, Hotspot, BatchSu
  */
 export const StudentView: React.FC<StudentViewProps> = ({
   runtime,
+  displayName,
   questionText,
   imageUrl,
   hotspots: _hotspots,
@@ -245,7 +246,7 @@ export const StudentView: React.FC<StudentViewProps> = ({
     <div className="image-hotspot-student-view">
       {/* Problem Header with Title and Score */}
       <div className="problem-header">
-        <h3 className="problem-title">Image Hotspot</h3>
+        <h3 className="problem-title">{displayName}</h3>
         <div className="problem-points">
           {maxScore.toFixed(maxScore % 1 === 0 ? 0 : 1)}/{maxScore.toFixed(maxScore % 1 === 0 ? 0 : 1)} point{maxScore !== 1 ? 's' : ''} ({isGraded ? 'graded' : 'ungraded'})
         </div>
@@ -307,7 +308,6 @@ export const StudentView: React.FC<StudentViewProps> = ({
                         fill="rgba(0, 166, 137, 0.12)"
                         stroke="#00a689"
                         strokeWidth={3}
-                        style={{ animation: 'pulse 2s ease-in-out infinite' }}
                       >
                         <title>{hotspot.label}</title>
                       </circle>
