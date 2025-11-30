@@ -32,18 +32,18 @@ export function generateKonvaConfig(
   scaleFactor: number = 1
 ): KonvaAnimationConfig {
   // DEBUG: Log config generation
-  console.group(`🔧 [CONFIG] Generating for ${event.elementType} (${event.id})`);
-  console.log('Input - Event position (%):', event.position);
-  console.log('Input - Canvas dimensions:', canvasDimensions);
-  console.log('Input - Scale factor:', scaleFactor);
+  // console.group(`🔧 [CONFIG] Generating for ${event.elementType} (${event.id})`);
+  // console.log('Input - Event position (%):', event.position);
+  // console.log('Input - Canvas dimensions:', canvasDimensions);
+  // console.log('Input - Scale factor:', scaleFactor);
 
   const config = {
     konvaProps: generateKonvaProps(event, canvasDimensions, scaleFactor),
     animation: generateAnimationStates(event, canvasDimensions, scaleFactor),
   };
 
-  console.log('Output - Konva props:', config.konvaProps);
-  console.groupEnd();
+  // console.log('Output - Konva props:', config.konvaProps);
+  // console.groupEnd();
 
   return config;
 }
@@ -61,11 +61,11 @@ function generateKonvaProps(
   const y = (event.position.y / 100) * dimensions.height;
 
   // DEBUG: Log percentage → pixel conversion
-  console.log('  📍 Position conversion:', {
-    percentage: event.position,
-    calculation: `(${event.position.x}% / 100) * ${dimensions.width} = ${x}, (${event.position.y}% / 100) * ${dimensions.height} = ${y}`,
-    pixels: { x, y }
-  });
+  // console.log('  📍 Position conversion:', {
+  //   percentage: event.position,
+  //   calculation: `(${event.position.x}% / 100) * ${dimensions.width} = ${x}, (${event.position.y}% / 100) * ${dimensions.height} = ${y}`,
+  //   pixels: { x, y }
+  // });
 
   // Base properties (common to all elements)
   const baseProps = { x, y };
@@ -139,7 +139,7 @@ function generateKonvaProps(
     case 'line':
     case 'arrow': {
       if (!event.lineCoordinates) {
-        console.warn('Line/Arrow missing coordinates:', event.id);
+        // console.warn('Line/Arrow missing coordinates:', event.id);
         return baseProps;
       }
 

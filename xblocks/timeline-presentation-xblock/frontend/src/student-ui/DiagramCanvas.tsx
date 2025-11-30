@@ -104,20 +104,20 @@ export const DiagramCanvas: React.FC<DiagramCanvasProps> = ({
         setSizingScaleFactor(sizingScale);
 
         // DEBUG: Log student view scaling setup
-        console.group('🎬 [STUDENT] Canvas Setup');
-        console.log('Editor dimensions (from backend):', editorCanvasDimensions);
-        console.log('Image dimensions (loaded):', { width: img.width, height: img.height });
-        console.log('Container constraints:', { width: containerWidth, maxHeight: containerMaxHeight });
-        console.log('Stage dimensions (display):', { width: Math.round(displayWidth), height: Math.round(displayHeight) });
-        console.log('Layer scale factors:', { scaleX, scaleY });
-        console.log('Sizing scale factor:', sizingScale);
-        console.groupEnd();
+        // console.group('🎬 [STUDENT] Canvas Setup');
+        // console.log('Editor dimensions (from backend):', editorCanvasDimensions);
+        // console.log('Image dimensions (loaded):', { width: img.width, height: img.height });
+        // console.log('Container constraints:', { width: containerWidth, maxHeight: containerMaxHeight });
+        // console.log('Stage dimensions (display):', { width: Math.round(displayWidth), height: Math.round(displayHeight) });
+        // console.log('Layer scale factors:', { scaleX, scaleY });
+        // console.log('Sizing scale factor:', sizingScale);
+        // console.groupEnd();
       } else {
         // No editor dimensions available (legacy content) - no scaling needed
         setScaleFactors({ x: 1, y: 1 });
         setSizingScaleFactor(1);
 
-        console.warn('⚠️ [STUDENT] No editor dimensions - using legacy mode (no scaling)');
+        // console.warn('⚠️ [STUDENT] No editor dimensions - using legacy mode (no scaling)');
       }
 
       setImageLoaded(true);
@@ -132,7 +132,7 @@ export const DiagramCanvas: React.FC<DiagramCanvasProps> = ({
       setImageError(true);
       setImageLoaded(false);
       setBackgroundImage(null);
-      console.error('Failed to load diagram image:', imageUrl);
+      // console.error('Failed to load diagram image:', imageUrl);
     };
 
     img.src = imageUrl;

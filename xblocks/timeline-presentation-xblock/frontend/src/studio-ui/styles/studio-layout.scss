@@ -148,44 +148,32 @@
 }
 
 // =============================================================================
-// MINIMAL CLOSE BUTTON (replaces modal header X)
+// TABS HEADER WRAPPER (contains tabs + close button)
 // =============================================================================
 
-.modal-close-button {
+.tabs-header-wrapper {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+// =============================================================================
+// CLOSE BUTTON (positioned inline with tabs)
+// =============================================================================
+
+.tabs-close-button {
   position: absolute !important;
-  top: $xblock-modal-close-offset;
-  right: $xblock-modal-close-offset;
-  z-index: 100;
-  width: $xblock-modal-close-size !important;
-  height: $xblock-modal-close-size !important;
-  border-radius: 50% !important;
-  background: rgba(255, 255, 255, 0.95) !important;
-  border: 1px solid $liverpool-neutral-200 !important;
-  box-shadow: $liverpool-shadow-sm !important;
-  transition: all 150ms ease !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+  top: 0;
+  right: 0;
+  z-index: 10;
   cursor: pointer;
-
-  &:hover {
-    border-color: $liverpool-blue !important;
-    transform: scale(1.1);
-    box-shadow: $liverpool-shadow-base !important;
-  }
-
-  &:active {
-    transform: scale(0.95);
-  }
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
 
   svg {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     color: $liverpool-neutral-600;
-  }
-
-  &:hover svg {
-    color: $liverpool-blue;
   }
 }
 

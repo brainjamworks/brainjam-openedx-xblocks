@@ -46,19 +46,19 @@ export const TimelineKonvaElement: React.FC<TimelineKonvaElementProps> = ({
   // Generate Konva config at runtime with scale factor
   const konvaConfig = useMemo(() => {
     if (!stageDimensions) {
-      console.warn(`Event ${event.id} missing stageDimensions`);
+  // console.warn(`Event ${event.id} missing stageDimensions`);
       return null;
     }
 
     const config = generateKonvaConfig(event, stageDimensions, sizingScaleFactor);
 
     // DEBUG: Log final element rendering
-    console.group(`🎭 [ELEMENT] Rendering ${event.elementType}`);
-    console.log('Event data:', event);
-    console.log('Stage dimensions:', stageDimensions);
-    console.log('Sizing scale factor:', sizingScaleFactor);
-    console.log('Generated config:', config);
-    console.groupEnd();
+  // console.group(`🎭 [ELEMENT] Rendering ${event.elementType}`);
+  // console.log('Event data:', event);
+  // console.log('Stage dimensions:', stageDimensions);
+  // console.log('Sizing scale factor:', sizingScaleFactor);
+  // console.log('Generated config:', config);
+  // console.groupEnd();
 
     return config;
   }, [event, stageDimensions, sizingScaleFactor]);
@@ -204,7 +204,7 @@ export const TimelineKonvaElement: React.FC<TimelineKonvaElementProps> = ({
       );
 
     default:
-      console.warn(`Unknown element type: ${event.elementType}`);
+  // console.warn(`Unknown element type: ${event.elementType}`);
       return null;
   }
 };

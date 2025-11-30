@@ -58,9 +58,9 @@ export function useTimelineEvents(): UseTimelineEventsReturn {
   const events = useSyncExternalStore(
     // subscribe: called by React to set up subscription
     (callback) => {
-      console.log('[Hook] useSyncExternalStore subscribing to service');
+  // console.log('[Hook] useSyncExternalStore subscribing to service');
       const unsubscribe = timelineEventService.subscribe(() => {
-        console.log('[Hook] Service notified hook - triggering re-render');
+  // console.log('[Hook] Service notified hook - triggering re-render');
         callback();
       });
       return unsubscribe;
@@ -68,14 +68,14 @@ export function useTimelineEvents(): UseTimelineEventsReturn {
     // getSnapshot: returns current state (called on every render check)
     () => {
       const snapshot = timelineEventService.getAll();
-      console.log('[Hook] getSnapshot called - returning', snapshot.length, 'events');
+  // console.log('[Hook] getSnapshot called - returning', snapshot.length, 'events');
       return snapshot;
     },
     // getServerSnapshot: for SSR (optional, return empty array)
     () => []
   );
 
-  console.log('[Hook] useTimelineEvents rendering with', events.length, 'events');
+  // console.log('[Hook] useTimelineEvents rendering with', events.length, 'events');
 
   return {
     events,

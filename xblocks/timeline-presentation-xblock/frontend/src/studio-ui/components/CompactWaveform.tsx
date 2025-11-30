@@ -145,7 +145,7 @@ export const CompactWaveform: React.FC<CompactWaveformProps> = ({
       wavesurferRef.current = wavesurfer;
 
       const handleError = (err: Error) => {
-        console.error('[CompactWaveform] Error loading audio:', err);
+  // console.error('[CompactWaveform] Error loading audio:', err);
         setError('Failed to load audio');
         setIsLoading(false);
       };
@@ -186,7 +186,7 @@ export const CompactWaveform: React.FC<CompactWaveformProps> = ({
         regionEventMapRef.current.clear();
       };
     } catch (err) {
-      console.error('[CompactWaveform] Initialization error:', err);
+  // console.error('[CompactWaveform] Initialization error:', err);
       setError('Failed to initialize');
       setIsLoading(false);
     }

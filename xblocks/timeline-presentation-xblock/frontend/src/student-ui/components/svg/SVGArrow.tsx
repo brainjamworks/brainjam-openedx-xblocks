@@ -33,7 +33,7 @@ export const SVGArrow: React.FC<SVGArrowProps> = ({
 }) => {
   // Guard: ensure line coordinates exist
   if (!event.lineCoordinates) {
-    console.warn('Arrow element missing lineCoordinates:', event.id);
+  // console.warn('Arrow element missing lineCoordinates:', event.id);
     return null;
   }
 

@@ -28,7 +28,7 @@ export const renderBlock = (
   runtime: XBlockRuntime
 ) => {
   if (!element) {
-    console.error('Timeline Presentation: No element provided for rendering');
+  // console.error('Timeline Presentation: No element provided for rendering');
     return;
   }
 

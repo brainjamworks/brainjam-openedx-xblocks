@@ -56,13 +56,13 @@ export class TimelineEventService {
    * Only updates properties provided in `updates` (partial update)
    */
   update(id: string, updates: Partial<TimelineEvent>): void {
-    console.log('[Service] UPDATE called:', { id, updates });
+  // console.log('[Service] UPDATE called:', { id, updates });
     const before = this.events.find(e => e.id === id);
     this.events = this.events.map(e =>
       e.id === id ? { ...e, ...updates } : e
     );
     const after = this.events.find(e => e.id === id);
-    console.log('[Service] Event updated:', { before, after });
+  // console.log('[Service] Event updated:', { before, after });
     this.notify();
   }
 
@@ -96,9 +96,9 @@ export class TimelineEventService {
    * Notify all subscribers of change
    */
   private notify(): void {
-    console.log('[Service] NOTIFY called - notifying', this.listeners.size, 'listeners');
+  // console.log('[Service] NOTIFY called - notifying', this.listeners.size, 'listeners');
     this.listeners.forEach(listener => listener());
-    console.log('[Service] All listeners notified');
+  // console.log('[Service] All listeners notified');
   }
 
   /**

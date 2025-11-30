@@ -31,7 +31,7 @@ export const SVGLine: React.FC<SVGLineProps> = ({
 }) => {
   // Guard: ensure line coordinates exist
   if (!event.lineCoordinates) {
-    console.warn('Line element missing lineCoordinates:', event.id);
+  // console.warn('Line element missing lineCoordinates:', event.id);
     return null;
   }
 

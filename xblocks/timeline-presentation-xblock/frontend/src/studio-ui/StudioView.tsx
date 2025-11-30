@@ -154,11 +154,11 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
 
         if (!cancelled) {
           setAudioDuration(duration);
-          console.log(`[Timeline] Audio duration loaded: ${duration.toFixed(1)}s`);
+          // console.log(`[Timeline] Audio duration loaded: ${duration.toFixed(1)}s`);
         }
       } catch (error) {
         if (!cancelled) {
-          console.warn('[Timeline] Could not get audio duration:', error);
+          // console.warn('[Timeline] Could not get audio duration:', error);
           setAudioDuration(30);
         }
       }
@@ -211,7 +211,7 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
         setImageError(errorMsg);
       }
     } catch (error) {
-      console.error('Image upload error:', error);
+      // console.error('Image upload error:', error);
       setImageError(error instanceof Error ? error.message : 'Upload failed');
     } finally {
       setUploadingImage(false);
@@ -279,7 +279,7 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
           setMessage({ type: 'success', text: `Audio uploaded successfully! Duration: ${duration.toFixed(1)}s` });
           setTimeout(() => setMessage(null), 3000);
         } catch (durationError) {
-          console.warn('Could not get audio duration:', durationError);
+          // console.warn('Could not get audio duration:', durationError);
           setAudioDuration(30);
           setMessage({ type: 'success', text: 'Audio uploaded successfully! (Duration detection failed, defaulted to 30s)' });
           setTimeout(() => setMessage(null), 4000);
@@ -289,7 +289,7 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
         setAudioError(errorMsg);
       }
     } catch (error) {
-      console.error('Audio upload error:', error);
+      // console.error('Audio upload error:', error);
       setAudioError(error instanceof Error ? error.message : 'Upload failed');
     } finally {
       setUploadingAudio(false);
@@ -323,10 +323,10 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
       if (result.success && result.assets) {
         setCourseAssets(result.assets);
       } else {
-        console.error('Failed to load assets:', result.error);
+        // console.error('Failed to load assets:', result.error);
       }
     } catch (error) {
-      console.error('Asset list error:', error);
+      // console.error('Asset list error:', error);
     } finally {
       setLoadingAssets(false);
     }
@@ -397,7 +397,7 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
         }
       }
     } catch (error) {
-      console.error('Save error:', error);
+      // console.error('Save error:', error);
       setMessage({ type: 'error', text: 'An error occurred while saving.' });
 
       if (runtime.notify) {
@@ -570,11 +570,12 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
       )}
 
       {/* Tabbed Interface */}
-      <Tabs
-        activeKey={activeTab}
-        onSelect={(key) => setActiveTab(key as string)}
-        className="mb-3"
-      >
+      <div className="tabs-header-wrapper">
+        <Tabs
+          activeKey={activeTab}
+          onSelect={(key) => setActiveTab(key as string)}
+          className="mb-3"
+        >
         {/* Setup Tab - Combined Basic Information + Assets */}
         <Tabs.Tab eventKey="setup" title="Setup">
           <div className="timeline-presentation-setup-tab">
@@ -678,17 +679,6 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
             </Alert>
           ) : (
             <div className="timeline-editor-root">
-              {/* Minimal close button */}
-              <IconButton
-                src={Close}
-                iconAs={Icon}
-                alt="Close editor"
-                onClick={handleCancel}
-                className="modal-close-button"
-                variant="tertiary"
-                size="sm"
-              />
-
               {/* LEFT COLUMN: Event Sidebar */}
               <div className="editor-left-column">
                 <EventSidebar
@@ -762,6 +752,18 @@ export const StudioView: React.FC<StudioViewProps> = ({ runtime, fields }) => {
         </Tabs.Tab>
 
       </Tabs>
+
+      {/* Close button - positioned inline with tabs */}
+      <IconButton
+        src={Close}
+        iconAs={Icon}
+        alt="Close editor"
+        onClick={handleCancel}
+        className="tabs-close-button"
+        variant="tertiary"
+        size="sm"
+      />
+      </div>
 
       {/* Action Buttons (shown outside editor tab) */}
       {activeTab !== 'editor' && (

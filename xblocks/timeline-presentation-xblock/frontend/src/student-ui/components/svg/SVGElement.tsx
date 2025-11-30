@@ -69,7 +69,7 @@ export const SVGElement: React.FC<SVGElementProps> = ({
             />
           );
         case 'triangle':
-          console.warn('Triangle shapes not yet implemented in SVG renderer');
+  // console.warn('Triangle shapes not yet implemented in SVG renderer');
           return null;
         default:
           return null;
@@ -103,7 +103,7 @@ export const SVGElement: React.FC<SVGElementProps> = ({
       );
 
     default:
-      console.warn(`Unknown element type: ${event.elementType}`);
+  // console.warn(`Unknown element type: ${event.elementType}`);
       return null;
   }
 };

@@ -291,14 +291,31 @@
   }
 
   &.timeline-player-button-replay {
+    // Reset browser default button appearance (removes 3D effect)
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    // Remove 3D effects - flat modern styling
+    box-shadow: none !important;
+    border: 2px solid $liverpool-blue;
+    background: transparent;
+
+    // Flat focus state
+    &:focus {
+      box-shadow: 0 0 0 3px rgba($liverpool-blue, 0.25) !important;
+    }
+
     &:hover:not(:disabled) {
       background: $liverpool-btn-outline-hover-bg;
       color: $liverpool-btn-outline-hover-color;
       transform: translateY(-1px);
+      box-shadow: none !important;  // Keep flat on hover
     }
 
     &:active:not(:disabled) {
       transform: translateY(0);
+      box-shadow: none !important;  // Keep flat when pressed
     }
   }
 }

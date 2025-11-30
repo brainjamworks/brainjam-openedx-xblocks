@@ -185,11 +185,11 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
       setStagePosition({ x: 0, y: 0 }); // Reset pan position
 
       // DEBUG: Log canvas initialization
-      console.group('🎨 [STUDIO] Canvas Initialized');
-      console.log('Image dimensions:', img.width, 'x', img.height);
-      console.log('Stage dimensions:', img.width, 'x', img.height);
-      console.log('Auto-fit zoom:', calculatedZoom);
-      console.groupEnd();
+      // console.group('🎨 [STUDIO] Canvas Initialized');
+      // console.log('Image dimensions:', img.width, 'x', img.height);
+      // console.log('Stage dimensions:', img.width, 'x', img.height);
+      // console.log('Auto-fit zoom:', calculatedZoom);
+      // console.groupEnd();
 
       // IMPORTANT: Save ORIGINAL image dimensions (not zoomed) to backend
       // This ensures percentage calculations work correctly
@@ -199,7 +199,7 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
     };
 
     img.onerror = () => {
-      console.error('Failed to load background image:', backgroundImageUrl);
+      // console.error('Failed to load background image:', backgroundImageUrl);
       setBackgroundImage(null);
     };
 
@@ -214,6 +214,43 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
     if (!originalImageDimensions) return;
     setZoomLevel(newZoom);
     // ✅ Stage dimensions stay fixed - zoom handled by scale props
+  };
+
+  /**
+   * Handle mouse wheel zoom - zoom towards cursor position
+   * Based on image-hotspot implementation and Konva best practices
+   */
+  const handleWheel = (e: any) => {
+    e.evt.preventDefault(); // Prevent page scroll
+
+    const stage = stageRef.current;
+    if (!stage) return;
+
+    const oldZoom = zoomLevel;
+    const pointer = stage.getPointerPosition();
+    if (!pointer) return;
+
+    // Calculate zoom direction (10% per scroll notch)
+    const scaleBy = 1.1;
+    const direction = e.evt.deltaY < 0 ? 1 : -1;
+    const newZoom = Math.max(0.5, Math.min(5.0, oldZoom * (scaleBy ** direction)));
+
+    if (newZoom !== oldZoom) {
+      // Calculate mouse position in original image space
+      const mousePointTo = {
+        x: (pointer.x - stagePosition.x) / oldZoom,
+        y: (pointer.y - stagePosition.y) / oldZoom,
+      };
+
+      // Calculate new position to keep mouse point stationary
+      const newPos = {
+        x: pointer.x - mousePointTo.x * newZoom,
+        y: pointer.y - mousePointTo.y * newZoom,
+      };
+
+      setZoomLevel(newZoom);
+      setStagePosition(newPos);
+    }
   };
 
   /**
@@ -326,11 +363,11 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
     const percentPos = pixelsToPercent(x, y, stageDimensions.width, stageDimensions.height);
 
     // DEBUG: Log text creation
-    console.group('📝 [STUDIO] Creating Text Element');
-    console.log('Pixel position (clicked):', { x, y });
-    console.log('Stage dimensions:', stageDimensions);
-    console.log('Percentage position (saved):', percentPos);
-    console.groupEnd();
+    // console.group('📝 [STUDIO] Creating Text Element');
+    // console.log('Pixel position (clicked):', { x, y });
+    // console.log('Stage dimensions:', stageDimensions);
+    // console.log('Percentage position (saved):', percentPos);
+    // console.groupEnd();
 
     return {
       id: generateId(),
@@ -409,13 +446,13 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
     const percentRadius = (radius / stageDimensions.width) * 100;
 
     // DEBUG: Log circle creation
-    console.group('⭕ [STUDIO] Creating Circle Element');
-    console.log('Pixel position (center):', { x: centerX, y: centerY });
-    console.log('Pixel radius:', radius);
-    console.log('Stage dimensions:', stageDimensions);
-    console.log('Percentage position (saved):', percentPos);
-    console.log('Percentage diameter (saved):', percentRadius * 2);
-    console.groupEnd();
+    // console.group('⭕ [STUDIO] Creating Circle Element');
+    // console.log('Pixel position (center):', { x: centerX, y: centerY });
+    // console.log('Pixel radius:', radius);
+    // console.log('Stage dimensions:', stageDimensions);
+    // console.log('Percentage position (saved):', percentPos);
+    // console.log('Percentage diameter (saved):', percentRadius * 2);
+    // console.groupEnd();
 
     return {
       id: generateId(),
@@ -518,15 +555,15 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
    */
   const handleStageMouseDown = (e: any) => {
     // Debug logging
-    console.log('[VisualEditor] Mouse down:', {
-      drawingMode,
-      targetType: e.target.getType(),
-      targetName: e.target.name(),
-      isStage: e.target === e.target.getStage()
-    });
+    // console.log('[VisualEditor] Mouse down:', {
+    //   drawingMode,
+    //   targetType: e.target.getType(),
+    //   targetName: e.target.name(),
+    //   isStage: e.target === e.target.getStage()
+    // });
 
-    // PRIORITY 1: Check if pan mode is active (space pressed)
-    if (isSpacePressed) {
+    // PRIORITY 1: Check if pan mode is active (space pressed OR shift key OR middle mouse button)
+    if (isSpacePressed || e.evt.shiftKey || e.evt.button === 1) {
       const stage = stageRef.current;
       if (!stage) return;
 
@@ -557,20 +594,20 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
 
     // In drawing modes, only process clicks on background or empty areas
     if (!isBackgroundClick) {
-      console.log('[VisualEditor] Ignoring click on existing element in draw mode');
+      // console.log('[VisualEditor] Ignoring click on existing element in draw mode');
       return;
     }
 
     const pos = getMousePos(e);
     if (!pos) return;
 
-    console.log('[VisualEditor] Starting drawing operation:', { mode: drawingMode, pos, editingEventId });
+    // console.log('[VisualEditor] Starting drawing operation:', { mode: drawingMode, pos, editingEventId });
 
     // ========================================================================
     // EDIT MODE: If editing an event, UPDATE it instead of creating new
     // ========================================================================
     if (editingEventId) {
-      console.log('[VisualEditor] Edit mode active - will update event:', editingEventId);
+      // console.log('[VisualEditor] Edit mode active - will update event:', editingEventId);
 
       // For text mode: Update immediately (no drag needed)
       if (drawingMode === 'text') {
@@ -597,7 +634,7 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
     // ========================================================================
     // CREATE MODE: No event selected, create new event
     // ========================================================================
-    console.log('[VisualEditor] Create mode - will create new event');
+    // console.log('[VisualEditor] Create mode - will create new event');
 
     if (drawingMode === 'text') {
       const textEvent = createTextEvent(pos.x, pos.y);
@@ -677,7 +714,7 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
     // EDIT MODE: Update existing event
     // ========================================================================
     if (editingEventId) {
-      console.log('[VisualEditor] Edit mode - updating event:', editingEventId, 'with mode:', drawingMode);
+      // console.log('[VisualEditor] Edit mode - updating event:', editingEventId, 'with mode:', drawingMode);
 
       if (drawingMode === 'line' || drawingMode === 'arrow') {
         const pos1 = pixelsToPercent(start.x, start.y, stageDimensions.width, stageDimensions.height);
@@ -1024,12 +1061,12 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
    * Render preview of element being drawn
    */
   const renderDrawingPreview = () => {
-    console.log('[renderDrawingPreview]', {
-      isDrawing,
-      pathLength: currentPath.length,
-      drawingMode,
-      currentPath
-    });
+    // console.log('[renderDrawingPreview]', {
+    //   isDrawing,
+    //   pathLength: currentPath.length,
+    //   drawingMode,
+    //   currentPath
+    // });
 
     if (!isDrawing || currentPath.length < 1) return null;
 
@@ -1142,43 +1179,8 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
     : `visual-editor-container mode-${drawingMode}`;
 
   return (
-    <>
-      {/* Zoom Controls */}
-      {originalImageDimensions && (
-        <div className="zoom-controls">
-          <label className="zoom-controls-label">
-            Zoom: {Math.round(zoomLevel * 100)}%
-          </label>
-          <input
-            type="range"
-            min="0.25"
-            max="2"
-            step="0.25"
-            value={zoomLevel}
-            onChange={(e) => handleZoomChange(parseFloat(e.target.value))}
-            className="zoom-controls-slider"
-          />
-          <button
-            onClick={() => {
-              handleZoomChange(autoFitZoom);
-              setStagePosition({ x: 0, y: 0 }); // Reset pan position
-            }}
-            className="zoom-controls-button"
-            title="Fit to screen"
-          >
-            Fit
-          </button>
-          <button
-            onClick={() => handleZoomChange(1)}
-            className="zoom-controls-button"
-            title="100% size"
-          >
-            100%
-          </button>
-        </div>
-      )}
-
-      <div ref={containerRef} className={cursorClass}>
+    <div style={{ position: 'relative', height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <div ref={containerRef} className={cursorClass} style={{ flex: 1 }}>
         <Stage
         ref={stageRef}
         width={stageDimensions.width}
@@ -1191,6 +1193,7 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
         onMouseDown={handleStageMouseDown}
         onMouseMove={handleStageMouseMove}
         onMouseUp={handleStageMouseUp}
+        onWheel={handleWheel}
       >
         {/* Background Layer */}
         <Layer>
@@ -1215,8 +1218,32 @@ export const VisualEditor: React.FC<VisualEditorProps> = ({
           {renderTransformer()}
         </Layer>
       </Stage>
+
+      {/* Inline Help Overlay */}
+      {originalImageDimensions && (
+        <div style={{
+          position: 'absolute',
+          bottom: '8px',
+          right: '8px',
+          padding: '8px 12px',
+          background: 'rgba(0, 0, 0, 0.75)',
+          color: 'white',
+          borderRadius: '4px',
+          fontSize: '0.75rem',
+          pointerEvents: 'none',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '4px',
+          zIndex: 1000
+        }}>
+          <div>Zoom: {(zoomLevel * 100).toFixed(0)}%</div>
+          <div style={{ fontSize: '0.7rem', opacity: 0.8 }}>
+            Scroll to zoom • Shift+drag to pan
+          </div>
+        </div>
+      )}
     </div>
-    </>
+    </div>
   );
 };
 

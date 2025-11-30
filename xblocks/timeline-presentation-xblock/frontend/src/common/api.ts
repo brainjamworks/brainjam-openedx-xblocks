@@ -60,7 +60,7 @@ function getCSRFToken(): string {
   }
 
   // If no token found, return empty (will likely fail, but better than crashing)
-  console.warn('CSRF token not found');
+  // console.warn('CSRF token not found');
   return '';
 }
 
@@ -107,7 +107,7 @@ export async function xblockPost<T = any>(
 
     return await response.json();
   } catch (error) {
-    console.error(`XBlock handler error (${handler}):`, error);
+  // console.error(`XBlock handler error (${handler}):`, error);
 
     // Return standardized error response
     return {
@@ -155,7 +155,7 @@ export async function xblockGet<T = any>(
 
     return await response.json();
   } catch (error) {
-    console.error(`XBlock handler error (${handler}):`, error);
+  // console.error(`XBlock handler error (${handler}):`, error);
 
     return {
       success: false,

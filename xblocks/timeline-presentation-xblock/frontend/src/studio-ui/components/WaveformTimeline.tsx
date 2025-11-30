@@ -90,7 +90,7 @@ export const WaveformTimeline: React.FC<WaveformTimelineProps> = ({
 
   const createRegions = React.useCallback((eventsToAdd: TimelineEvent[]) => {
     if (!regionsPluginRef.current) {
-      console.warn('[WaveformTimeline] Cannot create regions - plugin not initialized');
+      // console.warn('[WaveformTimeline] Cannot create regions - plugin not initialized');
       return;
     }
 
@@ -100,13 +100,13 @@ export const WaveformTimeline: React.FC<WaveformTimelineProps> = ({
     regionsPlugin.clearRegions();
     regionEventMapRef.current.clear();
 
-    console.log(`[WaveformTimeline] Creating ${eventsToAdd.length} regions`);
+    // console.log(`[WaveformTimeline] Creating ${eventsToAdd.length} regions`);
 
     // Add region for each event
     eventsToAdd.forEach((event) => {
       const color = getEventColor(event.elementType);
 
-      console.log('[WaveformTimeline] Adding region:', event.id, 'at', event.timing.startTime, 'seconds');
+      // console.log('[WaveformTimeline] Adding region:', event.id, 'at', event.timing.startTime, 'seconds');
 
       // Create region marker (small duration for visibility)
       const region = regionsPlugin.addRegion({
@@ -118,28 +118,28 @@ export const WaveformTimeline: React.FC<WaveformTimelineProps> = ({
         content: event.name || `#${event.id.slice(-4)}`,
       });
 
-      console.log('[WaveformTimeline] Region created:', region.id, 'actual start:', region.start, 'actual end:', region.end);
+      // console.log('[WaveformTimeline] Region created:', region.id, 'actual start:', region.start, 'actual end:', region.end);
 
       // Store mapping
       regionEventMapRef.current.set(region.id, event.id);
 
       // Handle region interactions
       region.on('click', () => {
-        console.log('[WaveformTimeline] Region clicked:', event.id);
+        // console.log('[WaveformTimeline] Region clicked:', event.id);
         if (onEventClick) {
           onEventClick(event);
         }
       });
 
       region.on('update-end', () => {
-        console.log('[WaveformTimeline] Region dragged to:', region.start);
+        // console.log('[WaveformTimeline] Region dragged to:', region.start);
         if (onEventUpdate) {
           onEventUpdate(event.id, region.start);
         }
       });
     });
 
-    console.log(`[WaveformTimeline] Successfully created ${eventsToAdd.length} regions`);
+    // console.log(`[WaveformTimeline] Successfully created ${eventsToAdd.length} regions`);
   }, [onEventClick, onEventUpdate]);
 
   // =======================================================================
@@ -178,20 +178,20 @@ export const WaveformTimeline: React.FC<WaveformTimelineProps> = ({
       // Event Handlers
       // Define error handler so we can remove it later in cleanup
       const handleError = (err: Error) => {
-        console.error('[WaveformTimeline] Error loading audio:', err);
+        // console.error('[WaveformTimeline] Error loading audio:', err);
         setError('Failed to load audio waveform');
         setIsLoading(false);
       };
 
       wavesurfer.on('ready', () => {
         const duration = wavesurfer.getDuration();
-        console.log('[WaveformTimeline] Waveform ready, duration:', duration, 'seconds');
+        // console.log('[WaveformTimeline] Waveform ready, duration:', duration, 'seconds');
         setLoadedDuration(duration);
         setIsReady(true);
         setIsLoading(false);
 
         // Create initial regions HERE - WaveSurfer is definitely ready at this point
-        console.log('[WaveformTimeline] Creating initial regions in ready handler');
+        // console.log('[WaveformTimeline] Creating initial regions in ready handler');
         createRegions(events);
         initialRegionsCreatedRef.current = true; // Mark initial regions as created
         prevEventsRef.current = events; // Store events to detect future changes
@@ -201,12 +201,12 @@ export const WaveformTimeline: React.FC<WaveformTimelineProps> = ({
 
       // Playback event listeners
       wavesurfer.on('play', () => {
-        console.log('[WaveformTimeline] Playback started');
+        // console.log('[WaveformTimeline] Playback started');
         setIsPlaying(true);
       });
 
       wavesurfer.on('pause', () => {
-        console.log('[WaveformTimeline] Playback paused');
+        // console.log('[WaveformTimeline] Playback paused');
         setIsPlaying(false);
       });
 
@@ -218,7 +218,7 @@ export const WaveformTimeline: React.FC<WaveformTimelineProps> = ({
       wavesurfer.on('click', (relativeX) => {
         if (onAddEvent) {
           const timestamp = relativeX * wavesurfer.getDuration();
-          console.log('[WaveformTimeline] Clicked at', timestamp, 'seconds');
+          // console.log('[WaveformTimeline] Clicked at', timestamp, 'seconds');
           onAddEvent(timestamp);
         }
       });
@@ -227,7 +227,7 @@ export const WaveformTimeline: React.FC<WaveformTimelineProps> = ({
       wavesurfer.load(audioUrl).catch((err) => {
         // Ignore AbortError when component unmounts during load
         if (err.name === 'AbortError') {
-          console.debug('[WaveformTimeline] Audio load aborted (component unmounted)');
+          // console.debug('[WaveformTimeline] Audio load aborted (component unmounted)');
           return;
         }
         // Other errors still handled by 'error' event listener
@@ -245,7 +245,7 @@ export const WaveformTimeline: React.FC<WaveformTimelineProps> = ({
         regionEventMapRef.current.clear();
       };
     } catch (err) {
-      console.error('[WaveformTimeline] Initialization error:', err);
+      // console.error('[WaveformTimeline] Initialization error:', err);
       setError('Failed to initialize waveform');
       setIsLoading(false);
     }
@@ -271,12 +271,12 @@ export const WaveformTimeline: React.FC<WaveformTimelineProps> = ({
                          events.some((event, index) => event.id !== prevEventsRef.current[index]?.id);
 
     if (!eventsChanged) {
-      console.log('[WaveformTimeline] Effect triggered but events unchanged, skipping region update');
+      // console.log('[WaveformTimeline] Effect triggered but events unchanged, skipping region update');
       return;
     }
 
     // Update regions when events actually change
-    console.log('[WaveformTimeline] Events changed, updating regions via effect');
+    // console.log('[WaveformTimeline] Events changed, updating regions via effect');
     createRegions(events);
     prevEventsRef.current = events; // Store new events state
   }, [events, isReady, loadedDuration, createRegions]);

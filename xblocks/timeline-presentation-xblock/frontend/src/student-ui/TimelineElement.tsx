@@ -49,7 +49,7 @@ export const TimelineElement: React.FC<TimelineElementProps> = ({
       return renderArrowElement(event, classes, baseStyles);
 
     default:
-      console.warn(`Unknown element type: ${event.elementType}`);
+  // console.warn(`Unknown element type: ${event.elementType}`);
       return null;
   }
 };

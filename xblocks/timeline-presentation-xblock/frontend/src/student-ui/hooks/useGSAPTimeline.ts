@@ -67,7 +67,7 @@ export function useGSAPTimeline({
 
     // Debug logging in development
     if (process.env.NODE_ENV === 'development') {
-      console.log(
+  // console.log(
         `[Timeline Sync] Time: ${audioCurrentTime.toFixed(2)}s | Visible: ${Array.from(newVisibleIds).join(', ')}`
       );
     }

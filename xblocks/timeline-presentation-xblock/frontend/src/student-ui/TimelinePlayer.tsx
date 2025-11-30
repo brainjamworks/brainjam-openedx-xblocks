@@ -115,7 +115,7 @@ export const TimelinePlayer: React.FC<TimelinePlayerProps> = ({
   const handleAudioError = () => {
     setAudioError(true);
     setIsLoading(false);
-    console.error('Failed to load audio:', audioUrl);
+  // console.error('Failed to load audio:', audioUrl);
   };
 
   /**
