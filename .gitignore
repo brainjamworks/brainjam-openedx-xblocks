@@ -4,9 +4,9 @@ node_modules/
 # Build outputs
 dist/
 build/
-**/public/*.js
+# **/public/*.js  # Commented out to allow committing built bundles
 **/public/*.js.map
-**/public/*.css
+# **/public/*.css  # Commented out to allow committing built CSS
 **/public/*.css.map
 *.tsbuildinfo
 

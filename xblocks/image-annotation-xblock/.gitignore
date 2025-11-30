@@ -19,8 +19,7 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# Build outputs - ARCHITECTURAL: Never commit built bundles
-{xblock_name}/public/
+# Build outputs
 *.js.map
 
 # IDE
