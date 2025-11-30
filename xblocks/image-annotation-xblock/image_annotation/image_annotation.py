@@ -580,6 +580,7 @@ class ImageAnnotationXBlock(ScorableXBlockMixin, XBlock):
         frag.initialize_js('ImageAnnotationStudentView', {
             'url': self.runtime.local_resource_url(self, 'public/student-ui.js'),
             # IMPLEMENTATION: Image annotation data
+            'displayName': self.display_name,  # Single source of truth for title
             'questionText': self.question_text,
             'backgroundImageUrl': self.background_image_url,
             'backgroundImageWidth': self.background_image_width,
@@ -610,16 +611,18 @@ class ImageAnnotationXBlock(ScorableXBlockMixin, XBlock):
         """
         frag = Fragment()
 
-        # ARCHITECTURAL: Add bootstrap loader
+        # Add bootstrap loader
         bootstrap_js = self.resource_string("static/studio.js")
         frag.add_javascript(bootstrap_js)
 
-        # Load Paragon CSS from CDN (runtime, not bundled)
-        frag.add_css_url('https://cdn.jsdelivr.net/npm/@openedx/paragon@23.0.0/dist/core.min.css')
-        frag.add_css_url('https://cdn.jsdelivr.net/npm/@openedx/paragon@23.0.0/dist/light.min.css')
-
-        # ARCHITECTURAL: Add XBlock custom styles (minimal)
+        # Load XBlock styles in correct order
+        # 1. Load studio-ui.css FIRST (contains all: initial reset)
         frag.add_css_url(self.runtime.local_resource_url(self, 'public/studio-ui.css'))
+
+        # 2. Load Paragon/Liverpool AFTER reset (re-applies clean styles)
+        frag.add_css_url('https://cdn.jsdelivr.net/npm/@openedx/paragon@23.14.9/dist/core.min.css')
+        frag.add_css_url('https://cdn.jsdelivr.net/npm/@openedx/paragon@23.14.9/dist/light.min.css')
+        frag.add_css_url('https://cdn.jsdelivr.net/npm/@brainjam/liverpool-dental-theme@1.1.0/liverpool-authoring-complete.css')
 
         # Parse configuration
         try:

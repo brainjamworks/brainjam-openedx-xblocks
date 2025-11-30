@@ -1,41 +1,12 @@
 /**
- * Image Annotation XBlock - Studio View Styles
+ * ARCHITECTURAL: XBlock structural styles only
  *
- * Minimal structural styles for the Studio editor interface.
- * Paragon CSS is loaded from CDN at runtime (via Python fragment).
+ * Paragon CSS is loaded from CDN at runtime (via Python fragment)
+ * This file contains ONLY XBlock-specific layout and structural styles
  */
 
-// Studio View Container
-.image-annotation-studio-view {
-  padding-left: 3rem;
-  padding-right: 3rem;
+// Import studio editor modal structure
+@import './studio-editor';
 
-  // Sticky action buttons at bottom
-  .image-annotation-sticky-actions {
-    position: sticky;
-    bottom: 0;
-    background-color: var(--pgn-color-bg-base, #ffffff);
-    z-index: 100;
-    margin-left: -3rem;
-    margin-right: -3rem;
-    margin-top: 2rem;
-    padding: 1.5rem 3rem;
-    border-top: 1px solid var(--pgn-color-border-base, #dee2e6);
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-  }
-}
-
-// Visual Editor for Drop Zones
-.visual-editor {
-  // Most styling is handled by Paragon Card and Form components
-  // Add custom styles here if needed
-}
-
-// Tab components - mostly use Paragon defaults
-.configuration-tab,
-.content-tab,
-.image-tab,
-.labels-tab {
-  // Add custom tab styles here if needed
-}
+// All previous content commented out - studio-editor.scss provides modal structure
+// Student view styles remain in student-ui/styles/minimal-paragon.scss

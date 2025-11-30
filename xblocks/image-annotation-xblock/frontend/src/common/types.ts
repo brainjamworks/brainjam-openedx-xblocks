@@ -36,7 +36,7 @@ export interface DropZone {
   y: number;            // Center Y position in pixels
   radius: number;       // Detection and visual radius in pixels
   correctAnswer: string; // Correct label ID (e.g., "A")
-  description?: string;  // Human-readable description
+  description: string;   // Human-readable description (required)
   visible?: boolean;     // Whether to show zone outline (for studio)
 }
 
@@ -134,6 +134,7 @@ export interface SubmissionResult {
 export interface StudentData {
   runtime: any;
   url: string;
+  displayName: string;
   questionText: string;
   backgroundImageUrl: string;
   backgroundImageWidth: number;
@@ -205,6 +206,7 @@ export interface StudioData {
 export interface StudentViewProps {
   runtime: XBlockRuntime;
   url: string;
+  displayName: string;
   questionText: string;
   backgroundImageUrl: string;
   backgroundImageWidth: number;

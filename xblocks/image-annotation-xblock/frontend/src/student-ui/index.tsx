@@ -29,6 +29,7 @@ export const renderBlock = (element: Element | null, data: StudentData) => {
         <StudentView
           runtime={data.runtime}
           url={data.url}
+          displayName={data.displayName}
           questionText={data.questionText}
           backgroundImageUrl={data.backgroundImageUrl}
           backgroundImageWidth={data.backgroundImageWidth}

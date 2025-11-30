@@ -54,6 +54,20 @@ export const LabelBank: React.FC<LabelBankProps> = ({
   // Get labels that are NOT currently placed in zones
   const unplacedLabels = labels.filter(label => !placements[label.id]?.inZone);
 
+  // Group unplaced labels by type
+  const groupedLabels = {
+    normal: unplacedLabels.filter(label => (label.type || 'normal') === 'normal'),
+    dot: unplacedLabels.filter(label => label.type === 'dot'),
+    cross: unplacedLabels.filter(label => label.type === 'cross')
+  };
+
+  // Type display names
+  const typeNames = {
+    normal: 'Badges',
+    dot: 'Dot Markers',
+    cross: 'Cross Markers'
+  };
+
   // =======================================================================
   // RENDER
   // =======================================================================
@@ -62,58 +76,45 @@ export const LabelBank: React.FC<LabelBankProps> = ({
     <div
       ref={drop}
       className={`label-bank ${isOver ? 'drag-over' : ''}`}
-      style={{
-        padding: '16px',
-        marginBottom: '24px',
-        backgroundColor: isOver ? '#e3f2fd' : '#f5f5f5',
-        border: '2px dashed #ccc',
-        borderRadius: '8px',
-        minHeight: '80px',
-        transition: 'background-color 0.2s ease'
-      }}
     >
       <div className="label-bank-header">
-        <strong style={{ fontSize: '14px', color: '#333' }}>
-          Available Labels
-        </strong>
-        <p style={{ fontSize: '12px', color: '#666', margin: '4px 0 0 0' }}>
+        <h4 className="label-bank-title">Available Labels</h4>
+        <p className="label-bank-description">
           {unplacedLabels.length > 0
             ? 'Drag these labels onto the image'
             : 'Drop labels here to remove from zones'}
         </p>
       </div>
 
-      <div
-        className="label-bank-items"
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '8px',
-          marginTop: '12px'
-        }}
-      >
+      <div className="label-bank-items">
         {unplacedLabels.length > 0 ? (
-          unplacedLabels.map(label => (
-            <div key={label.id} style={{ position: 'relative', width: `${label.width}px`, height: `${label.height}px` }}>
-              <DraggableLabel
-                label={label}
-                placement={undefined}
-                disabled={disabled}
-                scale={1}  // Don't scale labels in bank
-              />
-            </div>
-          ))
+          <>
+            {/* Render each group that has labels */}
+            {(['normal', 'dot', 'cross'] as const).map(type => {
+              const typeLabels = groupedLabels[type];
+              if (typeLabels.length === 0) return null;
+
+              return (
+                <div key={type} className="label-group">
+                  <div className="group-header">{typeNames[type]}</div>
+                  <div className="group-items">
+                    {typeLabels.map(label => (
+                      <div key={label.id} style={{ position: 'relative', width: `${label.width}px`, height: `${label.height}px`, overflow: 'visible' }}>
+                        <DraggableLabel
+                          label={label}
+                          placement={undefined}
+                          disabled={disabled}
+                          scale={1}  // Don't scale labels in bank
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </>
         ) : (
-          <div
-            style={{
-              width: '100%',
-              textAlign: 'center',
-              padding: '20px',
-              color: '#999',
-              fontStyle: 'italic',
-              fontSize: '14px'
-            }}
-          >
+          <div className="label-bank-empty">
             All labels placed on image
           </div>
         )}

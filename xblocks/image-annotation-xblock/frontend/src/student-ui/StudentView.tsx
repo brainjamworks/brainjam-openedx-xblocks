@@ -24,8 +24,7 @@ import type {
   ImmediateFeedbackResult
 } from '../common/types';
 import {
-  AssessmentCanvas,
-  FeedbackPanel
+  AssessmentCanvas
 } from './components';
 
 /**
@@ -33,6 +32,7 @@ import {
  */
 export const StudentView: React.FC<StudentData> = ({
   runtime,
+  displayName,
   questionText,
   backgroundImageUrl,
   backgroundImageWidth,
@@ -212,7 +212,7 @@ export const StudentView: React.FC<StudentData> = ({
             if (labelType === 'dot' || labelType === 'cross') {
               // Dot/cross labels use translate(-25%, -25%) with marker at bottom-left
               // Need to adjust coordinates to center the marker at zone center
-              const markerSize = labelType === 'dot' ? 15 : 25; // Unscaled pixels
+              const markerSize = labelType === 'dot' ? 15 : 12; // Unscaled pixels (dot 15px, cross 12px)
               x = correctZone.x + (label.width * 0.25) - (markerSize / 2);
               y = correctZone.y - (label.height * 0.75) + (markerSize / 2);
             }
@@ -244,8 +244,14 @@ export const StudentView: React.FC<StudentData> = ({
 
   const totalLabels = labels.length;
   const placedLabels = Object.keys(placements).length;
-  const isComplete = placedLabels === totalLabels;
-  const canSubmit = isComplete && !hasSubmitted && attemptsRemaining !== 0;
+  // Check if all zones are filled (not all labels placed - allows more labels than zones)
+  const occupiedZones = new Set(Object.values(placements).map(p => p.inZone).filter(Boolean));
+  const allZonesFilled = occupiedZones.size === dropZones.length;
+  const canSubmit = allZonesFilled && !hasSubmitted && attemptsRemaining !== 0;
+
+  // Score display metrics (for immediate mode)
+  const correctLabels = Object.values(placements).filter(p => p.correct === true).length;
+  const allCorrect = correctLabels === totalLabels && totalLabels > 0 && placedLabels === totalLabels;
 
   // =======================================================================
   // RENDER
@@ -256,7 +262,7 @@ export const StudentView: React.FC<StudentData> = ({
       <div className="image-annotation-student-view">
         {/* Problem Header */}
         <div className="problem-header">
-          <h3 className="problem-title">Image Annotation</h3>
+          <h3 className="problem-title">{displayName}</h3>
           <div className="problem-points">
             {maxScore.toFixed(maxScore % 1 === 0 ? 0 : 1)}/{maxScore.toFixed(maxScore % 1 === 0 ? 0 : 1)} point{maxScore !== 1 ? 's' : ''} ({isGraded ? 'graded' : 'ungraded'})
           </div>
@@ -272,11 +278,11 @@ export const StudentView: React.FC<StudentData> = ({
           </Alert>
         )}
 
-        {/* Live Score Display - show during interaction in immediate mode */}
-        {feedbackMode === 'immediate' && !hasSubmitted && (
-          <div className="score-display">
+        {/* Score Display - immediate mode only */}
+        {feedbackMode === 'immediate' && (
+          <div className={`score-display ${allCorrect ? 'score-correct' : 'score-incorrect'}`}>
             <strong>Current Score:</strong> {localScore.toFixed(2)} / {maxScore.toFixed(2)}
-            {' '}({((localScore / maxScore) * 100).toFixed(0)}%)
+            {' '}({((localScore / maxScore) * 100).toFixed(0)}% - {correctLabels} of {totalLabels} correct)
           </div>
         )}
 
@@ -303,16 +309,6 @@ export const StudentView: React.FC<StudentData> = ({
           showingAnswer={showAnswer}
           showZones={true} // TEMPORARY: Debug mode - showing zones for position verification
         />
-
-        {/* Feedback Panel - Show validation results after submission */}
-        {hasSubmitted && validationResult && (
-          <FeedbackPanel
-            validationResult={validationResult}
-            showAnswer={showAnswer}
-            labels={labels}
-            dropZones={dropZones}
-          />
-        )}
 
         {/* Action Buttons - only in on_submit mode */}
         {feedbackMode === 'on_submit' && (
@@ -360,10 +356,41 @@ export const StudentView: React.FC<StudentData> = ({
                 {submitting ? 'Submitting...' : 'Submit'}
               </button>
 
-              {/* Placement progress indicator */}
-              {!hasSubmitted && (
-                <div className="placement-progress">
-                  {placedLabels} of {totalLabels} labels placed
+              {/* Submission feedback (notifications) - shown after submission */}
+              {hasSubmitted && validationResult && (
+                <div className="submission-feedback">
+                  {/* Correctness Notification */}
+                  <div className={`notification notification-${validationResult.allCorrect ? 'correct' : 'incorrect'}`}>
+                    <div className="notification-icon">
+                      {validationResult.allCorrect ? '✓' : '✗'}
+                    </div>
+                    <div className="notification-content">
+                      <p>
+                        {validationResult.allCorrect ? 'Correct' : 'Incorrect'}
+                        ({validationResult.score.toFixed(2)}/{validationResult.maxScore.toFixed(2)} point{validationResult.maxScore !== 1 ? 's' : ''})
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Explanation Notification */}
+                  {validationResult.explanation && (
+                    <div className="notification notification-explanation">
+                      <div className="notification-icon">📋</div>
+                      <div className="notification-content">
+                        <div dangerouslySetInnerHTML={{ __html: validationResult.explanation }} />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Answer visibility notification */}
+                  {showAnswer && (
+                    <div className="notification notification-answer">
+                      <div className="notification-icon">ℹ</div>
+                      <div className="notification-content">
+                        <p>Correct label positions are highlighted on the image above</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

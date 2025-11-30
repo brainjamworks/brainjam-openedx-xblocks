@@ -1,28 +1,33 @@
 /**
  * Studio View Component for Image Annotation XBlock
  *
- * Provides a tabbed interface for configuring the XBlock:
- * - Configuration: Basic settings, grading, snap settings
- * - Content: Question text and explanation
- * - Image: Background image configuration
- * - Labels: Manage draggable labels
- * - Drop Zones: Visual canvas editor for positioning zones
+ * MFE Pattern: Modal-based editor with EditorLayout (two-column)
+ * - List View: Shows labels and zones with add/edit actions
+ * - Edit Label View: Form for creating/editing labels
+ * - Edit Zone View: Visual canvas for positioning zones
  */
 
-import React, { useState } from 'react';
-import Button from '@openedx/paragon/dist/Button';
-import Tabs from '@openedx/paragon/dist/Tabs';
-import Tab from '@openedx/paragon/dist/Tabs/Tab';
+import React, { useState, useEffect, useRef } from 'react';
 import Alert from '@openedx/paragon/dist/Alert';
+import Button from '@openedx/paragon/dist/Button';
+import ModalDialog from '@openedx/paragon/dist/Modal/ModalDialog';
+import { StandardModal } from '@openedx/paragon';
 import { xblockPost } from '../common/api';
-import type { StudioViewProps, LabelDefinition, DropZone } from '../common/types';
+import type { StudioViewProps, LabelDefinition, DropZone, CourseAsset, ListAssetsResponse } from '../common/types';
 import {
-  ConfigurationTab,
-  ContentTab,
-  ImageTab,
-  LabelsTab,
-  VisualEditor,
+  EditorLayout,
+  ModalHeader,
+  ModalFooter,
+  MainContentArea,
+  SettingsSidebar,
+  EditLabelView,
+  EditZoneView,
 } from './components';
+
+/**
+ * View modes for the modal editor
+ */
+type ViewMode = 'list' | 'edit-label' | 'edit-zone';
 
 export const StudioView: React.FC<StudioViewProps> = ({
   runtime,
@@ -42,6 +47,18 @@ export const StudioView: React.FC<StudioViewProps> = ({
   showCorrectOnSubmit: initialShowCorrectOnSubmit,
   courseId,
 }) => {
+  // =======================================================================
+  // STATE MANAGEMENT - MFE Pattern
+  // =======================================================================
+
+  // View mode state - controls which view is displayed
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const [editingLabelId, setEditingLabelId] = useState<string | null>(null);
+  const [editingZoneId, setEditingZoneId] = useState<string | null>(null);
+
+  // Ref to save function in edit views (called by ModalFooter)
+  const saveEditViewRef = useRef<(() => void) | null>(null);
+
   // State management for all form fields
   const [displayName, setDisplayName] = useState(initialDisplayName);
   const [questionText, setQuestionText] = useState(initialQuestionText);
@@ -59,9 +76,34 @@ export const StudioView: React.FC<StudioViewProps> = ({
   const [showCorrectOnSubmit, setShowCorrectOnSubmit] = useState(initialShowCorrectOnSubmit);
 
   // UI state
-  const [activeTab, setActiveTab] = useState('configuration');
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  // Asset picker state
+  const [showAssetPicker, setShowAssetPicker] = useState(false);
+  const [loadingAssets, setLoadingAssets] = useState(false);
+  const [courseAssets, setCourseAssets] = useState<CourseAsset[]>([]);
+
+  // =======================================================================
+  // EFFECTS - Disable Legacy CSS
+  // =======================================================================
+
+  /**
+   * Disable legacy Liverpool Studio CSS that interferes with Paragon
+   * NOTE: We provide essential modal structure CSS in studio-editor.scss
+   */
+  useEffect(() => {
+    const legacySheets = [
+      '/static/studio/liverpool-dental-legacy/css/studio-main-v1.css',
+      '/static/studio/liverpool-dental-legacy/css/course-unit-mfe-iframe-bundle.css'
+    ];
+
+    document.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
+      if (legacySheets.some(path => link.href.includes(path))) {
+        (link as HTMLLinkElement).disabled = true;
+      }
+    });
+  }, []);
 
   /**
    * Validate form data before saving
@@ -180,119 +222,293 @@ export const StudioView: React.FC<StudioViewProps> = ({
     }
   };
 
+  // =======================================================================
+  // HANDLERS - Asset Picker
+  // =======================================================================
+
+  const handleOpenAssetPicker = async () => {
+    setShowAssetPicker(true);
+    setLoadingAssets(true);
+
+    try {
+      const result = await xblockPost<ListAssetsResponse>(runtime, 'list_course_assets', {});
+
+      if (result.success && result.assets) {
+        setCourseAssets(result.assets);
+      }
+    } catch (error) {
+      console.error('Asset list error:', error);
+    } finally {
+      setLoadingAssets(false);
+    }
+  };
+
+  const handleSelectAsset = (asset: CourseAsset) => {
+    setBackgroundImageUrl(asset.url);
+    setShowAssetPicker(false);
+
+    // Auto-detect dimensions when asset is selected
+    const img = new Image();
+    img.onload = () => {
+      setBackgroundImageWidth(img.naturalWidth);
+      setBackgroundImageHeight(img.naturalHeight);
+    };
+    img.src = asset.url;
+  };
+
+  // =======================================================================
+  // HANDLERS - View Mode & CRUD Operations
+  // =======================================================================
+
+  /**
+   * Switch to list view (main view)
+   */
+  const handleBackToList = () => {
+    setViewMode('list');
+    setEditingLabelId(null);
+    setEditingZoneId(null);
+    saveEditViewRef.current = null;
+  };
+
+  /**
+   * Add a new label (switch to edit view with null ID)
+   */
+  const handleAddLabel = () => {
+    setEditingLabelId(null);
+    setViewMode('edit-label');
+  };
+
+  /**
+   * Edit an existing label
+   */
+  const handleEditLabel = (labelId: string) => {
+    setEditingLabelId(labelId);
+    setViewMode('edit-label');
+  };
+
+  /**
+   * Delete a label
+   */
+  const handleDeleteLabel = (labelId: string) => {
+    setLabels(prev => prev.filter(l => l.id !== labelId));
+    // Also remove any zones that reference this label
+    setDropZones(prev => prev.filter(z => z.correctAnswer !== labelId));
+  };
+
+  /**
+   * Add a new zone (switch to edit view with null ID)
+   */
+  const handleAddZone = () => {
+    setEditingZoneId(null);
+    setViewMode('edit-zone');
+  };
+
+  /**
+   * Edit an existing zone
+   */
+  const handleEditZone = (zoneId: string) => {
+    setEditingZoneId(zoneId);
+    setViewMode('edit-zone');
+  };
+
+  /**
+   * Delete a zone
+   */
+  const handleDeleteZone = (zoneId: string) => {
+    setDropZones(prev => prev.filter(z => z.id !== zoneId));
+  };
+
+  /**
+   * Save handler for edit views (called by ModalFooter)
+   * Delegates to the save function set by the current edit view
+   */
+  const handleSaveEditView = () => {
+    if (saveEditViewRef.current) {
+      saveEditViewRef.current();
+    }
+  };
+
+  /**
+   * Save a label (create or update)
+   * Called by EditLabelView when saving
+   */
+  const handleSaveLabel = (label: LabelDefinition) => {
+    if (editingLabelId) {
+      // Update existing label
+      setLabels(prev => prev.map(l => l.id === editingLabelId ? label : l));
+    } else {
+      // Add new label
+      setLabels(prev => [...prev, label]);
+    }
+    // Return to list view
+    handleBackToList();
+  };
+
+  /**
+   * Save a zone (create or update)
+   * Called by EditZoneView when saving
+   */
+  const handleSaveZone = (zone: DropZone) => {
+    if (editingZoneId) {
+      // Update existing zone
+      setDropZones(prev => prev.map(z => z.id === editingZoneId ? zone : z));
+    } else {
+      // Add new zone
+      setDropZones(prev => [...prev, zone]);
+    }
+    // Return to list view
+    handleBackToList();
+  };
+
   return (
-    <div className="image-annotation-studio-view">
-      {/* Alert messages */}
-      {message && (
-        <Alert
-          variant={message.type === 'success' ? 'success' : 'danger'}
-          dismissible
-          onClose={() => setMessage(null)}
-        >
-          {message.text}
-        </Alert>
-      )}
+    <div className="modal-container-fullscreen">
+      {/* Modal Header - Title + Close Button */}
+      <ModalHeader
+        title={displayName}
+        onClose={handleCancel}
+        onTitleChange={setDisplayName}
+      />
 
-      {/* Tabbed Interface */}
-      <Tabs
-        activeKey={activeTab}
-        onSelect={(key) => setActiveTab(key as string)}
-        id="studio-tabs"
+      <ModalDialog.Body className="pb-0">
+        {/* Alert messages */}
+        {message && (
+          <Alert
+            variant={message.type === 'success' ? 'success' : 'danger'}
+            dismissible
+            onClose={() => setMessage(null)}
+          >
+            {message.text}
+          </Alert>
+        )}
+
+        {/* Conditional Layout - EditorLayout for list view, full-width for edit views */}
+        {viewMode === 'list' ? (
+          <EditorLayout
+            mainContent={
+              <MainContentArea
+                questionText={questionText}
+                explanation={explanation}
+                onQuestionTextChange={setQuestionText}
+                onExplanationChange={setExplanation}
+                runtime={runtime}
+                courseId={courseId}
+                backgroundImageUrl={backgroundImageUrl}
+                backgroundImageWidth={backgroundImageWidth}
+                backgroundImageHeight={backgroundImageHeight}
+                onBackgroundImageUrlChange={setBackgroundImageUrl}
+                onBackgroundImageWidthChange={setBackgroundImageWidth}
+                onBackgroundImageHeightChange={setBackgroundImageHeight}
+                onOpenAssetPicker={handleOpenAssetPicker}
+                labels={labels}
+                onAddLabel={handleAddLabel}
+                onEditLabel={handleEditLabel}
+                onDeleteLabel={handleDeleteLabel}
+                zones={dropZones}
+                onAddZone={handleAddZone}
+                onEditZone={handleEditZone}
+                onDeleteZone={handleDeleteZone}
+              />
+            }
+            sidebar={
+              <SettingsSidebar
+                weight={weight}
+                maxAttempts={maxAttempts}
+                onWeightChange={setWeight}
+                onMaxAttemptsChange={setMaxAttempts}
+                showFeedbackMode={showFeedbackMode}
+                gradingMode={gradingMode}
+                snapEnabled={snapEnabled}
+                showCorrectOnSubmit={showCorrectOnSubmit}
+                onShowFeedbackModeChange={setShowFeedbackMode}
+                onGradingModeChange={setGradingMode}
+                onSnapEnabledChange={setSnapEnabled}
+                onShowCorrectOnSubmitChange={setShowCorrectOnSubmit}
+              />
+            }
+          />
+        ) : viewMode === 'edit-label' ? (
+          <EditLabelView
+            labelId={editingLabelId}
+            labels={labels}
+            onSave={handleSaveLabel}
+            saveRef={saveEditViewRef}
+          />
+        ) : (
+          <EditZoneView
+            zoneId={editingZoneId}
+            zones={dropZones}
+            labels={labels}
+            backgroundImageUrl={backgroundImageUrl}
+            backgroundImageWidth={backgroundImageWidth}
+            backgroundImageHeight={backgroundImageHeight}
+            onSave={handleSaveZone}
+            saveRef={saveEditViewRef}
+          />
+        )}
+      </ModalDialog.Body>
+
+      {/* Modal Footer - Save/Cancel buttons */}
+      <ModalFooter
+        viewMode={viewMode === 'list' ? 'list' : 'edit'}
+        editingType={viewMode === 'edit-label' ? 'label' : viewMode === 'edit-zone' ? 'zone' : undefined}
+        onSave={handleSave}
+        onCancel={handleCancel}
+        saveDisabled={saving || (viewMode === 'list' && (labels.length === 0 || dropZones.length === 0))}
+        onSavePair={handleSaveEditView}
+        onBackToList={handleBackToList}
+        savePairDisabled={false}
+      />
+
+      {/* Asset Picker Modal */}
+      <StandardModal
+        title="Choose Course Image"
+        isOpen={showAssetPicker}
+        onClose={() => setShowAssetPicker(false)}
+        size="lg"
+        isOverflowVisible={false}
+        footerNode={
+          <Button variant="tertiary" onClick={() => setShowAssetPicker(false)}>
+            Close
+          </Button>
+        }
       >
-        {/* Configuration Tab */}
-        <Tab eventKey="configuration" title="Configuration">
-          <div className="p-3">
-            <ConfigurationTab
-              displayName={displayName}
-              weight={weight}
-              maxAttempts={maxAttempts}
-              gradingMode={gradingMode}
-              showFeedbackMode={showFeedbackMode}
-              snapEnabled={snapEnabled}
-              showCorrectOnSubmit={showCorrectOnSubmit}
-              onDisplayNameChange={setDisplayName}
-              onWeightChange={setWeight}
-              onMaxAttemptsChange={setMaxAttempts}
-              onGradingModeChange={setGradingMode}
-              onShowFeedbackModeChange={setShowFeedbackMode}
-              onSnapEnabledChange={setSnapEnabled}
-              onShowCorrectOnSubmitChange={setShowCorrectOnSubmit}
-            />
+        {loadingAssets ? (
+          <p>Loading images...</p>
+        ) : courseAssets.length === 0 ? (
+          <p>No images found in course. Upload an image first.</p>
+        ) : (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '1rem' }}>
+            {courseAssets.map((asset) => (
+              <div
+                key={asset.url}
+                onClick={() => handleSelectAsset(asset)}
+                style={{
+                  cursor: 'pointer',
+                  border: backgroundImageUrl === asset.url ? '2px solid #0075b4' : '1px solid #ccc',
+                  borderRadius: '4px',
+                  padding: '0.5rem',
+                  textAlign: 'center'
+                }}
+              >
+                <img
+                  src={asset.url}
+                  alt={asset.display_name}
+                  style={{
+                    width: '100%',
+                    height: '100px',
+                    objectFit: 'cover',
+                    borderRadius: '4px',
+                    marginBottom: '0.5rem'
+                  }}
+                />
+                <div style={{ fontSize: '12px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {asset.display_name}
+                </div>
+              </div>
+            ))}
           </div>
-        </Tab>
-
-        {/* Content Tab */}
-        <Tab eventKey="content" title="Content">
-          <div className="p-3">
-            <ContentTab
-              questionText={questionText}
-              explanation={explanation}
-              onQuestionTextChange={setQuestionText}
-              onExplanationChange={setExplanation}
-            />
-          </div>
-        </Tab>
-
-        {/* Image Tab */}
-        <Tab eventKey="image" title="Image">
-          <div className="p-3">
-            <ImageTab
-              runtime={runtime}
-              courseId={courseId}
-              backgroundImageUrl={backgroundImageUrl}
-              backgroundImageWidth={backgroundImageWidth}
-              backgroundImageHeight={backgroundImageHeight}
-              onBackgroundImageUrlChange={setBackgroundImageUrl}
-              onBackgroundImageWidthChange={setBackgroundImageWidth}
-              onBackgroundImageHeightChange={setBackgroundImageHeight}
-            />
-          </div>
-        </Tab>
-
-        {/* Labels Tab */}
-        <Tab eventKey="labels" title="Labels">
-          <div className="p-3">
-            <LabelsTab
-              labels={labels}
-              onLabelsChange={setLabels}
-            />
-          </div>
-        </Tab>
-
-        {/* Visual Editor Tab - Zone positioning */}
-        <Tab eventKey="visual" title="Drop Zones">
-          <div className="p-3">
-            <VisualEditor
-              backgroundImageUrl={backgroundImageUrl}
-              backgroundImageWidth={backgroundImageWidth}
-              backgroundImageHeight={backgroundImageHeight}
-              labels={labels}
-              zones={dropZones}
-              onLabelsChange={setLabels}
-              onZonesChange={setDropZones}
-            />
-          </div>
-        </Tab>
-      </Tabs>
-
-      {/* Save/Cancel buttons - fixed at bottom */}
-      <div className="image-annotation-sticky-actions d-flex justify-content-end border-top pt-3 mt-4">
-        <Button
-          variant="tertiary"
-          onClick={handleCancel}
-          disabled={saving}
-          className="mr-2"
-        >
-          Close Without Saving
-        </Button>
-        <Button
-          variant="primary"
-          onClick={handleSave}
-          disabled={saving}
-        >
-          {saving ? 'Saving...' : 'Save All Changes'}
-        </Button>
-      </div>
+        )}
+      </StandardModal>
     </div>
   );
 };

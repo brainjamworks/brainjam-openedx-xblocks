@@ -1,0 +1,234 @@
+// ============================================================================
+// ESSENTIAL MODAL STRUCTURE CSS (VERBATIM FROM EDX-PLATFORM)
+// ============================================================================
+// Source: edx-platform/cms/static/sass/elements/_modal-window.scss
+//         edx-platform/cms/static/sass/elements/_modal.scss
+//         edx-platform/cms/static/sass/course-unit-mfe-iframe-bundle.scss
+// Purpose: Exact modal structure CSS with resolved SASS variable values
+// Note: Form element styling excluded - Paragon handles inputs/buttons/labels
+// Date: 2025-11-29
+// ============================================================================
+
+// Modal container structure (Lines 7-311 from _modal-window.scss)
+// NOTE: All visual styling removed - only structural CSS kept
+// Paragon ModalDialog provides all visual styling
+[class*="view-"] .modal-window {
+  box-sizing: border-box;
+  position: absolute;
+  width: 50%;
+  background-color: transparent;
+  text-align: left;
+
+  .modal-content {
+    position: relative;
+    background-color: transparent;
+  }
+}
+
+// Modal actions/footer layout (Lines 272-310 from _modal-window.scss)
+// NOTE: Visual styling removed - Paragon ModalDialog.Footer handles visuals
+[class*="view-"] .modal-window .modal-actions,
+[class*="view-"] .modal-window .xblock-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  background-color: transparent;
+
+  .action-item {
+    display: inline-block;
+    margin-right: 15px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+// Large modal sizing (Lines 338-392 from _modal-window.scss)
+// NOTE: Visual styling removed - only structural sizing kept
+[class*="view-"] .modal-lg {
+  width: 95%;
+  min-width: 550px;
+  height: auto;
+
+  &.modal-editor {
+    .modal-content {
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+  }
+}
+
+// Modal editor flexbox (Lines 281-458 from course-unit-mfe-iframe-bundle.scss)
+// NOTE: Visual styling removed - only flexbox structure kept
+.modal-window.modal-editor {
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+
+  .edit-xblock-modal {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+
+    .modal-content {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+  }
+}
+
+// Modal window overlay/backdrop (Lines 580-591 from _modal-window.scss)
+[class*="view-"] .modal-window-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgb(0, 0, 0);
+  opacity: 0.5;
+  z-index: 1000;
+}
+
+// Prevent background scrolling (Lines 83-85 from _modal.scss)
+body.modal-open {
+  overflow: hidden;
+}
+
+// ============================================================================
+// HIDE LEGACY STUDIO MODAL ELEMENTS
+// ============================================================================
+
+.modal-type-image_annotation {
+  // Hide legacy Studio modal header
+  .modal-header {
+    display: none !important;
+  }
+
+  // Hide legacy Studio modal footer actions (Save/Cancel buttons)
+  .modal-actions {
+    display: none !important;
+  }
+}
+
+// ============================================================================
+// MODAL DIMENSIONS
+// ============================================================================
+
+.modal-type-image_annotation.modal-window.modal-editor {
+  // Large modal with comfortable margins
+  width: 90vw !important;
+  height: 90vh !important;
+  max-width: none !important;
+  max-height: none !important;
+
+  // Center the modal
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  margin: 0 !important;
+
+  // Ensure modal appears above overlay
+  z-index: 1001 !important;
+}
+
+// ============================================================================
+// OPENEDX WRAPPER ELEMENTS - Full Flex Chain
+// ============================================================================
+// Fix for modal shrinking issue - OpenEdX adds wrapper elements that don't
+// participate in flex layout by default. Force them to grow and fill space.
+// Based on: .skills/debug-modal-whitespace.md Pattern 1
+
+// Target the xblock-editor wrapper
+[class*="view-"] .wrapper .modal-type-image_annotation .xblock-editor {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  overflow: hidden !important;
+}
+
+// Target the xblock wrapper
+[class*="view-"] .wrapper .modal-type-image_annotation .xblock {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  overflow: hidden !important;
+}
+
+// ============================================================================
+// REACT COMPONENT CONTAINER - White Background
+// ============================================================================
+// Apply white background to custom modal container to match Paragon components
+
+.modal-container-fullscreen {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;  // Enable flex shrinking and scrolling
+  flex: 1 !important;  // Grow to fill parent modal
+  background: var(--pgn-color-modal-content-bg);
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  // Header and footer stay fixed height (don't shrink)
+  .pgn__modal-header,
+  .pgn__modal-footer {
+    flex-shrink: 0;
+  }
+
+  // Body fills remaining space and scrolls when needed
+  .pgn__modal-body {
+    flex: 1 1 auto;      // Grow to fill available space
+    min-height: 0;       // CRITICAL: Enable scrolling in flex container
+    overflow-y: auto;    // Scroll when content exceeds height
+    overflow-x: hidden;  // No horizontal scroll
+  }
+}
+
+// ============================================================================
+// MFE EDITOR LAYOUT (COPIED FROM MFE - DO NOT MODIFY)
+// ============================================================================
+// Source: frontend-app-authoring EditProblemView/index.scss
+// Purpose: Two-column layout with fixed-width settings sidebar
+// Date: 2025-11-29
+// ============================================================================
+
+.editProblemView {
+  .editProblemView-settingsColumn {
+    width: 320px;
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+
+  .settingsOption {
+    .pgn__form-checkbox .pgn__form-label {
+      min-width: .8rem;
+    }
+  }
+}
+
+// ============================================================================
+// MFE SETTINGS WIDGET (COPIED FROM MFE - DO NOT MODIFY)
+// ============================================================================
+// Source: frontend-app-authoring SettingsWidget/index.scss
+// Purpose: Settings sidebar styling
+// Date: 2025-11-29
+// ============================================================================
+
+.settingsCardTitleSection {
+  padding-bottom: 0;
+}
+
+.settingsWidget {
+  margin-top: 40px;
+
+  .pgn__form-text {
+    font-size: small;
+  }
+}

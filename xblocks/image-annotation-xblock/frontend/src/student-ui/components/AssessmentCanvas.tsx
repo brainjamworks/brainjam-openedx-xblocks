@@ -107,7 +107,7 @@ export const AssessmentCanvas: React.FC<AssessmentCanvasProps> = ({
         // Cross labels: Container uses translate(-25%, -25%)
         // Marker at bottom-left of container
         // Aiming point = center of cross marker
-        const crossSize = 25 * canvasScale; // Must match DraggableLabel
+        const crossSize = 12 * canvasScale; // Must match DraggableLabel
         aimingPointX = sourceOffset.x + (crossSize / 2);
         aimingPointY = sourceOffset.y + scaledHeight - (crossSize / 2);
       } else {
@@ -154,7 +154,7 @@ export const AssessmentCanvas: React.FC<AssessmentCanvasProps> = ({
             if (labelType === 'dot' || labelType === 'cross') {
               // Dot/cross labels use translate(-25%, -25%) with marker at bottom-left
               // Marker has a size and we need to center its CENTER, not its corner
-              const markerSize = labelType === 'dot' ? 15 : 25; // Unscaled pixels
+              const markerSize = labelType === 'dot' ? 15 : 12; // Unscaled pixels (dot 15px, cross 12px)
 
               // Marker center within container: (markerSize/2, containerHeight - markerSize/2)
               // After transform(-25%, -25%), marker center is at:
@@ -326,7 +326,7 @@ export const AssessmentCanvas: React.FC<AssessmentCanvasProps> = ({
               key={zone.id}
               zone={zone}
               isOccupied={occupiedZones.has(zone.id)}
-              visible={showZones}
+              visible={zone.visible ?? showZones}
               scale={canvasScale}
             />
           ))}
@@ -364,23 +364,6 @@ export const AssessmentCanvas: React.FC<AssessmentCanvasProps> = ({
             );
           })}
         </div>
-      </div>
-
-      {/* Legend/Instructions */}
-      <div className="canvas-instructions" style={{
-        backgroundColor: showingAnswer ? '#e7f3ff' : undefined,
-        borderLeft: showingAnswer ? '4px solid #0075b4' : undefined
-      }}>
-        <p className="text-muted">
-          {showingAnswer ? (
-            <strong style={{ color: '#0075b4' }}>Showing Correct Answer - All labels positioned at their correct locations</strong>
-          ) : (
-            <>
-              Drag labels to their correct positions on the image.
-              {snapEnabled && ' Labels will snap to target areas when close.'}
-            </>
-          )}
-        </p>
       </div>
     </div>
   );

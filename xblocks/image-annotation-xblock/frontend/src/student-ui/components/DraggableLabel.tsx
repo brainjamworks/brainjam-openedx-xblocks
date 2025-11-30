@@ -99,11 +99,11 @@ export const DraggableLabel: React.FC<DraggableLabelProps> = ({
   // Common colors based on state
   const getColor = () => {
     if (hasBeenPlaced) {
-      if (isCorrect === true) return '#28a745';
-      if (isCorrect === false) return '#dc3545';
-      return '#007bff';
+      if (isCorrect === true) return '#28a745'; // Green when correct
+      if (isCorrect === false) return '#dc3545'; // Red when incorrect
+      return '#ff9800'; // Orange/amber when placed on canvas (active state)
     }
-    return '#6c757d';
+    return '#6c757d'; // Gray when in bank
   };
 
   // Correctness indicator (reused across all types)
@@ -151,8 +151,8 @@ export const DraggableLabel: React.FC<DraggableLabelProps> = ({
           top: `${scaledY}px`,
           width: `${scaledWidth}px`,
           height: `${scaledHeight}px`, // Equal width/height for perfect circle
-          // Center the element at the position
-          transform: 'translate(-50%, -50%)',
+          // Center the element at the position (skip when in label bank)
+          transform: placement ? 'translate(-50%, -50%)' : 'none',
           opacity: isDragging ? 0.5 : 1,
           cursor: disabled ? 'not-allowed' : 'grab',
           display: 'flex',
@@ -164,7 +164,7 @@ export const DraggableLabel: React.FC<DraggableLabelProps> = ({
           border: '2px solid #ffffff',
           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
           fontWeight: 'bold',
-          fontSize: `${Math.max(12 * scale, 10)}px`,
+          fontSize: `${Math.max(14 * scale, 12)}px`,
           userSelect: 'none',
           transition: 'all 0.2s ease',
           zIndex: isDragging ? 1000 : hasBeenPlaced ? 10 : 5
@@ -196,7 +196,7 @@ export const DraggableLabel: React.FC<DraggableLabelProps> = ({
           top: `${scaledY}px`,
           width: `${scaledWidth}px`,
           height: `${scaledHeight}px`,
-          transform: 'translate(-25%, -25%)', // Offset so dot (at bottom-left) is at (x, y)
+          transform: placement ? 'translate(-25%, -25%)' : 'none', // Offset so dot (at bottom-left) is at (x, y) (skip in bank)
           opacity: isDragging ? 0.5 : 1,
           cursor: disabled ? 'not-allowed' : 'grab',
           userSelect: 'none',
@@ -235,7 +235,7 @@ export const DraggableLabel: React.FC<DraggableLabelProps> = ({
             border: '2px solid #ffffff',
             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
             fontWeight: 'bold',
-            fontSize: `${Math.max(12 * scale, 10)}px`,
+            fontSize: `${Math.max(14 * scale, 12)}px`,
             padding: `${Math.max(4 * scale, 2)}px ${Math.max(8 * scale, 4)}px`
           }}
         >
@@ -250,7 +250,7 @@ export const DraggableLabel: React.FC<DraggableLabelProps> = ({
   // Render cross (X) marker with floating text
   if (labelType === 'cross') {
     // Calculate pixel-based dimensions with scale
-    const crossSize = 25 * scale; // Fixed cross size scaled
+    const crossSize = 12 * scale; // Fixed cross size scaled (smaller than dot marker)
     const textBoxWidth = scaledWidth - crossSize;
     const textBoxHeight = scaledHeight - crossSize;
 
@@ -267,7 +267,7 @@ export const DraggableLabel: React.FC<DraggableLabelProps> = ({
           top: `${scaledY}px`,
           width: `${scaledWidth}px`,
           height: `${scaledHeight}px`,
-          transform: 'translate(-25%, -25%)', // Offset so cross (at bottom-left) is at (x, y)
+          transform: placement ? 'translate(-25%, -25%)' : 'none', // Offset so cross (at bottom-left) is at (x, y) (skip in bank)
           opacity: isDragging ? 0.5 : 1,
           cursor: disabled ? 'not-allowed' : 'grab',
           userSelect: 'none',
@@ -324,8 +324,11 @@ export const DraggableLabel: React.FC<DraggableLabelProps> = ({
             border: '2px solid #ffffff',
             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
             fontWeight: 'bold',
-            fontSize: `${Math.max(12 * scale, 10)}px`,
-            padding: `${Math.max(4 * scale, 2)}px ${Math.max(8 * scale, 4)}px`
+            fontSize: `${Math.max(14 * scale, 12)}px`,
+            padding: `${Math.max(4 * scale, 2)}px ${Math.max(8 * scale, 4)}px`,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap'
           }}
         >
           {label.label}
