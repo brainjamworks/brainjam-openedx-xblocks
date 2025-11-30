@@ -10,6 +10,7 @@
 import React from 'react';
 import Button from '@openedx/paragon/dist/Button';
 import ActionRow from '@openedx/paragon/dist/ActionRow';
+import { Edit, Delete } from '@openedx/paragon/icons';
 import DraggableList from '../../generic/DraggableList';
 import SortableItem from '../../generic/DraggableList/SortableItem';
 import { HotspotItem } from './HotspotItem';
@@ -47,15 +48,15 @@ export const HotspotList: React.FC<HotspotListProps> = ({
             <>
               <span className="font-weight-bold">Hotspot {index + 1}</span>
               <ActionRow.Spacer />
-              <Button variant="link" onClick={() => onEditHotspot(index)} size="sm">
+              <Button variant="link" size="sm" onClick={() => onEditHotspot(index)} iconBefore={Edit}>
                 Edit
               </Button>
               <Button
-                variant="link"
+                variant="outline-danger"
                 onClick={() => onDeleteHotspot(index)}
                 disabled={hotspots.length === 1}
                 size="sm"
-                className="text-danger"
+                iconBefore={Delete}
               >
                 Delete
               </Button>

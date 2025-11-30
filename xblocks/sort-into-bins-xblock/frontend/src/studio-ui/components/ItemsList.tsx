@@ -9,7 +9,7 @@ import React, { useState } from 'react';
 import Button from '@openedx/paragon/dist/Button';
 import Form from '@openedx/paragon/dist/Form';
 import Icon from '@openedx/paragon/dist/Icon';
-import { Add, Delete, DragIndicator } from '@openedx/paragon/icons';
+import { Add, Delete, DragIndicator, Edit } from '@openedx/paragon/icons';
 import type { SortableItem, BinDefinition, ItemType } from '../../common/types';
 
 interface ItemsListProps {
@@ -188,11 +188,12 @@ const ItemItem: React.FC<ItemItemProps> = ({ item, index, bins, onEdit, onDelete
           variant="link"
           size="sm"
           onClick={() => setIsEditing(true)}
+          iconBefore={Edit}
         >
           Edit
         </Button>
         <Button
-          variant="link"
+          variant="outline-danger"
           size="sm"
           onClick={onDelete}
           iconBefore={Delete}

@@ -1,7 +1,7 @@
 /**
  * Studio View Component for Drag and Drop Matching XBlock
  *
- * Main container that orchestrates between ListView and EditView.
+ * Main container that orchestrates between MainContentArea and EditView.
  */
 
 import React, { useState, useEffect, useRef } from 'react';

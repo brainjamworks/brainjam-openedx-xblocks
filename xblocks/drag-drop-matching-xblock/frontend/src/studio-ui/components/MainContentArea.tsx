@@ -11,7 +11,7 @@ import React from 'react';
 import Button from '@openedx/paragon/dist/Button';
 import Form from '@openedx/paragon/dist/Form';
 import ActionRow from '@openedx/paragon/dist/ActionRow';
-import { Add } from '@openedx/paragon/icons';
+import { Add, Edit, Delete } from '@openedx/paragon/icons';
 import type { MatchingPair } from '../../common/types';
 import DraggableList, { SortableItem } from '../../generic/DraggableList';
 
@@ -91,15 +91,15 @@ export const MainContentArea: React.FC<MainContentAreaProps> = ({
               <>
                 <span className="font-weight-bold">Pair {index + 1}</span>
                 <ActionRow.Spacer />
-                <Button variant="link" onClick={() => onEditPair(index)} size="sm">
+                <Button variant="link" size="sm" onClick={() => onEditPair(index)} iconBefore={Edit}>
                   Edit
                 </Button>
                 <Button
-                  variant="link"
+                  variant="outline-danger"
                   onClick={() => onDeletePair(index)}
                   disabled={pairs.length === 1}
                   size="sm"
-                  className="text-danger"
+                  iconBefore={Delete}
                 >
                   Delete
                 </Button>

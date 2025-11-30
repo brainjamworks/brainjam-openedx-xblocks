@@ -32,17 +32,9 @@ export const BehaviorCard: React.FC<BehaviorCardProps> = ({
       summary={summary}
       className="behaviorCard"
     >
-      <Form.Group className="mb-3">
-        <Form.Checkbox
-          checked={randomizeItems}
-          onChange={(e) => onRandomizeChange(e.target.checked)}
-        >
-          Randomize item order
-        </Form.Checkbox>
-        <Form.Control.Feedback>
-          Shuffle terms and descriptions for each student
-        </Form.Control.Feedback>
-      </Form.Group>
+      <div className="mb-4">
+        Specify when and how feedback is shown to students
+      </div>
 
       <Form.Group>
         <Form.Control
@@ -54,6 +46,19 @@ export const BehaviorCard: React.FC<BehaviorCardProps> = ({
           <option value="immediate">Immediate Feedback</option>
           <option value="on_submit">On Submit</option>
         </Form.Control>
+        <Form.Control.Feedback>
+          When to show correctness feedback to students
+        </Form.Control.Feedback>
+
+        <Form.Checkbox
+          className="mt-3 decoration-control-label"
+          checked={randomizeItems}
+          onChange={(e) => onRandomizeChange(e.target.checked)}
+        >
+          <div className="x-small">
+            Randomize item order
+          </div>
+        </Form.Checkbox>
       </Form.Group>
     </SettingsOption>
   );

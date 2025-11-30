@@ -27322,44 +27322,49 @@ const Rc = (e, t = 60) => e ? e.length <= t ? e : e.substring(0, t) + "..." : ""
       summary: c,
       className: "behaviorCard",
       children: [
+        /* @__PURE__ */ D.jsx("div", { className: "mb-4", children: "Specify when and how feedback is shown to students" }),
         /* @__PURE__ */ D.jsxs(ue.Group, { className: "mb-3", children: [
+          /* @__PURE__ */ D.jsxs(
+            ue.Control,
+            {
+              as: "select",
+              value: t,
+              onChange: (d) => i(d.target.value),
+              floatingLabel: "Feedback Mode",
+              children: [
+                /* @__PURE__ */ D.jsx("option", { value: "immediate", children: "Immediate Feedback" }),
+                /* @__PURE__ */ D.jsx("option", { value: "on_submit", children: "On Submit" })
+              ]
+            }
+          ),
+          /* @__PURE__ */ D.jsx(ue.Control.Feedback, { children: "When to show correctness feedback to students" })
+        ] }),
+        /* @__PURE__ */ D.jsxs(ue.Group, { children: [
+          /* @__PURE__ */ D.jsxs(
+            ue.Control,
+            {
+              as: "select",
+              value: n,
+              onChange: (d) => a(d.target.value),
+              floatingLabel: "Show Answers",
+              children: [
+                /* @__PURE__ */ D.jsx("option", { value: "never", children: "Never" }),
+                /* @__PURE__ */ D.jsx("option", { value: "after_attempts", children: "After Max Attempts" }),
+                /* @__PURE__ */ D.jsx("option", { value: "always", children: "Always" })
+              ]
+            }
+          ),
+          /* @__PURE__ */ D.jsx(ue.Control.Feedback, { children: "When students can see the correct answers" }),
           /* @__PURE__ */ D.jsx(
             ue.Checkbox,
             {
+              className: "mt-3 decoration-control-label",
               checked: e,
               onChange: (d) => r(d.target.checked),
-              children: "Randomize item order"
+              children: /* @__PURE__ */ D.jsx("div", { className: "x-small", children: "Randomize item order" })
             }
-          ),
-          /* @__PURE__ */ D.jsx(ue.Control.Feedback, { children: "Shuffle terms and descriptions for each student" })
-        ] }),
-        /* @__PURE__ */ D.jsx(ue.Group, { className: "mb-3", children: /* @__PURE__ */ D.jsxs(
-          ue.Control,
-          {
-            as: "select",
-            value: t,
-            onChange: (d) => i(d.target.value),
-            floatingLabel: "Feedback Mode",
-            children: [
-              /* @__PURE__ */ D.jsx("option", { value: "immediate", children: "Immediate Feedback" }),
-              /* @__PURE__ */ D.jsx("option", { value: "on_submit", children: "On Submit" })
-            ]
-          }
-        ) }),
-        /* @__PURE__ */ D.jsx(ue.Group, { children: /* @__PURE__ */ D.jsxs(
-          ue.Control,
-          {
-            as: "select",
-            value: n,
-            onChange: (d) => a(d.target.value),
-            floatingLabel: "Show Correct Answers",
-            children: [
-              /* @__PURE__ */ D.jsx("option", { value: "never", children: "Never" }),
-              /* @__PURE__ */ D.jsx("option", { value: "after_attempts", children: "After Max Attempts" }),
-              /* @__PURE__ */ D.jsx("option", { value: "always", children: "Always" })
-            ]
-          }
-        ) })
+          )
+        ] })
       ]
     }
   );

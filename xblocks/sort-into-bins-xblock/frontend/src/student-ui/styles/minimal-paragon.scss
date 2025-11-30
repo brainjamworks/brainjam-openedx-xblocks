@@ -94,6 +94,12 @@
       margin-bottom: $liverpool-space-3;
     }
 
+    .source-description {
+      color: $liverpool-text-muted;
+      font-size: $liverpool-font-size-sm;
+      margin: 0;
+    }
+
     .source-items {
       display: flex;
       flex-wrap: wrap;
