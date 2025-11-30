@@ -20,7 +20,7 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # Build outputs - ARCHITECTURAL: Never commit built bundles
-{xblock_name}/public/
+# {xblock_name}/public/  # Commented out to allow committing built bundles
 *.js.map
 
 # IDE
